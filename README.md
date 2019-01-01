@@ -14,6 +14,10 @@ WARNING: This plugin is beta.
 
 ## Player Commands
 All commands can use "/sctf" instead of "/simplectf"
+### /simplectf
+You can view command list.
+- CanUse: Player, Console 
+- Permission: none(Anybody can use this command)
 ### /simplectf join \<arena\>
 You join \<arena\>  
 - CanUse: Player  
@@ -54,24 +58,24 @@ Start creation arena process as arena name is \<arena\>
 ## Admin Commands
 All commands can use "/sctf" instead of "/simplectf"  
 A Player who has "simplectf.admin" can use admin commands.
-### /simplectf create \<arena\>
+### /simplectf admin create \<arena\>
 Start creation arena process as arena name is \<arena\>
 - CanUse: Player
 - Permission: simplectf.admin
-### /simplectf remove \<arena\> 
+### /simplectf admin remove \<arena\> 
 Remove \<arena\>
 - CanUse: Player
 - Permission: simplectf.admin
-### /simplectf setInv
+### /simplectf admin setInv
 Set Inventory team1 and team2.  
 You can use this command when you create arena.
 - CanUse: Player
 - Permission: simplectf.admin
-### /simplectf enable \<arena\>
+### /simplectf admin enable \<arena\>
 You enable \<arena\>
 - CanUse: Player, Console
 - Permission: simplectf.admin
-### /simplectf disable \<arena\> 
+### /simplectf admin disable \<arena\> 
 You disable \<arena\>
 - CanUse: Player, Console
 - Permission: simplectf.admin
