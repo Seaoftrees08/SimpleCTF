@@ -9,3 +9,63 @@ WARNING: This plugin is beta.
 
 ## License
 ### [MIT License](https://github.com/Seaoftrees/SimpleCTF/blob/master/LICENSE)
+
+## Player Commands
+All commands can use "/sctf" instead of "/simplectf"
+### /simplectf join \<arena\>
+You join \<arena\>  
+- CanUse: Player  
+- Permission: simplectf.play
+### /simplectf leave
+You leave from arena.  
+- CanUse: Player
+- Permission: none(Anybody can use this command)
+### /simplectf rate \[player\]
+You can view \[player\] rate.  
+If you don't write \[player\], you can view your rate.  
+WARNING: This function is implemented in future version.  
+- CanUse: Player, Console
+- Permission: simplectf.rate
+### /simplectf list
+You can view arena list.
+- CanUse: Player, Console
+- Permission: none(Anybody can use this command)
+### /simplectf watch \<arena\>
+You can watch \<arena\> game.  
+WARNING: This function is implemented in future version.
+- CanUse: Player
+- Permission: none(Anybody can use this command)
+### /simplectf back
+You back to WorldSpawnPoint from watching game.  
+WARNING: This function is implemented in future version.
+- CanUse: Player
+- Permission: none(Anybody can use this command)
+### /simplectf version
+You can view this plugin infomation.
+- CanUse: Player, Console
+- Permission: none(Anybody can use this command)
+
+## Admin Commands
+All commands can use "/sctf" instead of "/simplectf"  
+A Player who has "simplectf.admin" can use admin commands.
+### /simplectf create \<arena\>
+Start creation arena process as arena name is \<arena\>
+- CanUse: Player
+- Permission: simplectf.admin
+### /simplectf remove \<arena\> 
+Remove \<arena\>
+- CanUse: Player
+- Permission: simplectf.admin
+### /simplectf setInv
+Set Inventory team1 and team2.  
+You can use this command when you create arena.
+- CanUse: Player
+- Permission: simplectf.admin
+### /simplectf enable \<arena\>
+You enable \<arena\>
+- CanUse: Player, Console
+- Permission: simplectf.admin
+### /simplectf disable \<arena\> 
+You disable \<arena\>
+- CanUse: Player, Console
+- Permission: simplectf.admin
