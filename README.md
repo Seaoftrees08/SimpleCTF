@@ -6,6 +6,8 @@ WARNING: This plugin is beta.
 ## Download and Version info
 - [0.1.0](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.0)  
   First Releace for Spigot1.8.8
+- [0.1.1](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.1)  
+  bug fixed from 0.1.1(Timer is faster) for Spigot1.8.8
 
 ## License
 ### [MIT License](https://github.com/Seaoftrees/SimpleCTF/blob/master/LICENSE)
@@ -42,6 +44,10 @@ WARNING: This function is implemented in future version.
 - Permission: none(Anybody can use this command)
 ### /simplectf version
 You can view this plugin infomation.
+- CanUse: Player, Console
+- Permission: none(Anybody can use this command)
+### /simplectf admin
+Start creation arena process as arena name is \<arena\>
 - CanUse: Player, Console
 - Permission: none(Anybody can use this command)
 
