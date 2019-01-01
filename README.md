@@ -8,6 +8,8 @@ WARNING: This plugin is beta.
   First Releace for Spigot1.8.8
 - [0.1.1](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.1)  
   bug fixed from 0.1.1(Timer is faster) for Spigot1.8.8
+- [0.1.2](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.2)  
+  bug fixed from 0.1.1(permissions) for Spigot1.8.8
 
 ## License
 ### [MIT License](https://github.com/Seaoftrees/SimpleCTF/blob/master/LICENSE)
