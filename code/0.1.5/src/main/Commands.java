@@ -133,7 +133,7 @@ public class Commands implements CommandExecutor{
 			}else if(args[0].equalsIgnoreCase("version")) {
 				SendMessage(sender, "   ===== Simple CTF Infomation ===== ", ChatColor.GRAY);
 				SendMessage(sender, "This plugin is to play CTF!", ChatColor.GRAY);
-				SendMessage(sender, "version: 0.1.4", ChatColor.GRAY);
+				SendMessage(sender, "version: 0.1.5", ChatColor.GRAY);
 				SendMessage(sender, "Author: Seaoftrees (Minecraft ID)", ChatColor.GRAY);
 				
 			}else {
