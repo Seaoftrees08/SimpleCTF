@@ -12,6 +12,8 @@ WARNING: This plugin is beta.
   bug fixed from 0.1.1(permissions) for Spigot1.8.8
 - [0.1.3](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.3)  
   bug fixed from 0.1.2(nullPointExep. at FlingItem.java) for Spigot1.8.8
+- [0.1.4](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.4)  
+  bug fixed from 0.1.3(return bug fixed) for Spigot1.8.8
 
 ## License
 ### [MIT License](https://github.com/Seaoftrees/SimpleCTF/blob/master/LICENSE)
