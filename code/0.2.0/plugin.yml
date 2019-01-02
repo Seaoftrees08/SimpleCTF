@@ -1,0 +1,39 @@
+name: SimpleCTF
+version: 0.2.0
+description: This plugin is to play ctf
+
+author: Seaoftrees
+
+main: main.Main
+
+commands:
+  simplectf:
+    description: This is SimpleCTF Commands.
+    aliases: [sctf]
+    permission: simplectf.simplectf
+    usage: /simplectf
+    
+permissions:
+  simplectf.*:
+    description: Give access to all SimpleCTF commands
+    children:
+      simplectf.admin: true
+      simplectf.rate: true
+      simplectf.simplectf: true
+      simplectf.play: true
+      simplectf.force: true
+  simplectf.admin:
+    description: Allows to controle SimpleCTF
+    default: op
+  simplectf.rate:
+    description: Allows to view player rate
+    default: true
+  simplectf.simplectf:
+    description: Allows to simplectf commands
+    default: true
+  simplectf.play:
+    description: Allows to play ctf
+    default: true
+  simplectf.force:
+    description: Allows to force playing ctf
+    default: op
