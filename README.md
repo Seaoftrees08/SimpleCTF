@@ -3,8 +3,8 @@ This is a Spigot plugin for playing "Capture The Flag".
 
 WARNING: This plugin is beta.  
 
-## Download lastest
-### [0.2.0](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.2.0) 
+## Download latest
+### [0.2.1](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.2.1) 
 for Spigot 1.8.8
 
 ## License
@@ -129,7 +129,7 @@ Allows to force playing ctf
 - [0.1.4](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.4)  
   bug fixed from 0.1.3(return bug fixed) for Spigot1.8.8
 - [0.1.5](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.5)  
-  bug fixed from 0.1.4(fixed not paid items) for Spigot1.8.8
+  bug fixed from 0.1.4(fixed not to paid items) for Spigot1.8.8
 - [0.2.0](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.2.0)  
   add function and bugfixed from 0.1.5 for Spigot1.8.8
   - fatal bug fixed (item throw away bug)
@@ -139,3 +139,5 @@ Allows to force playing ctf
   - specification change(item clear when player join arena)
   - add cmds
   - add function(watch game)
+- [0.2.1](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.2.1)  
+  bug fixed from 0.2.0(fixed get flag when any item) for Spigot1.8.8
