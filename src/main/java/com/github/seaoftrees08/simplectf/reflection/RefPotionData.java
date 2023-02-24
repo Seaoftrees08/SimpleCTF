@@ -11,13 +11,13 @@ import java.lang.reflect.InvocationTargetException;
  * それしか使わせてもらえない欠陥品だったのでこれを実装。
  * 例：PotionData pd = new PotionData(PotionType.FIRE_RESISTANCE, false, false); //Error
  */
-public class MyPotionData {
+public class RefPotionData {
 
     private final PotionType type;
     private final boolean extended;
     private final boolean upgraded;
 
-    public MyPotionData(PotionType type, boolean extended, boolean upgraded){
+    public RefPotionData(PotionType type, boolean extended, boolean upgraded){
         this.type = type;
         this.extended = type.isExtendable() && extended;
         this.upgraded = type.isUpgradeable() && upgraded;

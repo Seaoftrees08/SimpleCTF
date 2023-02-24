@@ -1,5 +1,6 @@
 package com.github.seaoftrees08.simplectf;
 
+import com.github.seaoftrees08.simplectf.utils.SctfPerms;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;

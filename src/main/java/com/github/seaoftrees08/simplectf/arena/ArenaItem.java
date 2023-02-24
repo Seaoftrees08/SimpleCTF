@@ -1,6 +1,6 @@
 package com.github.seaoftrees08.simplectf.arena;
 
-import com.github.seaoftrees08.simplectf.reflection.MyPotionData;
+import com.github.seaoftrees08.simplectf.reflection.RefPotionData;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -88,6 +88,10 @@ public class ArenaItem extends ItemStack {
      * @return
      */
     private static ItemStack listToItem(List<String> lst){
+        if(lst==null || lst.size()<=3){
+            return new ItemStack(Material.AIR);
+        }
+
         //setType
         ItemStack i = new ItemStack(Material.valueOf(lst.get(0)));
 
@@ -113,7 +117,7 @@ public class ArenaItem extends ItemStack {
         //setPortion
         if((i.getType().equals(Material.POTION) || i.getType().equals(Material.SPLASH_POTION) || i.getType().equals(Material.LINGERING_POTION))){
             ss = lst.get(3).split(", ");
-            PotionData pd = new MyPotionData(PotionType.valueOf(ss[0]), Boolean.parseBoolean(ss[1]), Boolean.parseBoolean(ss[2])).getPotionData();
+            PotionData pd = new RefPotionData(PotionType.valueOf(ss[0]), Boolean.parseBoolean(ss[1]), Boolean.parseBoolean(ss[2])).getPotionData();
             PotionMeta pm = (PotionMeta) im;
             assert pm != null;
             pm.setBasePotionData(pd);

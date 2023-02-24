@@ -1,4 +1,4 @@
-# YAML???
+# YAML
 FirstPoint:
   - 1
   - 0
@@ -16,17 +16,26 @@ BlueFlag:
   - 56
   - -80
 RedSpawn:
-  - -123
-  - 44
-  - -80
+  - -123.0
+  - 44.0
+  - -80.0
+  - 12.2
+  - 243.1
+  - world
 BlueSpawn:
-  - -68
-  - 44
-  - -80
+  - -123.0
+  - 44.0
+  - -80.0
+  - 12.2
+  - 243.1
+  - world
 ReturnPoint:
-  - 0
-  - 32
-  - 0
+  - -123.0
+  - 44.0
+  - -80.0
+  - 12.2
+  - 243.1
+  - world
 RedInv:
   item:
   - - DIAMOND_SWORD

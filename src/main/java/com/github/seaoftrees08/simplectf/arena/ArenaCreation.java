@@ -1,5 +1,7 @@
 package com.github.seaoftrees08.simplectf.arena;
 
+import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
+import com.github.seaoftrees08.simplectf.utils.Vec3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,57 +11,66 @@ public class ArenaCreation {
 
     private final Player author;
     private CreationPhase cp;
+    private Arena arena;
 
-    public ArenaCreation(Player player){
+    public ArenaCreation(Player player, String arenaName){
         author = player;
-        cp = CreationPhase.SET_FIRST_POINT;
-        flow();
+        cp = CreationPhase.STARTED;
+        arena = new Arena(arenaName);
+        flow(ArenaCreationCause.FIRST, new Vec3i(), null);
     }
 
     /**
      * “ü—Í‚ª•¡”‚ ‚é‚ªA‚Æ‚è‚ ‚¦‚¸”]Ž€‚Å‚±‚ê‚ð‘–‚ç‚¹‚Æ‚¯‚Î‚¢‚¢flow
-     *
+     * @param acc ”­¶Œ¹
      */
-    private void flow(){
+    public void flow(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
         switch (cp){
-            case SET_FIRST_POINT -> setFirstPoint();
-            case SET_SECOND_POINT -> setSecondPoint();
-            case SET_RED_FLAG -> setRedFlag();
-            case SET_BLUE_FLAG -> setBlueFlag();
-            case SET_RED_SPAWN -> setRedSpawn();
-            case SET_BLUE_SPAWN -> setBlueSpawn();
-            case SET_RETURN_POINT -> setReturnPoint();
+            case STARTED -> started(acc, loc, inv);
+            case SET_FIRST_POINT -> setFirstPoint(acc, loc, inv);
+            case SET_SECOND_POINT -> setSecondPoint(acc, loc, inv);
+            case SET_RED_FLAG -> setRedFlag(acc, loc, inv);
+            case SET_BLUE_FLAG -> setBlueFlag(acc, loc, inv);
+            case SET_RED_SPAWN -> setRedSpawn(acc, loc, inv);
+            case SET_BLUE_SPAWN -> setBlueSpawn(acc, loc, inv);
+            case SET_RETURN_POINT -> setReturnPoint(acc, loc, inv);
         }
     }
 
-    private void setFirstPoint(){
+    private void started(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
+        if(!acc.equals(ArenaCreationCause.FIRST)) return;
         author.getInventory().addItem(new ItemStack(Material.BLAZE_ROD));
         sendMessage("Arena-Creation has 7 phase.");
         sendMessage("1st: left punch first arena edge with BLAZE_ROD plz.");
-        cp = CreationPhase.SET_SECOND_POINT;
+        cp = CreationPhase.SET_FIRST_POINT;
     }
 
-    private void setSecondPoint(){
-
+    private void setFirstPoint(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
+        if(!acc.equals(ArenaCreationCause.EVENT)) return;
+        
     }
 
-    private void setRedFlag(){
-
-    }
-
-    private void setBlueFlag(){
+    private void setSecondPoint(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
 
     }
 
-    private void setRedSpawn(){
+    private void setRedFlag(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
 
     }
 
-    private void setBlueSpawn(){
+    private void setBlueFlag(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
 
     }
 
-    private void setReturnPoint(){
+    private void setRedSpawn(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
+
+    }
+
+    private void setBlueSpawn(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
+
+    }
+
+    private void setReturnPoint(ArenaCreationCause acc, Vec3i loc, PlayerInventoryItems inv){
 
     }
 
@@ -70,6 +81,7 @@ public class ArenaCreation {
 }
 
 enum CreationPhase{
+    STARTED,
     SET_FIRST_POINT,
     SET_SECOND_POINT,
     SET_RED_FLAG,

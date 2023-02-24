@@ -1,4 +1,4 @@
-package com.github.seaoftrees08.simplectf;
+package com.github.seaoftrees08.simplectf.utils;
 
 public class SctfPerms {
 

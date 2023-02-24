@@ -1,6 +1,8 @@
 package com.github.seaoftrees08.simplectf;
 
-import com.github.seaoftrees08.simplectf.reflection.MyPotionData;
+import com.github.seaoftrees08.simplectf.arena.ArenaManager;
+import com.github.seaoftrees08.simplectf.reflection.RefPotionData;
+import com.github.seaoftrees08.simplectf.utils.SctfPerms;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -41,10 +43,10 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin create <arena>
             if(args.length>=3 && args[1].equalsIgnoreCase("create") && sender instanceof Player){
-                //TODO: Arena Creation
                 if(getArenaList().contains(args[2])){
                     sendMessage(sender, "This arena already created!", ChatColor.RED);
                 }
+                ArenaManager.startCreation((Player) sender, args[2]);
                 return true;
             }
 
@@ -144,17 +146,6 @@ public class Commands implements CommandExecutor {
         if(args[0].equalsIgnoreCase("version")){
 
             Player p = (Player) sender;
-            ItemMeta im = p.getInventory().getItemInMainHand().getItemMeta();
-            PotionMeta pm = (PotionMeta) im;
-            PotionData pd = pm.getBasePotionData();
-
-            ItemStack is = new ItemStack(Material.SPLASH_POTION);
-            PotionMeta ipm = (PotionMeta) is.getItemMeta();
-            PotionData ipd = new MyPotionData(PotionType.FIRE_RESISTANCE, true, false).getPotionData();
-            ipm.setBasePotionData(ipd);
-            is.setItemMeta(ipm);
-
-            p.getInventory().addItem(is);
 
             p.sendMessage("debug: ");
 
