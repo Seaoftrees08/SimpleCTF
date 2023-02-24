@@ -17,7 +17,8 @@ public final class SimpleCTF extends JavaPlugin {
         this.saveDefaultConfig();
 
         //Commands
-        getCommand("sctf").setExecutor(new Commands(this));
+        getCommand("sctf").setExecutor(new Commands());
+        getCommand("sctf").setTabCompleter(new CmdTabCompletion());
 
         //Listener
         new PlayerListeners(this);

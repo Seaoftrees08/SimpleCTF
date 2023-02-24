@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
-    public Commands(SimpleCTF simpleCTF) {
+    public Commands() {
     }
 
     @Override
@@ -20,11 +20,11 @@ public class Commands implements CommandExecutor {
             sendHelp(sender);
             return true;
         }
-        
+
         // adminコマンド
         if(args[0].equalsIgnoreCase("admin")){
             //権限をお持ちでない場合
-            if(!sender.hasPermission("simplectf.admin")){
+            if(!sender.hasPermission(SctfPerms.ADMIN)){
                 sendMessage(sender, "You have not enough permission.", ChatColor.RED);
                 return true;
             }
@@ -91,7 +91,7 @@ public class Commands implements CommandExecutor {
 
         // 一般コマンド
         // /simplectf join <arena>
-        if(args.length>=2 && args[0].equalsIgnoreCase("join") && sender.hasPermission("simplectf.play")
+        if(args.length>=2 && args[0].equalsIgnoreCase("join") && sender.hasPermission(SctfPerms.PLAY)
                 && sender instanceof Player){
             //TODO: Arena Join
             return true;
