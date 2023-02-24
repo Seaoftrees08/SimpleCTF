@@ -4,11 +4,26 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SimpleCTF extends JavaPlugin {
 
+    private static SimpleCTF plugin;
+
+    public static SimpleCTF getSimpleCTF(){
+        return plugin;
+    }
+
     @Override
     public void onEnable() {
-        // Plugin startup logic
-        System.out.println("hi");
 
+        //config
+        this.saveDefaultConfig();
+
+        //Commands
+        getCommand("sctf").setExecutor(new Commands(this));
+
+        //Listener
+        new PlayerListeners(this);
+
+        super.onEnable();
+        plugin = this;
     }
 
     @Override
