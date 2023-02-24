@@ -1,0 +1,7 @@
+name: SimpleCTF
+version: '${version}'
+main: com.github.seaoftrees08.simplectf.Simplectf
+api-version: 1.19
+authors: [Seaoftrees08]
+description: You can play capture the flag!
+website: https://github.com/Seaoftrees08/SimpleCTF
