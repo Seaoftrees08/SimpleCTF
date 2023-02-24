@@ -1,6 +1,6 @@
 name: SimpleCTF
 version: '${version}'
-main: com.github.seaoftrees08.simplectf.Simplectf
+main: com.github.seaoftrees08.simplectf.SimpleCTF
 api-version: 1.19
 authors: [Seaoftrees08]
 description: This plugin is to play ctf

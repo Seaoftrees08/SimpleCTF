@@ -6,6 +6,5 @@ public class PlayerListeners implements Listener {
     public PlayerListeners(SimpleCTF simpleCTF) {
 
 
-
     }
 }

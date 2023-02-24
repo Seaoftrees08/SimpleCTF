@@ -1,10 +1,20 @@
 package com.github.seaoftrees08.simplectf;
 
+import com.github.seaoftrees08.simplectf.reflection.MyPotionData;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Commands implements CommandExecutor {
     public Commands() {
@@ -21,9 +31,9 @@ public class Commands implements CommandExecutor {
             return true;
         }
 
-        // adminƒRƒ}ƒ“ƒh
+        // adminã‚³ãƒãƒ³ãƒ‰
         if(args[0].equalsIgnoreCase("admin")){
-            //Œ ŒÀ‚ğ‚¨‚¿‚Å‚È‚¢ê‡
+            //æ¨©é™ã‚’ãŠæŒã¡ã§ãªã„å ´åˆ
             if(!sender.hasPermission(SctfPerms.ADMIN)){
                 sendMessage(sender, "You have not enough permission.", ChatColor.RED);
                 return true;
@@ -32,6 +42,9 @@ public class Commands implements CommandExecutor {
             // /simplectf admin create <arena>
             if(args.length>=3 && args[1].equalsIgnoreCase("create") && sender instanceof Player){
                 //TODO: Arena Creation
+                if(getArenaList().contains(args[2])){
+                    sendMessage(sender, "This arena already created!", ChatColor.RED);
+                }
                 return true;
             }
 
@@ -84,12 +97,12 @@ public class Commands implements CommandExecutor {
                 return true;
             }
 
-            //‚Ç‚Ì/simplectf admin ‚É‚àŠY“–‚µ‚È‚¢‚È‚çƒwƒ‹ƒv‚ğ•\¦
+            //ã©ã®/simplectf admin ã«ã‚‚è©²å½“ã—ãªã„ãªã‚‰ãƒ˜ãƒ«ãƒ—ã‚’è¡¨ç¤º
             sendAdminHelp(sender);
         }
 
 
-        // ˆê”ÊƒRƒ}ƒ“ƒh
+        // ä¸€èˆ¬ã‚³ãƒãƒ³ãƒ‰
         // /simplectf join <arena>
         if(args.length>=2 && args[0].equalsIgnoreCase("join") && sender.hasPermission(SctfPerms.PLAY)
                 && sender instanceof Player){
@@ -123,20 +136,36 @@ public class Commands implements CommandExecutor {
 
         // /simplectf start
         if(args[0].equalsIgnoreCase("start") && args.length==2){
-            //TODO: ‹­§ƒXƒ^[ƒg
+            //TODO: å¼·åˆ¶ã‚¹ã‚¿ãƒ¼ãƒˆ
             return true;
         }
 
         // /simplectf version
         if(args[0].equalsIgnoreCase("version")){
-            sendMessage(sender, "   ===== Simple CTF Infomation ===== ", ChatColor.GRAY);
-            sendMessage(sender, "This plugin is to play CTF!", ChatColor.GRAY);
-            sendMessage(sender, "version: "+SimpleCTF.getSimpleCTF().getDescription().getVersion(), ChatColor.GRAY);
-            sendMessage(sender, "Author: Seaoftrees08 (Minecraft ID)", ChatColor.GRAY);
+
+            Player p = (Player) sender;
+            ItemMeta im = p.getInventory().getItemInMainHand().getItemMeta();
+            PotionMeta pm = (PotionMeta) im;
+            PotionData pd = pm.getBasePotionData();
+
+            ItemStack is = new ItemStack(Material.SPLASH_POTION);
+            PotionMeta ipm = (PotionMeta) is.getItemMeta();
+            PotionData ipd = new MyPotionData(PotionType.FIRE_RESISTANCE, true, false).getPotionData();
+            ipm.setBasePotionData(ipd);
+            is.setItemMeta(ipm);
+
+            p.getInventory().addItem(is);
+
+            p.sendMessage("debug: ");
+
+//            sendMessage(sender, "   ===== Simple CTF Infomation ===== ", ChatColor.GRAY);
+//            sendMessage(sender, "This plugin is to play CTF!", ChatColor.GRAY);
+//            sendMessage(sender, "version: "+SimpleCTF.getSimpleCTF().getDescription().getVersion(), ChatColor.GRAY);
+//            sendMessage(sender, "Author: Seaoftrees08 (Minecraft ID)", ChatColor.GRAY);
             return true;
         }
 
-        //ÅŒã‚Ü‚Å‚Ç‚ê‚É‚àŠY“–‚µ‚È‚¢ê‡ƒwƒ‹ƒv‚ğ•\¦
+        //æœ€å¾Œã¾ã§ã©ã‚Œã«ã‚‚è©²å½“ã—ãªã„å ´åˆãƒ˜ãƒ«ãƒ—ã‚’è¡¨ç¤º
         sendHelp(sender);
         return true;
     }
@@ -176,4 +205,21 @@ public class Commands implements CommandExecutor {
         sendMessage(sender, "/sctf admin cmdlist            #view usable command list", ChatColor.GRAY);
     }
 
+    private List<String> getArenaList(){
+        //TODO: getEnableArena
+        return new ArrayList<>();
+    }
+    private List<String> getEnableArenaList(){
+        //TODO: getEnableArena
+        return new ArrayList<>();
+    }
+
+    private List<String> getDisableArenaList(){
+        //TODO: getEnableArena
+        return new ArrayList<>();
+    }
+    private List<String> getCmdList(){
+        //TODO: getCmds
+        return new ArrayList<>();
+    }
 }
