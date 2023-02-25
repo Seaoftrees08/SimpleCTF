@@ -2,6 +2,7 @@ package com.github.seaoftrees08.simplectf;
 
 import com.github.seaoftrees08.simplectf.arena.ArenaCreationCause;
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
+import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.Vec3i;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -24,7 +25,7 @@ public class PlayerListeners implements Listener {
         }
 
         //プレイ中の破壊禁止
-        if(ArenaManager.isJoined(name)){
+        if(PlayerManager.isJoined(name)){
             e.setCancelled(true);
         }
     }

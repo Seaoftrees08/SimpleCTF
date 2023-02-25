@@ -1,6 +1,7 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
+import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import com.github.seaoftrees08.simplectf.utils.Vec3i;
 import org.bukkit.Location;
@@ -103,6 +104,9 @@ public class Arena {
         //blue left Hand
         ItemStack blueLeftHand = new ArenaItem(yml.getStringList(ArenaYamlPath.BLUE_INV_LEFTHAND));
         blueInv = new PlayerInventoryItems(blueMainItems, blueHead, blueChest, blueLeggings, blueBoots, blueLeftHand);
+
+        //canPlay
+
     }
 
     public void setFirstPoint(Vec3i v){
@@ -143,6 +147,10 @@ public class Arena {
 
     public void setEnable(boolean b){
         this.enable = b;
+    }
+
+    public boolean isEnable(){
+        return enable;
     }
 
     public void save(){

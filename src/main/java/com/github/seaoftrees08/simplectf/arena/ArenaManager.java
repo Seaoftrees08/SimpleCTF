@@ -1,6 +1,7 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
+import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import com.github.seaoftrees08.simplectf.utils.Vec3i;
 import org.bukkit.ChatColor;
@@ -11,13 +12,14 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class ArenaManager {
 
     public static final String ARENA_LIST_PATH = "ArenaList";
     private static HashMap<String, String> creating = new HashMap<>();//PlayerName ArenaName
     private static HashMap<String, ArenaCreation> creatingArena = new HashMap<>();//arenaName, Arena
-    private static HashMap<String, String> joined = new HashMap<>();//PlayerName ArenaName
+    private static HashMap<String, PlayArena> playing = new HashMap<>();//arenaName, PlayArena
 
     public ArenaManager(){}
 
@@ -65,58 +67,62 @@ public class ArenaManager {
     }
 
     /**
-     * Arenaに参加した際に実行
-     * 参加ステータスを付与する
-     * @param player 付与するplayer
-     * @param arenaName 参加するArena名
-     * @return 参加に成功したかどうか(成功したらtrue)
-     */
-    public static boolean join(Player player, String arenaName){
-        if(joined.containsKey(player.getName())) return false;
-        joined.put(player.getName(), arenaName);
-        return true;
-    }
-
-    /**
-     * プレイヤーがアリーナに参加しているかどうか
-     * @param playerName 検査するplayerName
-     * @return 参加しているか（していればtrue）
-     */
-    public static boolean isJoined(String playerName){
-        return joined.containsKey(playerName);
-    }
-
-    /**
      * Arenaの名前一覧をconfig.ymlから読み取って返す
      * @return ArenaNameの一覧
      */
     public static List<String> loadArenaNameList(){
-        FileConfiguration fc = SimpleCTF.getSimpleCTF().getConfig();
-        return fc.getStringList(ARENA_LIST_PATH);
+        return SimpleCTF.getSimpleCTF().getConfig().getStringList(ARENA_LIST_PATH);
     }
 
     /**
-     * 新しいArenaを追加してconfigにセーブする
-     * @param newArenaName 新しいArenaName
+     * arenaNameに参加しているプレイヤーリストを返す
+     * @param arenaName 検査するArena名
+     * @return
      */
-    public static void saveArenaNameList(String newArenaName){
-        FileConfiguration fc = SimpleCTF.getSimpleCTF().getConfig();
-        List<String> lst = loadArenaNameList();
-        lst.add(newArenaName);
-        fc.set(ARENA_LIST_PATH, lst);
-        SimpleCTF.getSimpleCTF().saveConfig();
+    public static List<String> joinedPlayerNameList(String arenaName){
+        if(!loadArenaNameList().contains(arenaName)) return new ArrayList<>();
+        return playing.get(arenaName).joinedPlayerNameList();
     }
 
     /**
-     * ArenaのListを取得する
-     * @return ArenaのList
+     * playArenaのListを返す
+     * @return playArenaのList
      */
-    public static List<Arena> loadArenaList(){
-        ArrayList<Arena> lst = new ArrayList<>();
-        for(String name : loadArenaNameList()){
-            lst.add(new Arena(name));
+    public static List<PlayArena> getPlayArenaList(){
+        return playing.values().stream().toList();
+    }
+
+    /**
+     * 指定されたarenaNameにplayerを参加させる
+     * @param player 参加させるPlayer
+     * @param arenaName 対象のarenaName
+     */
+    public static void join(Player player, String arenaName){
+        if(!playing.containsKey(arenaName)) playing.put(arenaName, new PlayArena(arenaName));
+        PlayArena pa = playing.get(arenaName);
+        pa.join(player);
+        PlayerManager.sendNormalMessage(player, "You joined Arena! (" + pa.name + ")");
+
+        if(pa.canPlay()){
+            //TODO:Start!
+            System.out.println("START! START! START!");
         }
-        return lst;
     }
 
+    /**
+     * playerNameをarenaNameから退場させる
+     * この退場によってアリーナが誰もいなくなるようであればplayingから削除する
+     * @param playerName 退場させるplayerName
+     * @param arenaName 退場させるarenaName
+     */
+    public static void leave(String playerName, String arenaName){
+        PlayArena pa = playing.get(arenaName);
+        pa.leave(playerName);
+        if(pa.joinedPlayerList().isEmpty()){
+            playing.remove(arenaName);
+            PlayerManager.sendNormalMessage(
+                    Objects.requireNonNull(SimpleCTF.getSimpleCTF().getServer().getPlayer(playerName)),
+                    "You leaved Arena! (" + pa.name + ")");
+        }
+    }
 }

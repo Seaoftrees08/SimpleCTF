@@ -4,6 +4,7 @@ import com.github.seaoftrees08.simplectf.arena.Arena;
 import com.github.seaoftrees08.simplectf.arena.ArenaCreationCause;
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import com.github.seaoftrees08.simplectf.reflection.RefPotionData;
+import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import com.github.seaoftrees08.simplectf.utils.SctfPerms;
 import org.bukkit.ChatColor;
@@ -20,6 +21,8 @@ import org.bukkit.potion.PotionType;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Commands implements CommandExecutor {
@@ -146,13 +149,25 @@ public class Commands implements CommandExecutor {
         // /simplectf join <arena>
         if(args.length>=2 && args[0].equalsIgnoreCase("join") && sender.hasPermission(SctfPerms.PLAY)
                 && sender instanceof Player){
-            //TODO: Arena Join
+            if(ArenaManager.loadArenaNameList().contains(args[1]) && new Arena(args[1]).isEnable()){
+                Player p = (Player) sender;
+                PlayerManager.join(p, args[1]);
+            }else if(ArenaManager.loadArenaNameList().contains(args[1]) && !new Arena(args[1]).isEnable()){
+                sendMessage(sender, args[1] + " is disabled.", ChatColor.GRAY);
+            }else{
+                sendMessage(sender, args[1] + " is not exist.", ChatColor.GRAY);
+            }
             return true;
         }
 
         // /simplectf leave
         if(args[0].equalsIgnoreCase("leave") && sender instanceof Player){
-            //TODO: Arena Leave
+            Player p = (Player) sender;
+            if(PlayerManager.isJoined(p.getName())){
+                PlayerManager.leave(p.getName());
+            }else{
+                sendMessage(sender, "You are not join anywhere.", ChatColor.GRAY);
+            }
             return true;
         }
 
@@ -183,9 +198,9 @@ public class Commands implements CommandExecutor {
         // /simplectf version
         if(args[0].equalsIgnoreCase("version")){
 
-            Player p = (Player) sender;
+            //TODO: 直すこと！
+            System.out.println("debug: " + ArenaManager.loadArenaNameList().contains("alpha"));
 
-            p.sendMessage("debug: ");
 
 //            sendMessage(sender, "   ===== Simple CTF Infomation ===== ", ChatColor.GRAY);
 //            sendMessage(sender, "This plugin is to play CTF!", ChatColor.GRAY);
