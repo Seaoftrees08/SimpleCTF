@@ -17,13 +17,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.checkerframework.checker.units.qual.A;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Commands implements CommandExecutor {
     public Commands() {
@@ -200,7 +199,8 @@ public class Commands implements CommandExecutor {
         if(args[0].equalsIgnoreCase("version")){
 
             //TODO: 直すこと！
-            System.out.println("debug: " + ArenaManager.loadArenaNameList().contains("alpha"));
+            PotionEffect pe = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 40, 5);
+            Objects.requireNonNull((Player) sender).addPotionEffect(pe);
 
 
 //            sendMessage(sender, "   ===== Simple CTF Infomation ===== ", ChatColor.GRAY);

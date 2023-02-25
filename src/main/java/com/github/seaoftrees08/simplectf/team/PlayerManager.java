@@ -2,15 +2,15 @@ package com.github.seaoftrees08.simplectf.team;
 
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class PlayerManager {
 
+    public static ArrayList<Player> spectator = new ArrayList<>();
     public static final String NONE = "not join";
     public PlayerManager(){
     }
@@ -72,7 +72,26 @@ public class PlayerManager {
      * @param playerName 退場させるプレイヤー
      */
     public static void leave(String playerName){
+
         ArenaManager.leave(playerName, whereJoined(playerName));
+    }
+
+    /**
+     * spectatorに入れる
+     * @param p いれるPlayer
+     * @param arenaName 入れるarena名
+     */
+    public static void joinSpectator(Player p, String arenaName){
+        //Scoreboard忘れないこと
+    }
+
+    /**
+     * spectatorから退出させる
+     * @param p 退出させるPlayer
+     * @param arenaName 退出させるarena名
+     */
+    public static void leaveSpectator(Player p, String arenaName){
+        //Scoreboard忘れないこと
     }
 
     /**

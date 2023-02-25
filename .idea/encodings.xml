@@ -10,6 +10,7 @@
     <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/arena/ArenaItem.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/arena/ArenaManager.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/arena/PlayArena.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/clockwork/Waiting.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/reflection/RefPotionData.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/team/PlayerManager.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/utils/PlayerInventoryItems.java" charset="UTF-8" />

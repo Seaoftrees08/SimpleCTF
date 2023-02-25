@@ -1,6 +1,7 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
+import com.github.seaoftrees08.simplectf.clockwork.Waiting;
 import com.github.seaoftrees08.simplectf.team.ArenaPlayer;
 import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
@@ -105,9 +106,14 @@ public class ArenaManager {
         PlayerManager.sendNormalMessage(ap.player, "You joined Arena! (" + playArena.name + ")");
 
         if(playArena.canPlay()){
-            //TODO:Start!
-            System.out.println("START! START! START!");
+            playArena.broadcastInArena("Starting countdown for beginning game!");
+            //0tick後から、60秒間、20tickごとに実行するタイマー
+            new Waiting(60, playArena.name).runTaskTimer(SimpleCTF.getSimpleCTF(), 0, 20);
         }
+    }
+
+    public static PlayArena getPlayArena(String arenaName){
+        return playing.getOrDefault(arenaName, new PlayArena(arenaName));
     }
 
     /**
@@ -119,11 +125,13 @@ public class ArenaManager {
     public static void leave(String playerName, String arenaName){
         PlayArena pa = playing.get(arenaName);
         pa.leave(playerName);
+        PlayerManager.sendNormalMessage(
+                Objects.requireNonNull(SimpleCTF.getSimpleCTF().getServer().getPlayer(playerName)),
+                "You leaved Arena! (" + pa.name + ")"
+        );
+
         if(pa.joinedPlayerList().isEmpty()){
             playing.remove(arenaName);
-            PlayerManager.sendNormalMessage(
-                    Objects.requireNonNull(SimpleCTF.getSimpleCTF().getServer().getPlayer(playerName)),
-                    "You leaved Arena! (" + pa.name + ")");
         }
     }
 }

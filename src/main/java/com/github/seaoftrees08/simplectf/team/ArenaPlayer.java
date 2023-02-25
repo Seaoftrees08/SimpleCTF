@@ -14,6 +14,7 @@ public class ArenaPlayer {
         this.player = player;
         this.arenaName = arenaName;
         backup = new PlayerInventoryItems(player.getInventory());
+        backup.clearInventory(player);
     }
 
     public void restoreInventory(){

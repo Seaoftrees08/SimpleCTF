@@ -82,12 +82,7 @@ public class PlayerInventoryItems {
     public void setInventory(Player p){
         PlayerInventory pi = p.getInventory();
 
-        pi.clear();
-        pi.setHelmet(new ItemStack(Material.AIR));
-        pi.setChestplate(new ItemStack(Material.AIR));
-        pi.setLeggings(new ItemStack(Material.AIR));
-        pi.setBoots(new ItemStack(Material.AIR));
-        pi.setItemInOffHand(new ItemStack(Material.AIR));
+        clearInventory(p);
 
         for(ItemStack is : mainItems) pi.addItem(is);//ほんまか?
         pi.setHelmet(headItem);
@@ -96,5 +91,15 @@ public class PlayerInventoryItems {
         pi.setBoots(bootsItem);
         pi.setItemInOffHand(leftHandItem);
 
+    }
+
+    public void clearInventory(Player p){
+        PlayerInventory pi = p.getInventory();
+        pi.clear();
+        pi.setHelmet(new ItemStack(Material.AIR));
+        pi.setChestplate(new ItemStack(Material.AIR));
+        pi.setLeggings(new ItemStack(Material.AIR));
+        pi.setBoots(new ItemStack(Material.AIR));
+        pi.setItemInOffHand(new ItemStack(Material.AIR));
     }
 }
