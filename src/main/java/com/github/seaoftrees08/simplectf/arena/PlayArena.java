@@ -1,16 +1,15 @@
 package com.github.seaoftrees08.simplectf.arena;
 
-import com.github.seaoftrees08.simplectf.team.PlayerManager;
+import com.github.seaoftrees08.simplectf.team.ArenaPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class PlayArena extends Arena{
 
-    private ArrayList<Player> redTeamMember = new ArrayList<>();
-    private ArrayList<Player> blueTeamMemeber = new ArrayList<>();
+    private ArrayList<ArenaPlayer> redTeamMember = new ArrayList<>();
+    private ArrayList<ArenaPlayer> blueTeamMember = new ArrayList<>();
 
     public PlayArena(String name) {
         super(name);
@@ -20,13 +19,15 @@ public class PlayArena extends Arena{
      * PlayArenaにプレイヤーを参加させる
      * 少ないほうのチームに参加をさせる.
      *
-     * @param player 参加させるPlayer
+     * @param player 参加させるArenaPlayer
      */
-    public void join(Player player){
-        if(redTeamMember.size() < blueTeamMemeber.size()){
+    public void join(ArenaPlayer player){
+        if(redTeamMember.size() < blueTeamMember.size()){
             redTeamMember.add(player);
+            player.setGameInventory(redInv);
         }else{
-            blueTeamMemeber.add(player);
+            blueTeamMember.add(player);
+            player.setGameInventory(blueInv);
         }
     }
 
@@ -46,8 +47,8 @@ public class PlayArena extends Arena{
      * @return プレイヤーのリスト
      */
     public List<Player> joinedPlayerList(){
-        List<Player> list = new ArrayList<>(List.copyOf(redTeamMember));
-        list.addAll(List.copyOf(blueTeamMemeber));
+        List<Player> list = new ArrayList<>(redTeamMember.stream().map(ap -> ap.player).toList());
+        list.addAll(blueTeamMember.stream().map(ap -> ap.player).toList());
         return list;
     }
 
@@ -65,7 +66,7 @@ public class PlayArena extends Arena{
      * @return 各チームに1人以上プレイヤーがいればtrue
      */
     public boolean canPlay(){
-        return !redTeamMember.isEmpty() && !blueTeamMemeber.isEmpty();
+        return !redTeamMember.isEmpty() && !blueTeamMember.isEmpty();
     }
 
     /**
@@ -73,7 +74,7 @@ public class PlayArena extends Arena{
      * @param playerName 退場させるプレイヤー名
      */
     public void leave(String playerName){
-        redTeamMember.removeIf(p -> p.getName().equals(playerName));
-        blueTeamMemeber.removeIf(p -> p.getName().equals(playerName));
+        redTeamMember.removeIf(p -> p.player.getName().equals(playerName));
+        blueTeamMember.removeIf(p -> p.player.getName().equals(playerName));
     }
 }

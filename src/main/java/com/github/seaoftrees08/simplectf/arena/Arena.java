@@ -27,8 +27,8 @@ public class Arena {
     private ArenaLocation redSpawn;
     private ArenaLocation blueSpawn;
     private ArenaLocation returnPoint;
-    private PlayerInventoryItems redInv;
-    private PlayerInventoryItems blueInv;
+    protected PlayerInventoryItems redInv;
+    protected PlayerInventoryItems blueInv;
     private boolean enable;
 
     public Arena(String name){

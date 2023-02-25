@@ -173,7 +173,8 @@ public class Commands implements CommandExecutor {
 
         // /simplectf list
         if(args[0].equalsIgnoreCase("list")){
-            //TODO: Arena List
+            sendMessage(sender, "   ===== Arena List =====", ChatColor.GRAY);
+            for(String arenaName : ArenaManager.loadArenaNameList()) sendMessage(sender, arenaName, ChatColor.GRAY);
             return true;
         }
 

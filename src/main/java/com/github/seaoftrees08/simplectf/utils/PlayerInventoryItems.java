@@ -3,6 +3,7 @@ package com.github.seaoftrees08.simplectf.utils;
 
 import com.github.seaoftrees08.simplectf.arena.ArenaItem;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -19,6 +20,9 @@ public class PlayerInventoryItems {
     private ItemStack bootsItem = new ItemStack(Material.AIR);
     private ItemStack leftHandItem = new ItemStack(Material.AIR);
 
+    public PlayerInventoryItems(){
+
+    }
     public PlayerInventoryItems(PlayerInventory pi){
         mainItems.addAll(Arrays.asList(pi.getContents()));
         headItem = pi.getHelmet();
@@ -69,5 +73,28 @@ public class PlayerInventoryItems {
 
     public List<String> getLeftHandItemStringList(){
         return new ArenaItem(leftHandItem).getStringList();
+    }
+
+    /**
+     * Playerのインベントリを上書き設定する。中身はthis
+     * @param p 設定するplayer
+     */
+    public void setInventory(Player p){
+        PlayerInventory pi = p.getInventory();
+
+        pi.clear();
+        pi.setHelmet(new ItemStack(Material.AIR));
+        pi.setChestplate(new ItemStack(Material.AIR));
+        pi.setLeggings(new ItemStack(Material.AIR));
+        pi.setBoots(new ItemStack(Material.AIR));
+        pi.setItemInOffHand(new ItemStack(Material.AIR));
+
+        for(ItemStack is : mainItems) pi.addItem(is);//ほんまか?
+        pi.setHelmet(headItem);
+        pi.setChestplate(chestItem);
+        pi.setLeggings(leggingsItem);
+        pi.setBoots(bootsItem);
+        pi.setItemInOffHand(leftHandItem);
+
     }
 }

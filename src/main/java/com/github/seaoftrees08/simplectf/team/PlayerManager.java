@@ -2,7 +2,10 @@ package com.github.seaoftrees08.simplectf.team;
 
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.Optional;
 
@@ -26,7 +29,8 @@ public class PlayerManager {
             PlayerManager.sendNormalMessage(player, "You have already joined other arena.");
             return false;
         }else{
-            ArenaManager.join(player, arenaName);
+            initStatus(player);//PlayerのPotionEffectをリセット
+            ArenaManager.join(new ArenaPlayer(player, arenaName), arenaName);//ArenaPlayer作成時にインベントリのバックアップを作成
         }
         return true;
     }
@@ -69,5 +73,15 @@ public class PlayerManager {
      */
     public static void leave(String playerName){
         ArenaManager.leave(playerName, whereJoined(playerName));
+    }
+
+    /**
+     * ステータスを初期化します
+     * @param p 初期化を行うPlayer
+     */
+    private static void initStatus(Player p){
+        for(PotionEffect pe : p.getActivePotionEffects()) p.removePotionEffect(pe.getType());
+        p.setHealth(20);
+        p.setFoodLevel(20);
     }
 }

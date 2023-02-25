@@ -1,6 +1,7 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
+import com.github.seaoftrees08.simplectf.team.ArenaPlayer;
 import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import com.github.seaoftrees08.simplectf.utils.Vec3i;
@@ -94,16 +95,16 @@ public class ArenaManager {
 
     /**
      * 指定されたarenaNameにplayerを参加させる
-     * @param player 参加させるPlayer
+     * @param ap 参加させるPlayer
      * @param arenaName 対象のarenaName
      */
-    public static void join(Player player, String arenaName){
+    public static void join(ArenaPlayer ap, String arenaName){
         if(!playing.containsKey(arenaName)) playing.put(arenaName, new PlayArena(arenaName));
-        PlayArena pa = playing.get(arenaName);
-        pa.join(player);
-        PlayerManager.sendNormalMessage(player, "You joined Arena! (" + pa.name + ")");
+        PlayArena playArena = playing.get(arenaName);
+        playArena.join(ap);
+        PlayerManager.sendNormalMessage(ap.player, "You joined Arena! (" + playArena.name + ")");
 
-        if(pa.canPlay()){
+        if(playArena.canPlay()){
             //TODO:Start!
             System.out.println("START! START! START!");
         }
