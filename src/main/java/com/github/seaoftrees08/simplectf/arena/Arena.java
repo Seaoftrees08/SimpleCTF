@@ -2,7 +2,6 @@ package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
-import com.github.seaoftrees08.simplectf.utils.Utils;
 import com.github.seaoftrees08.simplectf.utils.Vec3i;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,35 +10,38 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Arena {
 
-    private final String name;
+    public final String name;
     private final FileConfiguration yml;
+    private final File file;
     private Vec3i firstPoint;
     private Vec3i secondPoint;
     private Vec3i redFlag;
     private Vec3i blueFlag;
-    private Location redSpawn;
-    private Location blueSpawn;
-    private Location returnPoint;
+    private ArenaLocation redSpawn;
+    private ArenaLocation blueSpawn;
+    private ArenaLocation returnPoint;
     private PlayerInventoryItems redInv;
     private PlayerInventoryItems blueInv;
     private boolean enable;
 
     public Arena(String name){
         this.name = name;
-        yml = YamlConfiguration.loadConfiguration(new File(SimpleCTF.getSimpleCTF().getDataFolder(), name+ ".yml"));
+        file = new File(SimpleCTF.getSimpleCTF().getDataFolder(), name+ ".yml");
+        yml = YamlConfiguration.loadConfiguration(file);
 
         firstPoint = new Vec3i(yml.getIntegerList(ArenaYamlPath.FIRST_POINT));
         secondPoint = new Vec3i(yml.getIntegerList(ArenaYamlPath.SECOND_POINT));
         redFlag = new Vec3i(yml.getIntegerList(ArenaYamlPath.RED_FLAG));
         blueFlag = new Vec3i(yml.getIntegerList(ArenaYamlPath.BLUE_FLAG));
-        redSpawn = Utils.listToLocation(yml.getStringList(ArenaYamlPath.RED_SPAWN));
-        blueSpawn = Utils.listToLocation(yml.getStringList(ArenaYamlPath.BLUE_SPAWN));
-        returnPoint = Utils.listToLocation(yml.getStringList(ArenaYamlPath.RETURN_POINT));
+        redSpawn = new ArenaLocation(yml.getStringList(ArenaYamlPath.RED_SPAWN));
+        blueSpawn = new ArenaLocation(yml.getStringList(ArenaYamlPath.BLUE_SPAWN));
+        returnPoint = new ArenaLocation(yml.getStringList(ArenaYamlPath.RETURN_POINT));
         enable = yml.getBoolean(ArenaYamlPath.ENABLE);
 
         //redInventory
@@ -120,15 +122,15 @@ public class Arena {
     }
 
     public void setRedSpawn(Location loc){
-        this.redSpawn = loc;
+        this.redSpawn = new ArenaLocation(loc);
     }
 
     public void setBlueSpawn(Location loc){
-        this.blueSpawn = loc;
+        this.blueSpawn = new ArenaLocation(loc);
     }
 
     public void setReturnPoint(Location loc){
-        this.returnPoint = loc;
+        this.returnPoint = new ArenaLocation(loc);
     }
 
     public void setRedInv(PlayerInventoryItems pii){
@@ -143,40 +145,32 @@ public class Arena {
         this.enable = b;
     }
 
-    /**
-     * Arenaの名前一覧をconfig.ymlから読み取って返す
-     * @return ArenaNameの一覧
-     */
-    public static List<String> loadArenaNameList(){
-        FileConfiguration fc = SimpleCTF.getSimpleCTF().getConfig();
-        return fc.getStringList("ArenaList");
-    }
-
-    /**
-     * 新しいArenaを追加してconfigにセーブする
-     * @param newArenaName 新しいArenaName
-     */
-    public static void saveArenaNameList(String newArenaName){
-        FileConfiguration fc = SimpleCTF.getSimpleCTF().getConfig();
-        List<String> lst = loadArenaNameList();
-        lst.add(newArenaName);
-        fc.set("ArenaList", lst);
+    public void save(){
+        //ArenaList
+        List<String> arenaList = ArenaManager.loadArenaNameList();
+        if(!arenaList.contains(name)) arenaList.add(name);
+        SimpleCTF.getSimpleCTF().getConfig().set(ArenaManager.ARENA_LIST_PATH, arenaList);
         SimpleCTF.getSimpleCTF().saveConfig();
-    }
 
-    /**
-     * ArenaのListを取得する
-     * @return ArenaのList
-     */
-    public static List<Arena> getArenaList(){
-        ArrayList<Arena> lst = new ArrayList<>();
-        for(String name : loadArenaNameList()){
-            lst.add(new Arena(name));
+        yml.set(ArenaYamlPath.FIRST_POINT, firstPoint.getList());     //firstPoint
+        yml.set(ArenaYamlPath.SECOND_POINT, secondPoint.getList());   //secondPoint
+        yml.set(ArenaYamlPath.RED_FLAG, redFlag.getList());           //redFlag
+        yml.set(ArenaYamlPath.BLUE_FLAG, blueFlag.getList());         //blueFlag
+        yml.set(ArenaYamlPath.RED_SPAWN, redSpawn.getStringList());         //redSpawn
+        yml.set(ArenaYamlPath.BLUE_SPAWN, blueSpawn.getStringList());       //blueSpawn
+        yml.set(ArenaYamlPath.RETURN_POINT, returnPoint.getStringList());   //returnPoint
+        yml.set(ArenaYamlPath.RED_INV_ITEMS, redInv.getMainItemStringList());   //redMainItem
+        yml.set(ArenaYamlPath.RED_INV_ARMOR, redInv.getArmorList());            //redArmor
+        yml.set(ArenaYamlPath.RED_INV_LEFTHAND, redInv.getLeftHandItemStringList()); //redLeftHand
+        yml.set(ArenaYamlPath.BLUE_INV_ITEMS, blueInv.getMainItemStringList());   //blueMainItem
+        yml.set(ArenaYamlPath.BLUE_INV_ARMOR, blueInv.getArmorList());            //blueArmor
+        yml.set(ArenaYamlPath.BLUE_INV_LEFTHAND, blueInv.getLeftHandItemStringList()); //blueLeftHand
+        yml.set(ArenaYamlPath.ENABLE, enable);
+        try {
+            yml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return lst;
     }
-
-
-
 
 }

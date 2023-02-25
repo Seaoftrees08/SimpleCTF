@@ -1,7 +1,9 @@
 package com.github.seaoftrees08.simplectf;
 
+import com.github.seaoftrees08.simplectf.arena.ArenaCreationCause;
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import com.github.seaoftrees08.simplectf.reflection.RefPotionData;
+import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import com.github.seaoftrees08.simplectf.utils.SctfPerms;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -52,7 +54,15 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin setInv
             if(args.length==2 && args[1].equalsIgnoreCase("setInv") && sender instanceof Player){
-                //TODO: Arena Creation @setInv
+                Player p = (Player) sender;
+                ArenaManager.doCreationFlow(sender.getName(), ArenaCreationCause.COMMAND, null, new PlayerInventoryItems(p.getInventory()));
+                return true;
+            }
+
+            // /simplectf admin setLoc
+            if(args.length==2 && args[1].equalsIgnoreCase("setLoc") && sender instanceof Player){
+                Player p = (Player) sender;
+                ArenaManager.doCreationFlow(sender.getName(), ArenaCreationCause.COMMAND, p.getLocation(), null);
                 return true;
             }
 
@@ -101,6 +111,7 @@ public class Commands implements CommandExecutor {
 
             //どの/simplectf admin にも該当しないならヘルプを表示
             sendAdminHelp(sender);
+            return true;
         }
 
 
@@ -189,6 +200,7 @@ public class Commands implements CommandExecutor {
         sendMessage(sender, "/sctf admin create <arena>     #create <arena>", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin remove <arena>     #remove <arena>", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin setInv             #use this when creating arena", ChatColor.GRAY);
+        sendMessage(sender, "/sctf admin setLoc             #use this when creating arena", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin enable <arena>     #enable <arena>", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin disable <arena>    #disable <arena>", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin addCmd <cmd>       #add usable command contain /", ChatColor.GRAY);

@@ -23,7 +23,7 @@ public class ArenaItem extends ItemStack {
         super(listToItem(lst));
     }
 
-    public List<String> getStrinList(){
+    public List<String> getStringList(){
         return itemToList(this);
     }
 

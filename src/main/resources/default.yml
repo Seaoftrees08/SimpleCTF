@@ -46,23 +46,23 @@ RedInv:
     - '1'
     - 'DAMAGE_ALL, 3, '
     - ''
-    armor:
-    - - LEATHER_BOOTS
+  armor:
+  - - LEATHER_BOOTS
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_LEGGINGS
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_CHESTPLATE
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_HELMET
       - '1'
-      - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
-      - ''
-    - - LEATHER_LEGGINGS
-      - '1'
-      - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
-      - ''
-    - - LEATHER_CHESTPLATE
-      - '1'
-      - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
-      - ''
-    - - LEATHER_HELMET
-      - '1'
-      - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
-      - ''
+  - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+  - ''
 BlueInv:
   item:
   - - DIAMOND_SWORD

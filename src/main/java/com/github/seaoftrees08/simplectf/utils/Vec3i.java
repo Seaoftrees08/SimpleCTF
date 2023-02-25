@@ -21,7 +21,7 @@ public class Vec3i {
     }
 
     public Vec3i(List<Integer> lst){
-        if(lst != null || lst.size()==3){
+        if(lst != null && lst.size()==3){
             x = lst.get(0);
             y = lst.get(1);
             z = lst.get(2);

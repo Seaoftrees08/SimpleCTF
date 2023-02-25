@@ -12,7 +12,7 @@ public class CmdTabCompletion implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 
-        // /simplectf <‚±‚±‚Ì•âŠ®>
+        // /simplectf <ã“ã“ã®è£œå®Œ>
         if(cmd.getName().equalsIgnoreCase("simplectf") && args.length==0){
             List<String> arguments = new ArrayList<>();
             if(sender.hasPermission(SctfPerms.PLAY)) arguments.add("join");
@@ -26,17 +26,17 @@ public class CmdTabCompletion implements TabCompleter {
             return arguments;
         }
 
-        // /simplectf join <‚±‚±‚Ì•âŠ®>
+        // /simplectf join <ã“ã“ã®è£œå®Œ>
         if(args.length==1 && args[0].equalsIgnoreCase("join")){
             return getEnableArenaList();
         }
 
-        // /simplectf watch <‚±‚±‚Ì•âŠ®>
+        // /simplectf watch <ã“ã“ã®è£œå®Œ>
         if(args.length==1 && args[0].equalsIgnoreCase("watch")){
             return getEnableArenaList();
         }
 
-        // /simplectf admin <‚±‚±‚Ì•âŠ®>
+        // /simplectf admin <ã“ã“ã®è£œå®Œ>
         if(args.length==1 && args[0].equalsIgnoreCase("admin") && sender.hasPermission(SctfPerms.ADMIN)){
             List<String> arguments = new ArrayList<>();
             arguments.add("create");
@@ -50,25 +50,25 @@ public class CmdTabCompletion implements TabCompleter {
             return arguments;
         }
 
-        // /simplectf admin remove <‚±‚±‚Ì•âŠ®>
+        // /simplectf admin remove <ã“ã“ã®è£œå®Œ>
         if(args.length==2 && args[0].equalsIgnoreCase("admin") &&
                 args[1].equalsIgnoreCase("remove") && sender.hasPermission(SctfPerms.ADMIN)){
             return getDisableArenaList();
         }
 
-        // /simplectf admin enable <‚±‚±‚Ì•âŠ®>
+        // /simplectf admin enable <ã“ã“ã®è£œå®Œ>
         if(args.length==2 && args[0].equalsIgnoreCase("admin") &&
                 args[1].equalsIgnoreCase("enable") && sender.hasPermission(SctfPerms.ADMIN)){
             return getDisableArenaList();
         }
 
-        // /simplectf admin disable <‚±‚±‚Ì•âŠ®>
+        // /simplectf admin disable <ã“ã“ã®è£œå®Œ>
         if(args.length==2 && args[0].equalsIgnoreCase("admin") &&
                 args[1].equalsIgnoreCase("disable") && sender.hasPermission(SctfPerms.ADMIN)){
             return getEnableArenaList();
         }
 
-        // /simplectf admin rmCmd <‚±‚±‚Ì•âŠ®>
+        // /simplectf admin rmCmd <ã“ã“ã®è£œå®Œ>
         if(args.length==2 && args[0].equalsIgnoreCase("admin") &&
                 args[1].equalsIgnoreCase("rmCmd") && sender.hasPermission(SctfPerms.ADMIN)){
             return getCmdList();

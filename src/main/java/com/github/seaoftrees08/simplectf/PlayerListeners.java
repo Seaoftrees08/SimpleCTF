@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class PlayerListeners implements Listener {
     public PlayerListeners(SimpleCTF simpleCTF) {
+        simpleCTF.getServer().getPluginManager().registerEvents(this, simpleCTF);
     }
 
     @EventHandler
@@ -18,7 +19,7 @@ public class PlayerListeners implements Listener {
 
         //Arena作成時
         if(ArenaManager.isCreating(name) && e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.BLAZE_ROD)){
-            ArenaManager.doCreationFlow(name, ArenaCreationCause.EVENT, new Vec3i(e.getBlock().getLocation()), null);
+            ArenaManager.doCreationFlow(name, ArenaCreationCause.EVENT, e.getBlock().getLocation(), null);
             e.setCancelled(true);
         }
 

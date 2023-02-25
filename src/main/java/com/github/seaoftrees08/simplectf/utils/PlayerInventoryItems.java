@@ -1,8 +1,8 @@
 package com.github.seaoftrees08.simplectf.utils;
 
 
+import com.github.seaoftrees08.simplectf.arena.ArenaItem;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -37,4 +37,37 @@ public class PlayerInventoryItems {
         leftHandItem = leftHand;
     }
 
+    private List<String> getHeadItemStringList(){ return new ArenaItem(headItem).getStringList(); }
+
+    private List<String> getChestItemStringList(){
+        return new ArenaItem(chestItem).getStringList();
+    }
+
+    private List<String> getLeggingsItemStringList(){
+        return new ArenaItem(leggingsItem).getStringList();
+    }
+
+    private List<String> getBootsItemStringList(){
+        return new ArenaItem(bootsItem).getStringList();
+    }
+
+    /**
+     * mainItemをStringのListにして、それをListにしたmainItem群を返す
+     * @return Yaml保存で使うListのList
+     */
+    public List<List<String>> getMainItemStringList(){
+        return mainItems.stream()
+                .map(is -> is==null ? new ItemStack(Material.AIR) : is)
+                .map(ArenaItem::new)
+                .map(ArenaItem::getStringList)
+                .toList();
+    }
+
+    public List<List<String>> getArmorList(){
+        return Arrays.asList(getBootsItemStringList(), getLeggingsItemStringList(), getChestItemStringList(), getHeadItemStringList());
+    }
+
+    public List<String> getLeftHandItemStringList(){
+        return new ArenaItem(leftHandItem).getStringList();
+    }
 }
