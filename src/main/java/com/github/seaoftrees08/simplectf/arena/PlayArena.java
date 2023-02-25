@@ -1,10 +1,13 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
+import com.github.seaoftrees08.simplectf.flag.FlagParticle;
+import com.github.seaoftrees08.simplectf.flag.FlagStatus;
 import com.github.seaoftrees08.simplectf.team.ArenaPlayer;
 import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -25,6 +28,9 @@ public class PlayArena extends Arena{
     private int redPoint = 0;
     private int bluePoint = 0;
     private int time= 0;
+    private ArenaStatus status = ArenaStatus.NONE;
+    private FlagStatus redFlagStatus = FlagStatus.CAMP;
+    private FlagStatus blueFlagStatus = FlagStatus.CAMP;
 
     public PlayArena(String name) {
         super(name);
@@ -117,6 +123,43 @@ public class PlayArena extends Arena{
         //setSpawn
         redTeamMember.forEach(ap -> ap.player.setBedSpawnLocation(redSpawn.getLocation()));
         blueTeamMember.forEach(ap -> ap.player.setBedSpawnLocation(blueSpawn.getLocation()));
+
+        //setArenaStatus
+        setArenaStatus(ArenaStatus.PLAYING);
+
+        //setFlag
+        //TODO: flag
+    }
+
+    public ArenaStatus getArenaStatus(){
+        return status;
+    }
+
+    public void setArenaStatus(ArenaStatus status){
+        this.status = status;
+    }
+
+    public FlagStatus getRedFlagStatus(){
+        return redFlagStatus;
+    }
+
+    public void setRedFlagStatus(FlagStatus flagStatus){
+        this.redFlagStatus = flagStatus;
+    }
+    public FlagStatus getBlueFlagStatus(){
+        return blueFlagStatus;
+    }
+
+    public void setBlueFlagStatus(FlagStatus flagStatus){
+        this.blueFlagStatus = flagStatus;
+    }
+
+    public Location getRedFlagLocation(){
+        return redFlag.getLocation(redSpawn.getLocation().getWorld());
+    }
+
+    public Location getBlueFlagLocation(){
+        return redFlag.getLocation(blueSpawn.getLocation().getWorld());
     }
 
     /**

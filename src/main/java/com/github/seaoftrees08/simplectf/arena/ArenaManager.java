@@ -107,6 +107,7 @@ public class ArenaManager {
 
         if(playArena.canPlay()){
             playArena.broadcastInArena("Starting countdown for beginning game!");
+            playArena.setArenaStatus(ArenaStatus.WAITING);
             //0tick後から、60秒間、20tickごとに実行するタイマー
             new Waiting(60, playArena.name).runTaskTimer(SimpleCTF.getSimpleCTF(), 0, 20);
         }

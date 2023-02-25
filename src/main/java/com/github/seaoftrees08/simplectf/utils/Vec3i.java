@@ -1,6 +1,7 @@
 package com.github.seaoftrees08.simplectf.utils;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,9 @@ public class Vec3i {
 
     public List<Integer> getList(){
         return Arrays.asList(x, y, z);
+    }
+    public Location getLocation(World world){
+        return new Location(world, x, y, z);
     }
 
 }
