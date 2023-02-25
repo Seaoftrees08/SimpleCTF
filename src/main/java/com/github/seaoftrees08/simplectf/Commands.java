@@ -1,5 +1,6 @@
 package com.github.seaoftrees08.simplectf;
 
+import com.github.seaoftrees08.simplectf.arena.Arena;
 import com.github.seaoftrees08.simplectf.arena.ArenaCreationCause;
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import com.github.seaoftrees08.simplectf.reflection.RefPotionData;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +70,15 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin remove <arena>
             if(args.length==3 && args[1].equalsIgnoreCase("remove")){
-                //TODO: Arena Remove
+                List<String> arenaList = ArenaManager.loadArenaNameList();
+                if(arenaList.contains(args[2])){
+                    arenaList.remove(args[2]);
+                    SimpleCTF.getSimpleCTF().getConfig().set(ArenaManager.ARENA_LIST_PATH, arenaList);
+                    SimpleCTF.getSimpleCTF().saveConfig();
+                    new Arena(args[2]).remove();
+                }else{
+                    sendMessage(sender, args[2] + " is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 
@@ -81,31 +91,48 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin enable <arena>
             if(args.length==3 && args[1].equalsIgnoreCase("enable")){
-                //TODO: Arena Enable
+                if(ArenaManager.loadArenaNameList().contains(args[2])){
+                    Arena arena = new Arena(args[2]);
+                    arena.setEnable(true);
+                    arena.save();
+                    sendMessage(sender, args[2] + " is enabled!", ChatColor.GREEN);
+                }else{
+                    sendMessage(sender, args[2] + " is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 
             // /simplectf admin disable <arena>
             if(args.length==3 && args[1].equalsIgnoreCase("disable")){
-                //TODO: Arena Disable
+                if(ArenaManager.loadArenaNameList().contains(args[2])){
+                    Arena arena = new Arena(args[2]);
+                    arena.setEnable(false);
+                    arena.save();
+                    sendMessage(sender, args[2] + " is disabled!", ChatColor.GREEN);
+                }else{
+                    sendMessage(sender, args[2] + " is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 
             //	/simplectf admin addCmd <allowCmd>
             if(args.length==3 && args[1].equalsIgnoreCase("addCmd")) {
                 //TODO: Add Allow Command
+                sendMessage(sender, "This command implementation in Future Update.", ChatColor.GRAY);
                 return true;
             }
 
             //	/simplectf admin rmCmd <allowedCmd>
             if(args.length==3 && args[1].equalsIgnoreCase("rmCmd")){
                 //TODO: Remove Allowed Command
+                sendMessage(sender, "This command implementation in Future Update.", ChatColor.GRAY);
                 return true;
             }
 
             //  /simplectf admin cmdlist
             if(args.length==2 && args[1].equalsIgnoreCase("cmdList")){
                 //TODO: Allow Command list
+                sendMessage(sender, "This command implementation in Future Update.", ChatColor.GRAY);
                 return true;
             }
 

@@ -173,4 +173,8 @@ public class Arena {
         }
     }
 
+    public void remove(){
+        file.delete();
+    }
+
 }
