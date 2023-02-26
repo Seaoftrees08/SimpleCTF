@@ -1,4 +1,4 @@
-package com.github.seaoftrees08.simplectf.team;
+package com.github.seaoftrees08.simplectf.player;
 
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import org.bukkit.entity.Player;

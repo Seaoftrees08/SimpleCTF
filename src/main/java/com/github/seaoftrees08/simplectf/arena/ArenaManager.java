@@ -1,14 +1,11 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
-import com.github.seaoftrees08.simplectf.clockwork.Waiting;
-import com.github.seaoftrees08.simplectf.team.ArenaPlayer;
-import com.github.seaoftrees08.simplectf.team.PlayerManager;
+import com.github.seaoftrees08.simplectf.player.ArenaPlayer;
+import com.github.seaoftrees08.simplectf.player.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
-import com.github.seaoftrees08.simplectf.utils.Vec3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package com.github.seaoftrees08.simplectf.clockwork;
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import com.github.seaoftrees08.simplectf.arena.PlayArena;
 import com.github.seaoftrees08.simplectf.flag.FlagStatus;
-import com.github.seaoftrees08.simplectf.team.PlayerManager;
+import com.github.seaoftrees08.simplectf.player.PlayerManager;
 import com.google.common.base.Preconditions;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,7 +24,7 @@ public class Playing extends BukkitRunnable {
         PlayArena arena = ArenaManager.getPlayArena(arenaName);
         int remTime = arena.getTime();
         if(!arena.canPlay()){
-            arena.broadcastInArena("Cancelled due to lack of capacity.");
+            arena.broadcastInArena(ChatColor.LIGHT_PURPLE + "Cancelled due to lack of capacity.");
             arena.joinedPlayerNameList().forEach(PlayerManager::leave);
             this.cancel();
         }

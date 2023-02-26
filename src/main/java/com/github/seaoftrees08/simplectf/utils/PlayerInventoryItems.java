@@ -84,7 +84,7 @@ public class PlayerInventoryItems {
 
         clearInventory(p);
 
-        for(ItemStack is : mainItems) pi.addItem(is);//ほんまか?
+        for(ItemStack is : mainItems) pi.addItem(is==null ? new ItemStack(Material.AIR) : is);//ほんまか?
         pi.setHelmet(headItem);
         pi.setChestplate(chestItem);
         pi.setLeggings(leggingsItem);

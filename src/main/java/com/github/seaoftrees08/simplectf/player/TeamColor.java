@@ -1,4 +1,4 @@
-package com.github.seaoftrees08.simplectf.team;
+package com.github.seaoftrees08.simplectf.player;
 
 public enum TeamColor {
     RED,
