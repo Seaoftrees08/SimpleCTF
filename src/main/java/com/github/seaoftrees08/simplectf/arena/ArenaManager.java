@@ -131,5 +131,9 @@ public class ArenaManager {
         if(pa.joinedPlayerList().isEmpty()){
             playing.remove(arenaName);
         }
+
+        Player p = SimpleCTF.getSimpleCTF().getServer().getPlayer(playerName);
+        assert p != null;
+        p.teleport(Objects.requireNonNull(p.getLocation().getWorld()).getSpawnLocation());
     }
 }

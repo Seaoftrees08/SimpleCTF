@@ -24,15 +24,15 @@ public class PlayArena extends Arena{
 
     private final static String RED_TEAM = "Red Team";
     private final static String BLUE_TEAM = "Blue Team";
-    private ArrayList<ArenaPlayer> redTeamMember = new ArrayList<>();
-    private ArrayList<ArenaPlayer> blueTeamMember = new ArrayList<>();
+    private final ArrayList<ArenaPlayer> redTeamMember = new ArrayList<>();
+    private final ArrayList<ArenaPlayer> blueTeamMember = new ArrayList<>();
     private Scoreboard scoreboard;
     private int redPoint = 0;
     private int bluePoint = 0;
     private int time= 0;
     private ArenaStatus status = ArenaStatus.NONE;
-    private Flag redFlag;
-    private Flag blueFlag;
+    private final Flag redFlag;
+    private final Flag blueFlag;
 
 //    private FlagStatus redFlagStatus = FlagStatus.CAMP;
 //    private FlagStatus blueFlagStatus = FlagStatus.CAMP;
@@ -192,8 +192,24 @@ public class PlayArena extends Arena{
 
     public void whenFinish(){
         setArenaStatus(ArenaStatus.FINISHED);
-
         //TODO
+        //announce
+        broadcastInArena(ChatColor.GOLD + "Game Finished!");
+        if(redPoint == bluePoint){
+            broadcastInArena("Game result: " + ChatColor.LIGHT_PURPLE + "DRAW");
+        }else if(redPoint > bluePoint){
+            broadcastInArena("Game result: " + ChatColor.RED + "Red Team" + ChatColor.GREEN + " Win!");
+        }else{
+            broadcastInArena("Game result: " + ChatColor.BLUE + "Blue Team" + ChatColor.GREEN + " Win!");
+        }
+
+
+        joinedPlayerNameList().forEach(PlayerManager::leave);
+
+        //kill flag
+        redFlag.kill();
+        blueFlag.kill();
+
     }
 
     public ArenaStatus getArenaStatus(){

@@ -36,7 +36,7 @@ public class FlagItem {
         this.itemstack = itemstack;
     }
 
-    public void remove() {
+    public void kill() {
         this.location = null;
         if(this.armorstand!=null) this.armorstand.remove();
         assert this.armorstand != null;
@@ -44,13 +44,6 @@ public class FlagItem {
         this.armorstand = null;
         this.text = null;
         this.itemstack = null;
-    }
-
-    public void teleport(Location location) {
-        if(this.location != null) {
-            armorstand.teleport(location);
-            this.location = location;
-        }
     }
 
     public void spawn() {
@@ -78,7 +71,4 @@ public class FlagItem {
         return this.itemstack;
     }
 
-    public String getText() {
-        return this.text;
-    }
 }

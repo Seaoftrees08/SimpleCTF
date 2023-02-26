@@ -73,7 +73,6 @@ public class PlayerManager {
      * @param playerName 退場させるプレイヤー
      */
     public static void leave(String playerName){
-
         ArenaManager.leave(playerName, whereJoined(playerName));
     }
 

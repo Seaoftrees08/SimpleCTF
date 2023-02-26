@@ -74,8 +74,8 @@ public class Flag {
 
     public boolean hasFlag(String playerName){ return havingPlayer != null && havingPlayer.getName().equals(playerName); }
 
-    public Player getHavingPlayer(){
-        return havingPlayer;
+    public void kill(){
+        flagItem.kill();
     }
 
     public static ItemStack getRedFlagItemStack(){

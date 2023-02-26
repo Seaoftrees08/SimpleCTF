@@ -41,8 +41,7 @@ public class Playing extends BukkitRunnable {
 
         //finish
         if(remTime==0){
-            //TODO:FINISH
-            System.out.println("----------- FINISH! FINISH! FINISH! ----------");
+            arena.whenFinish();
             this.cancel();
         }
 
