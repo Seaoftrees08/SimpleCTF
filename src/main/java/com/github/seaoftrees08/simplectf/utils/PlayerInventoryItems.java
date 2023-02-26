@@ -24,7 +24,9 @@ public class PlayerInventoryItems {
 
     }
     public PlayerInventoryItems(PlayerInventory pi){
-        mainItems.addAll(Arrays.asList(pi.getContents()));
+        List<ItemStack> contents = Arrays.asList(pi.getContents());
+        for(int i=0; i<5; i++) contents.remove(contents.size()-1);
+        mainItems.addAll(contents);
         headItem = pi.getHelmet()==null ? new ItemStack(Material.AIR) : pi.getHelmet();
         chestItem = pi.getChestplate()==null ? new ItemStack(Material.AIR) : pi.getChestplate();
         leggingsItem = pi.getLeggings()==null ? new ItemStack(Material.AIR) : pi.getLeggings();

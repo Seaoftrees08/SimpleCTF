@@ -6,10 +6,13 @@ import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import com.github.seaoftrees08.simplectf.utils.SctfPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -195,14 +198,10 @@ public class Commands implements CommandExecutor {
 
         // /simplectf version
         if(args[0].equalsIgnoreCase("version")){
-
-            //TODO: 直すこと！
-
-
-//            sendMessage(sender, "   ===== Simple CTF Infomation ===== ", ChatColor.GRAY);
-//            sendMessage(sender, "This plugin is to play CTF!", ChatColor.GRAY);
-//            sendMessage(sender, "version: "+SimpleCTF.getSimpleCTF().getDescription().getVersion(), ChatColor.GRAY);
-//            sendMessage(sender, "Author: Seaoftrees08 (Minecraft ID)", ChatColor.GRAY);
+            sendMessage(sender, "   ===== Simple CTF Infomation ===== ", ChatColor.GRAY);
+            sendMessage(sender, "This plugin is to play CTF!", ChatColor.GRAY);
+            sendMessage(sender, "version: "+SimpleCTF.getSimpleCTF().getDescription().getVersion(), ChatColor.GRAY);
+            sendMessage(sender, "Author: Seaoftrees08 (Minecraft ID)", ChatColor.GRAY);
             return true;
         }
 

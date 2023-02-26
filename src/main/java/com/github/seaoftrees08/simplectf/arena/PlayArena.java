@@ -9,6 +9,8 @@ import com.github.seaoftrees08.simplectf.player.ArenaPlayer;
 import com.github.seaoftrees08.simplectf.player.PlayerManager;
 import com.github.seaoftrees08.simplectf.player.TeamColor;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -192,7 +194,6 @@ public class PlayArena extends Arena{
 
     public void whenFinish(){
         setArenaStatus(ArenaStatus.FINISHED);
-        //TODO
         //announce
         broadcastInArena(ChatColor.GOLD + "Game Finished!");
         if(redPoint == bluePoint){
@@ -210,6 +211,28 @@ public class PlayArena extends Arena{
         redFlag.kill();
         blueFlag.kill();
 
+        //DropItemRemove
+        Objects.requireNonNull(redSpawn.getLocation()
+                .getWorld())
+                .getEntities()
+                .stream()
+                .filter(en -> en.getType().equals(EntityType.DROPPED_ITEM) || en.getType().equals(EntityType.ARMOR_STAND))
+                .filter(en -> isInArena(en.getLocation()))
+                .toList().forEach(Entity::remove);
+
+    }
+
+    public boolean isInArena(Location loc){
+        double x = Math.min(firstPoint.x, secondPoint.x);
+        double dx = Math.max(firstPoint.x, secondPoint.x);
+        double y = Math.min(firstPoint.y, secondPoint.y);
+        double dy = Math.max(firstPoint.y, secondPoint.y);
+        double z = Math.min(firstPoint.z, secondPoint.z);
+        double dz = Math.max(firstPoint.z, secondPoint.z);
+
+        return x <= loc.getX() && loc.getX() <= dx
+                && y <= loc.getY() && loc.getY() <= dy
+                && z <= loc.getZ() && loc.getZ() <= dz;
     }
 
     public ArenaStatus getArenaStatus(){
@@ -388,7 +411,7 @@ public class PlayArena extends Arena{
         // RED_101~197,  BLUE_1~97
         obj.getScore(ChatColor.GREEN + "  == CTF in " + name + " == ").setScore(300);
         obj.getScore(" ").setScore(299);
-        obj.getScore(ChatColor.AQUA + "remaining time: "+(time-100)*10).setScore(300);
+        obj.getScore(ChatColor.AQUA + "remaining time: "+time).setScore(300);
         obj.getScore(" ").setScore(199);
         obj.getScore(ChatColor.RED + " -- RED Team Status -- ").setScore(198);
         obj.getScore(ChatColor.RED + " Score: " + ChatColor.WHITE + redPoint).setScore(197);

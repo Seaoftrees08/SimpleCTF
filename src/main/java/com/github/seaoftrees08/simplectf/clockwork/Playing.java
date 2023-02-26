@@ -86,6 +86,6 @@ public class Playing extends BukkitRunnable {
         arena.degreesTime();//remTime--
 
         //ScoreBoard
-        arena.waitScoreboard();
+        arena.playScoreBoard();
     }
 }
