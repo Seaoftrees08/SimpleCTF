@@ -3,9 +3,9 @@ This is a Spigot plugin for playing "Capture The Flag".
 
 WARNING: This plugin is beta.  
 
-## Download latest
-### [0.2.1](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.2.1) 
-for Spigot 1.8.8
+## Download
+### [Releaces](https://github.com/Seaoftrees08/SimpleCTF/releases) 
+for Spigot 1.19.3
 
 ## License
 ### [MIT License](https://github.com/Seaoftrees/SimpleCTF/blob/master/LICENSE)
@@ -24,12 +24,6 @@ You join \<arena\>
 You leave from arena.  
 - CanUse: Player
 - Permission: none(Anybody can use this command)
-### /simplectf rate \[player\]
-You can view \[player\] rate.  
-If you don't write \[player\], you can view your rate.  
-WARNING: This function is implemented in future version.  
-- CanUse: Player, Console
-- Permission: simplectf.rate
 ### /simplectf list
 You can view arena list.
 - CanUse: Player, Console
@@ -104,9 +98,6 @@ Give access to all SimpleCTF commands
 ### simplectf.admin
 Allows to control SimpleCTF
 - Default: op
-### simplectf.rate
-Allows to view player rate
-- Default: true
 ### simplectf.simplectf
 Allows to control commands
 - Default: true
@@ -118,19 +109,11 @@ Allows to force playing ctf
 - Default: op
 
 ## version info
-- [0.1.0](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.0)  
-  First Releace for Spigot1.8.8
-- [0.1.1](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.1)  
-  bug fixed from 0.1.0(Timer is faster) for Spigot1.8.8
-- [0.1.2](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.2)  
-  bug fixed from 0.1.1(permissions) for Spigot1.8.8
-- [0.1.3](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.3)  
-  bug fixed from 0.1.2(nullPointExep. at FlingItem.java) for Spigot1.8.8
-- [0.1.4](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.4)  
-  bug fixed from 0.1.3(return bug fixed) for Spigot1.8.8
-- [0.1.5](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.1.5)  
-  bug fixed from 0.1.4(fixed not to paid items) for Spigot1.8.8
-- [0.2.0](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.2.0)  
+- 0.3.0
+  totally from scratch for mc1.19.3 (some function unimplemented)
+- 0.2.1
+  bug fixed from 0.2.0(fixed get flag when any item) for Spigot1.8.8
+- 0.2.0
   add function and bugfixed from 0.1.5 for Spigot1.8.8
   - fatal bug fixed (item throw away bug)
   - fatal bug fixed (Cannot throw FinishCTF.java)
@@ -139,5 +122,21 @@ Allows to force playing ctf
   - specification change(item clear when player join arena)
   - add cmds
   - add function(watch game)
-- [0.2.1](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.2.1)  
-  bug fixed from 0.2.0(fixed get flag when any item) for Spigot1.8.8
+- 0.1.5  
+  bug fixed from 0.1.4(fixed not to paid items) for Spigot1.8.8
+- 0.1.4 
+  bug fixed from 0.1.3(return bug fixed) for Spigot1.8.8
+- 0.1.3
+  bug fixed from 0.1.2(nullPointExep. at FlingItem.java) for Spigot1.8.8
+- 0.1.2 
+  bug fixed from 0.1.1(permissions) for Spigot1.8.8]
+- 0.1.1 
+  bug fixed from 0.1.0(Timer is faster) for Spigot1.8.8
+- 0.1.0
+  First Releace for Spigot1.8.8
+
+
+
+
+
+
