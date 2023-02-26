@@ -135,9 +135,9 @@ Allows to force playing ctf
   - fatal bug fixed (item throw away bug)
   - fatal bug fixed (Cannot throw FinishCTF.java)
   - bug fixed (item clear when player return on the way)
-  - specification change(cannot throw away other than flag)
+  - specification change(cannot throw away other than flagItem)
   - specification change(item clear when player join arena)
   - add cmds
   - add function(watch game)
 - [0.2.1](https://github.com/Seaoftrees/SimpleCTF/tree/master/jar/0.2.1)  
-  bug fixed from 0.2.0(fixed get flag when any item) for Spigot1.8.8
+  bug fixed from 0.2.0(fixed get flagItem when any item) for Spigot1.8.8

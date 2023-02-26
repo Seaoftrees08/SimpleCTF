@@ -1,0 +1,90 @@
+# YAML
+FirstPoint:
+  - 1
+  - 0
+  - -1
+SecondPoint:
+  - 1
+  - 0
+  - -1
+RedFlag:
+  - -117
+  - 56
+  - -80
+BlueFlag:
+  - -74
+  - 56
+  - -80
+RedSpawn:
+  - -123.0
+  - 44.0
+  - -80.0
+  - 12.2
+  - 243.1
+  - world
+BlueSpawn:
+  - -123.0
+  - 44.0
+  - -80.0
+  - 12.2
+  - 243.1
+  - world
+ReturnPoint:
+  - -123.0
+  - 44.0
+  - -80.0
+  - 12.2
+  - 243.1
+  - world
+RedInv:
+  item:
+  - - DIAMOND_SWORD
+    - '1'
+    - 'DAMAGE_ALL, 3, '
+    - ''
+  - - SPLASH_POTION
+    - '1'
+    - 'DAMAGE_ALL, 3, '
+    - ''
+  armor:
+  - - LEATHER_BOOTS
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_LEGGINGS
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_CHESTPLATE
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_HELMET
+      - '1'
+  - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+  - ''
+BlueInv:
+  item:
+  - - DIAMOND_SWORD
+    - '1'
+    - 'DAMAGE_ALL, 3, '
+    - ''
+  - - SPLASH_POTION
+  armor:
+  - - LEATHER_BOOTS
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_LEGGINGS
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_CHESTPLATE
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+  - - LEATHER_HELMET
+    - '1'
+    - 'PROTECTION_ENVIRONMENTAL, 4, DURABILITY, 3, '
+    - ''
+enable: false
