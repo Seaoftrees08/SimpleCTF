@@ -22,6 +22,7 @@ public class ArenaLocation extends ArrayList<String> {
         if(locationStringList == null || locationStringList.size()!=6){
             loc = null;
         }else{
+            addAll(locationStringList);
             loc = new Location(
                     SimpleCTF.getSimpleCTF().getServer().getWorld(locationStringList.get(5)),
                     Double.parseDouble(locationStringList.get(0)),

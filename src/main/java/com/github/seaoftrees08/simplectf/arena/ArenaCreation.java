@@ -60,20 +60,20 @@ public class ArenaCreation {
     private void setSecondPoint(ArenaCreationCause acc, Location loc, PlayerInventoryItems inv){
         if(!acc.equals(ArenaCreationCause.EVENT)) return;
         arena.setSecondPoint(new Vec3i(loc));
-        sendMessage("3rd: left punch " + ChatColor.RED + "Red Flag fence" + ChatColor.GREEN + "with BLAZE_ROD plz.");
+        sendMessage("3rd: left punch " + ChatColor.RED + "Red Flag fence" + ChatColor.GREEN + " with BLAZE_ROD plz.");
         cp = CreationPhase.SET_RED_FLAG;
     }
 
     private void setRedFlag(ArenaCreationCause acc, Location loc, PlayerInventoryItems inv){
         if(!acc.equals(ArenaCreationCause.EVENT)) return;
-        arena.setRedFlag(new Vec3i(loc));
+        arena.setRedFlagFence(new Vec3i(loc));
         sendMessage("4rd: left punch " + ChatColor.BLUE + "Blue Flag fence" + ChatColor.GREEN + " with BLAZE_ROD plz.");
         cp = CreationPhase.SET_BLUE_FLAG;
     }
 
     private void setBlueFlag(ArenaCreationCause acc, Location loc, PlayerInventoryItems inv){
         if(!acc.equals(ArenaCreationCause.EVENT)) return;
-        arena.setBlueFlag(new Vec3i(loc));
+        arena.setBlueFlagFence(new Vec3i(loc));
         sendMessage("5th: set " + ChatColor.RED + "Red Spawn Block" + ChatColor.GREEN + " with command.");
         sendMessage("Please type /sctf admin setLoc");
         cp = CreationPhase.SET_RED_SPAWN;

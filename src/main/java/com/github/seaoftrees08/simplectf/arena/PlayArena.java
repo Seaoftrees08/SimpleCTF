@@ -1,13 +1,15 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
-import com.github.seaoftrees08.simplectf.flag.FlagParticle;
+import com.github.seaoftrees08.simplectf.clockwork.Waiting;
+import com.github.seaoftrees08.simplectf.flag.Flag;
+import com.github.seaoftrees08.simplectf.flag.FlagItem;
 import com.github.seaoftrees08.simplectf.flag.FlagStatus;
 import com.github.seaoftrees08.simplectf.team.ArenaPlayer;
 import com.github.seaoftrees08.simplectf.team.PlayerManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import com.github.seaoftrees08.simplectf.team.TeamColor;
+import org.bukkit.*;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -29,11 +31,36 @@ public class PlayArena extends Arena{
     private int bluePoint = 0;
     private int time= 0;
     private ArenaStatus status = ArenaStatus.NONE;
-    private FlagStatus redFlagStatus = FlagStatus.CAMP;
-    private FlagStatus blueFlagStatus = FlagStatus.CAMP;
+    private Flag redFlag;
+    private Flag blueFlag;
+
+//    private FlagStatus redFlagStatus = FlagStatus.CAMP;
+//    private FlagStatus blueFlagStatus = FlagStatus.CAMP;
+//    private int redFlagOnGround = 0; //-1 -> PlayerListener等でonGroundを感知、0->camp、n->地面に落ちた時のremTime
+//    private int blueFlagOnGround = 0;
 
     public PlayArena(String name) {
         super(name);
+
+        //redFlag
+        redFlag = new Flag(
+                new FlagItem(
+                        redFlagFence.getLocation(redSpawn.getLocation().getWorld()),
+                        "Red Flag",
+                        Flag.getRedFlagItemStack()
+                ),
+                redFlagFence.getLocation(redSpawn.getLocation().getWorld())
+        );
+
+        //blueFlag
+        blueFlag = new Flag(
+                new FlagItem(
+                        blueFlagFence.getLocation(blueSpawn.getLocation().getWorld()),
+                        "Blue Flag",
+                        Flag.getBlueFlagItemStack()
+                ),
+                blueFlagFence.getLocation(blueSpawn.getLocation().getWorld())
+        );
     }
 
     /**
@@ -51,6 +78,16 @@ public class PlayArena extends Arena{
             player.setGameInventory(blueInv);
         }
     }
+
+    public int getTime(){
+        return time;
+    }
+
+    public void setTime(int time){
+        this.time = time;
+    }
+
+    public void degreesTime(){ time--; }
 
     /**
      * PlayArenaに参加しているすべてのプレイヤー名を返す
@@ -95,6 +132,19 @@ public class PlayArena extends Arena{
         }
     }
 
+    public void startWaiting(){
+        //0tick後から、60秒間、20tickごとに実行するタイマー
+        new Waiting(60, name).runTaskTimer(SimpleCTF.getSimpleCTF(), 0, 20);
+    }
+
+    public Location getRedRespawnLocation(){
+        return redSpawn.getLocation();
+    }
+
+    public Location getBlueRespawnLocation(){
+        return blueSpawn.getLocation();
+    }
+
     /**
      * プレイヤーがスポーンするとき
      * リスキル防止のため最初2秒は最強
@@ -128,7 +178,22 @@ public class PlayArena extends Arena{
         setArenaStatus(ArenaStatus.PLAYING);
 
         //setFlag
-        //TODO: flag
+        spawnRedFlagAtBase(true);
+        spawnBlueFlagAtBase(true);
+
+        //gamemode
+        joinedPlayerList().forEach(p -> p.setGameMode(GameMode.ADVENTURE));
+
+        //teleport
+        redTeamMember.forEach(ap -> ap.player.teleport(redSpawn.getLocation()));
+        blueTeamMember.forEach(ap -> ap.player.teleport(blueSpawn.getLocation()));
+
+    }
+
+    public void whenFinish(){
+        setArenaStatus(ArenaStatus.FINISHED);
+
+        //TODO
     }
 
     public ArenaStatus getArenaStatus(){
@@ -140,27 +205,101 @@ public class PlayArena extends Arena{
     }
 
     public FlagStatus getRedFlagStatus(){
-        return redFlagStatus;
+        return redFlag.status;
     }
 
-    public void setRedFlagStatus(FlagStatus flagStatus){
-        this.redFlagStatus = flagStatus;
-    }
     public FlagStatus getBlueFlagStatus(){
-        return blueFlagStatus;
+        return blueFlag.status;
     }
 
-    public void setBlueFlagStatus(FlagStatus flagStatus){
-        this.blueFlagStatus = flagStatus;
+    /**
+     * Playingからの呼び出し。旗の落ちてる時間制御に使う
+     * @param remTime 地面に落ちた時の時間
+     */
+    public void setRedFlagOnGroundTime(int remTime){
+        blueFlag.onGroundedTime = remTime;
     }
 
-    public Location getRedFlagLocation(){
-        return redFlag.getLocation(redSpawn.getLocation().getWorld());
+    /**
+     * 地面に落ちた時の時間を取得する Playingで使う
+     * @return 地面に落ちた時の時間
+     */
+    public int getRedFlagOnGroundTime(){
+        return redFlag.onGroundedTime;
     }
 
-    public Location getBlueFlagLocation(){
-        return redFlag.getLocation(blueSpawn.getLocation().getWorld());
+    /**
+     * Playingからの呼び出し。旗の落ちてる時間制御に使う
+     * @param remTime 地面に落ちた時の時間
+     */
+    public void setBlueFlagOnGroundTime(int remTime){
+        redFlag.onGroundedTime = remTime;
     }
+
+    /**
+     * 地面に落ちた時の時間を取得する Playingで使う
+     * @return 地面に落ちた時の時間
+     */
+    public int getBlueFlagOnGroundTime(){
+        return blueFlag.onGroundedTime;
+    }
+
+    /**
+     * 旗を落とした時に呼びだされる
+     * @param p 落としたプレイヤー
+     */
+    public void dropRedFlag(Player p, Item item){
+        if(item==null){
+            item = p.getWorld().dropItemNaturally(p.getLocation(), Flag.getRedFlagItemStack());
+        }
+        broadcastInArena(ChatColor.RED + "Red Flag" + ChatColor.GREEN + " is Dropped!");
+        redFlag.drop(item);
+        setRedFlagOnGroundTime(-1);
+    }
+
+    /**
+     * 旗を落とした時に呼びだされる
+     * @param p 落としたプレイヤー
+     */
+    public void dropBlueFlag(Player p, Item item){
+        if(item==null){
+            item = p.getWorld().dropItemNaturally(p.getLocation(), Flag.getBlueFlagItemStack());
+        }
+        broadcastInArena(ChatColor.BLUE + "BLUE Flag" + ChatColor.GREEN + " is Dropped!");
+        blueFlag.drop(item);
+        setBlueFlagOnGroundTime(-1);
+    }
+
+    /**
+     * 旗を拾った時に呼びだされる
+     * @param p 拾ったプレイヤー
+     */
+    public void pickupRedFlag(Player p){
+        redFlag.pickUp(p);
+        setRedFlagOnGroundTime(0);
+        broadcastInArena(ChatColor.BLUE + p.getName() + ChatColor.GREEN + " pick up RED FLAG!");
+    }
+
+    /**
+     * 旗を拾った時に呼びだされる
+     * @param p 拾ったプレイヤー
+     */
+    public void pickupBlueFlag(Player p){
+        blueFlag.pickUp(p);
+        setBlueFlagOnGroundTime(0);
+        broadcastInArena(ChatColor.RED + p.getName() + ChatColor.GREEN + " pick up BLUE FLAG!");
+    }
+
+    public void spawnFlagParticle(){
+        //赤旗
+        Location l = redFlag.getLocation();
+        Objects.requireNonNull(l.getWorld()).playEffect(l, Effect.MOBSPAWNER_FLAMES, 1, 100);
+
+        //青旗
+        l = blueFlag.getLocation();
+        Objects.requireNonNull(l.getWorld()).playEffect(l, Effect.MOBSPAWNER_FLAMES, 1, 100);
+    }
+
 
     /**
      * plauyerNameが参加しているかどうかを返す
@@ -193,7 +332,7 @@ public class PlayArena extends Arena{
 
             //スコアボード
             ap.player.setScoreboard(Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard());
-            Objects.requireNonNull(scoreboard.getTeam(belongTeam(ap.player.getName()))).removeEntry(ap.player.getName());
+            Objects.requireNonNull(scoreboard.getTeam(getBelongTeam(ap.player.getName()))).removeEntry(ap.player.getName());
 
         }
 
@@ -246,12 +385,106 @@ public class PlayArena extends Arena{
         applyScoreboard(sb);
     }
 
+    /**
+     * 旗をキャンプに設置する時に呼びだされる
+     */
+    public void spawnRedFlagAtBase(boolean first){
+        redFlag.spawnCamp();
+        setRedFlagOnGroundTime(0);
+        if(!first) broadcastInArena(ChatColor.RED + "RED FLAG" + ChatColor.GREEN + " is returned base.");
+    }
+
+    /**
+     * 旗をキャンプに設置する時に呼びだされる
+     */
+    public void spawnBlueFlagAtBase(boolean first){
+        blueFlag.spawnCamp();
+        setBlueFlagOnGroundTime(0);
+        if(!first) broadcastInArena(ChatColor.BLUE + "BLUE FLAG" + ChatColor.GREEN + " is returned base.");
+    }
+
+    /**
+     * red flagのフェンスとの距離を計測し、近ければTrueを返す
+     * @param location 検査するLocation
+     * @return 近いかどうか(近ければtrue)
+     */
+    public boolean nearRedFlagFence(Location location){
+        Location camp = redFlag.getCampLocation();
+        return Objects.requireNonNull(location.getWorld()).getName().equals(Objects.requireNonNull(camp.getWorld()).getName())
+                && location.distanceSquared(camp) < 1.5;
+    }
+
+    /**
+     * blue flagのフェンスとの距離を計測し、近ければTrueを返す
+     * @param location 検査するLocation
+     * @return 近いかどうか(近ければtrue)
+     */
+    public boolean nearBlueFlagFence(Location location){
+        Location camp = blueFlag.getCampLocation();
+        return Objects.requireNonNull(location.getWorld()).getName().equals(Objects.requireNonNull(camp.getWorld()).getName())
+                && location.distanceSquared(camp) < 1.5;
+    }
+
+    /**
+     * 青旗を納品して、赤チームが点数を取得
+     */
+    public void takePointRed(){
+        if(getArenaStatus().equals(ArenaStatus.PLAYING)){
+            redPoint++;
+            broadcastInArena(ChatColor.RED + "Red Team" + ChatColor.GREEN + " get one Point!");
+            spawnBlueFlagAtBase(true);
+        }
+        if(redPoint>=3){ setTime(1); }
+    }
+
+    /**
+     * 赤旗を納品して、青チームが点数を取得
+     */
+    public void takePointBlue(){
+        if(getArenaStatus().equals(ArenaStatus.PLAYING)){
+            bluePoint++;
+            broadcastInArena(ChatColor.BLUE + "Blue Team" + ChatColor.GREEN + " get one Point!");
+            spawnRedFlagAtBase(false);
+        }
+        if(bluePoint>=3){ setTime(1); }
+    }
+
     public void broadcastInArena(String msg){
         joinedPlayerList().forEach(p -> p.sendMessage(ChatColor.GREEN + "[S-CTF " + name + "] "
                 + ChatColor.GREEN + msg));
     }
 
-    private String belongTeam(String playerName){
+    public void broadcastRedTeam(String msg){
+        joinedPlayerList().forEach(p -> p.sendMessage(ChatColor.RED + "[S-CTF " + name + " RED] "
+                + ChatColor.GREEN + msg));
+    }
+
+    public void broadcastBlueTeam(String msg){
+        joinedPlayerList().forEach(p -> p.sendMessage(ChatColor.BLUE + "[S-CTF " + name + " BLUE] "
+                + ChatColor.GREEN + msg));
+    }
+
+    /**
+     * プレイヤーが所属しているチームカラーを返す
+     * どこにも所属していない場合はTeamColor.NONEが返る
+     * @param playerName 検査するPlayer名
+     * @return 所属しているTeamColor
+     */
+    public TeamColor getPlayerTeamColor(String playerName){
+        if(redTeamMember.stream().anyMatch(ap -> ap.player.getName().equals(playerName))) return TeamColor.RED;
+        if(blueTeamMember.stream().anyMatch(ap -> ap.player.getName().equals(playerName))) return TeamColor.BLUE;
+        return TeamColor.NONE;
+    }
+
+    public boolean hasRedFlag(String playerName){
+        return redFlag.hasFlag(playerName);
+    }
+
+    public boolean hasBlueFlag(String playerName){
+        return blueFlag.hasFlag(playerName);
+    }
+
+    private String getBelongTeam(String playerName){
         if(redTeamMember.stream().anyMatch(ap -> ap.player.getName().equals(playerName))){
             return RED_TEAM;
         }else if(blueTeamMember.stream().anyMatch(ap -> ap.player.getName().equals(playerName))){

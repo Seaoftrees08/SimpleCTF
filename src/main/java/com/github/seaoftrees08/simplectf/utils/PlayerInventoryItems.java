@@ -25,10 +25,10 @@ public class PlayerInventoryItems {
     }
     public PlayerInventoryItems(PlayerInventory pi){
         mainItems.addAll(Arrays.asList(pi.getContents()));
-        headItem = pi.getHelmet();
-        chestItem = pi.getChestplate();
-        leggingsItem = pi.getLeggings();
-        bootsItem = pi.getBoots();
+        headItem = pi.getHelmet()==null ? new ItemStack(Material.AIR) : pi.getHelmet();
+        chestItem = pi.getChestplate()==null ? new ItemStack(Material.AIR) : pi.getChestplate();
+        leggingsItem = pi.getLeggings()==null ? new ItemStack(Material.AIR) : pi.getLeggings();
+        bootsItem = pi.getBoots()==null ? new ItemStack(Material.AIR) : pi.getBoots();
         leftHandItem = pi.getItemInOffHand();
     }
 

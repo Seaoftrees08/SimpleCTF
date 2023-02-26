@@ -1,76 +1,98 @@
 package com.github.seaoftrees08.simplectf.flag;
 
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
+import org.bukkit.Material;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Objects;
 
 public class Flag {
-    private ArmorStand armorstand;
+
+    public FlagStatus status = FlagStatus.CAMP;
+    private final FlagItem flagItem;
+    private final Location campLocation;
     private Location location;
-    private String text = null;
-    private boolean h = false;
-    private ItemStack itemstack;
+    public int onGroundedTime = 0;//-1 -> PlayerListener等でonGroundを感知、0->camp、n->地面に落ちた時のremTime
+    private Item onGroundItem;
 
-    public void SetLocation(Location location) {
-        Location l = location.clone();
-        l.setX(l.getX()+0.5);
-        l.setZ(l.getZ()+0.5);
-        this.location = l;
+    private Player havingPlayer;
+
+    public Flag(FlagItem flagItem, Location flagFenceLocation){
+        this.flagItem = flagItem;
+        campLocation = flagFenceLocation;
+        location = flagFenceLocation;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    /**
+     * flagの場所を返す
+     * @return
+     */
+    public Location getLocation(){
+        switch (status){
+            case CAMP -> { return location.clone().add(0,1,0); }
+            case GROUND -> { return onGroundItem.getLocation(); }
+            case BRING -> { return havingPlayer.getLocation(); }
+        }
+        return location;
     }
 
-    public void setItemStack(ItemStack itemstack) {
-        this.itemstack = itemstack;
+    public Location getCampLocation(){ return campLocation; }
+
+    /**
+     * flagを落とした時
+     * @param item 落としたItem(Wool)
+     */
+    public void drop(Item item){
+        this.onGroundItem = item;
+        this.havingPlayer = null;
+        this.location = item.getLocation();
+        status = FlagStatus.GROUND;
     }
 
-    public void remove() {
+    /**
+     * flagをcampに召喚、帰還させるとき
+     */
+    public void spawnCamp(){
+        this.onGroundItem = null;
+        this.havingPlayer = null;
+        this.location = campLocation.clone();
+        flagItem.spawn();
+        status = FlagStatus.CAMP;
+    }
+
+    public void pickUp(Player p){
+        this.onGroundItem = null;
+        this.havingPlayer = p;
         this.location = null;
-        if(this.armorstand!=null) this.armorstand.remove();
-        assert this.armorstand != null;
-        if(this.armorstand.getPassengers().size() != 0) this.armorstand.getPassengers().forEach(it -> this.armorstand.removePassenger(it));
-        this.armorstand = null;
-        this.h = false;
-        this.text = null;
-        this.itemstack = null;
+        status = FlagStatus.BRING;
     }
 
-    public void teleport(Location location) {
-        if(this.location != null) {
-            armorstand.teleport(location);
-            this.location = location;
-        }
+    public boolean hasFlag(String playerName){ return havingPlayer != null && havingPlayer.getName().equals(playerName); }
+
+    public Player getHavingPlayer(){
+        return havingPlayer;
     }
 
-    public void spawn() {
-        if(!h) {
-            this.location.setY(this.location.getY());
-            h = true;
-        }
-        armorstand = (ArmorStand)this.location.getWorld().spawn(this.location, ArmorStand.class);
-        armorstand.setGravity(false);
-        armorstand.setVisible(false);
-        Item i = this.location.getWorld().dropItem(this.getLocation(), this.getItemStack());
-        i.setPickupDelay(0);
-        if(this.text != null) {
-            i.setCustomName(this.text);
-            i.setCustomNameVisible(true);
-        }
-        armorstand.setPassenger(i);
+    public static ItemStack getRedFlagItemStack(){
+        ItemStack is = new ItemStack(Material.RED_WOOL);
+        ItemMeta im = is.getItemMeta();
+        assert im != null;
+        im.setDisplayName(ChatColor.RED + "Red Flag");
+        is.setItemMeta(im);
+        return is;
     }
 
-    public Location getLocation() {
-        return this.location;
-    }
-
-    public ItemStack getItemStack() {
-        return this.itemstack;
-    }
-
-    public String getText() {
-        return this.text;
+    public static ItemStack getBlueFlagItemStack(){
+        ItemStack is = new ItemStack(Material.BLUE_WOOL);
+        ItemMeta im = is.getItemMeta();
+        assert im != null;
+        im.setDisplayName(ChatColor.BLUE + "Blue Flag");
+        is.setItemMeta(im);
+        return is;
     }
 }

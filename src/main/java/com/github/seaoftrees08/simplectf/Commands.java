@@ -1,12 +1,13 @@
 package com.github.seaoftrees08.simplectf;
 
-import com.github.seaoftrees08.simplectf.arena.Arena;
-import com.github.seaoftrees08.simplectf.arena.ArenaCreationCause;
-import com.github.seaoftrees08.simplectf.arena.ArenaManager;
+import com.github.seaoftrees08.simplectf.arena.*;
+import com.github.seaoftrees08.simplectf.flag.Flag;
+import com.github.seaoftrees08.simplectf.flag.FlagItem;
 import com.github.seaoftrees08.simplectf.reflection.RefPotionData;
 import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import com.github.seaoftrees08.simplectf.utils.SctfPerms;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -109,7 +110,7 @@ public class Commands implements CommandExecutor {
                 if(ArenaManager.loadArenaNameList().contains(args[2])){
                     Arena arena = new Arena(args[2]);
                     arena.setEnable(false);
-                    arena.save();
+                    //arena.save();
                     sendMessage(sender, args[2] + " is disabled!", ChatColor.GREEN);
                 }else{
                     sendMessage(sender, args[2] + " is not exist.", ChatColor.GRAY);
@@ -189,9 +190,18 @@ public class Commands implements CommandExecutor {
             return true;
         }
 
-        // /simplectf start
+        // /simplectf start <arena>
         if(args[0].equalsIgnoreCase("start") && args.length==2){
-            //TODO: 強制スタート
+            if(ArenaManager.loadArenaNameList().contains(args[1]) && new Arena(args[1]).isEnable()){
+                PlayArena pa = ArenaManager.getPlayArena(args[1]);
+                if(pa.getArenaStatus().equals(ArenaStatus.WAITING)){
+                    //pa.setTime(10);
+                    pa.broadcastInArena(ChatColor.GOLD + "Force start after 10 seconds!");
+                }
+                pa.setTime(10);
+            }else{
+                sendMessage(sender, args[1] + " is not exist.", ChatColor.GRAY);
+            }
             return true;
         }
 
@@ -199,14 +209,20 @@ public class Commands implements CommandExecutor {
         if(args[0].equalsIgnoreCase("version")){
 
             //TODO: 直すこと！
-            PotionEffect pe = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 40, 5);
-            Objects.requireNonNull((Player) sender).addPotionEffect(pe);
 
 
 //            sendMessage(sender, "   ===== Simple CTF Infomation ===== ", ChatColor.GRAY);
 //            sendMessage(sender, "This plugin is to play CTF!", ChatColor.GRAY);
 //            sendMessage(sender, "version: "+SimpleCTF.getSimpleCTF().getDescription().getVersion(), ChatColor.GRAY);
 //            sendMessage(sender, "Author: Seaoftrees08 (Minecraft ID)", ChatColor.GRAY);
+            return true;
+        }
+
+        // /simplectf reset
+        if(args[0].equalsIgnoreCase("reset") && sender instanceof Player){
+            sendMessage(sender, "reset scoreboard.", ChatColor.GRAY);
+            Player p = (Player) sender;
+            p.setScoreboard(Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard());
             return true;
         }
 
@@ -227,12 +243,13 @@ public class Commands implements CommandExecutor {
         sendMessage(sender, "   ===== Simple CTF CommandList ===== ", ChatColor.GRAY);
         sendMessage(sender, "/simplectf join <arena>     #Join to <arena>", ChatColor.GRAY);
         sendMessage(sender, "/simplectf leave            #Leave from <arena>", ChatColor.GRAY);
-        sendMessage(sender, "/simplectf rate [player]     #Look myrate or [player]rate", ChatColor.GRAY);
+        sendMessage(sender, "/simplectf rate [player]    #Look myrate or [player]rate", ChatColor.GRAY);
         sendMessage(sender, "/simplectf list             #Show arena list", ChatColor.GRAY);
         sendMessage(sender, "/simplectf watch <arena>    #Watch a <arena> game", ChatColor.GRAY);
         sendMessage(sender, "/simplectf back             #back to spawn from Watching game", ChatColor.GRAY);
         sendMessage(sender, "/simplectf version          #view this Plugin Infomation", ChatColor.GRAY);
         sendMessage(sender, "/simplectf start <arena>    #Force start game in <arena>", ChatColor.GRAY);
+        sendMessage(sender, "/simplectf reset            #Reset your scoreboard", ChatColor.GRAY);
         sendMessage(sender, "/simplectf admin            #Admin Cmds", ChatColor.GRAY);
         sendMessage(sender, "", ChatColor.GRAY);
         sendMessage(sender, "You can use /sctf instead of /simplectf", ChatColor.GRAY);

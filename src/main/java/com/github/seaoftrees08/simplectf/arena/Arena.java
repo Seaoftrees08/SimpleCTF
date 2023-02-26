@@ -1,7 +1,6 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
-import com.github.seaoftrees08.simplectf.team.PlayerManager;
 import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import com.github.seaoftrees08.simplectf.utils.Vec3i;
 import org.bukkit.Location;
@@ -22,8 +21,8 @@ public class Arena {
     private final File file;
     protected Vec3i firstPoint;
     protected Vec3i secondPoint;
-    protected Vec3i redFlag;
-    protected Vec3i blueFlag;
+    protected Vec3i redFlagFence;
+    protected Vec3i blueFlagFence;
     protected ArenaLocation redSpawn;
     protected ArenaLocation blueSpawn;
     protected ArenaLocation returnPoint;
@@ -38,8 +37,8 @@ public class Arena {
 
         firstPoint = new Vec3i(yml.getIntegerList(ArenaYamlPath.FIRST_POINT));
         secondPoint = new Vec3i(yml.getIntegerList(ArenaYamlPath.SECOND_POINT));
-        redFlag = new Vec3i(yml.getIntegerList(ArenaYamlPath.RED_FLAG));
-        blueFlag = new Vec3i(yml.getIntegerList(ArenaYamlPath.BLUE_FLAG));
+        redFlagFence = new Vec3i(yml.getIntegerList(ArenaYamlPath.RED_FLAG));
+        blueFlagFence = new Vec3i(yml.getIntegerList(ArenaYamlPath.BLUE_FLAG));
         redSpawn = new ArenaLocation(yml.getStringList(ArenaYamlPath.RED_SPAWN));
         blueSpawn = new ArenaLocation(yml.getStringList(ArenaYamlPath.BLUE_SPAWN));
         returnPoint = new ArenaLocation(yml.getStringList(ArenaYamlPath.RETURN_POINT));
@@ -117,12 +116,12 @@ public class Arena {
         this.secondPoint = v;
     }
 
-    public void setRedFlag(Vec3i v){
-        this.redFlag = v;
+    public void setRedFlagFence(Vec3i v){
+        this.redFlagFence = v;
     }
 
-    public void setBlueFlag(Vec3i v){
-        this.blueFlag = v;
+    public void setBlueFlagFence(Vec3i v){
+        this.blueFlagFence = v;
     }
 
     public void setRedSpawn(Location loc){
@@ -140,6 +139,9 @@ public class Arena {
     public void setRedInv(PlayerInventoryItems pii){
         this.redInv = pii;
     }
+    public PlayerInventoryItems getRedInv(){ return redInv; }
+
+    public PlayerInventoryItems getBlueInv(){ return blueInv; }
 
     public void setBlueInv(PlayerInventoryItems pii){
         this.blueInv = pii;
@@ -162,8 +164,8 @@ public class Arena {
 
         yml.set(ArenaYamlPath.FIRST_POINT, firstPoint.getList());     //firstPoint
         yml.set(ArenaYamlPath.SECOND_POINT, secondPoint.getList());   //secondPoint
-        yml.set(ArenaYamlPath.RED_FLAG, redFlag.getList());           //redFlag
-        yml.set(ArenaYamlPath.BLUE_FLAG, blueFlag.getList());         //blueFlag
+        yml.set(ArenaYamlPath.RED_FLAG, redFlagFence.getList());           //redFlag
+        yml.set(ArenaYamlPath.BLUE_FLAG, blueFlagFence.getList());         //blueFlag
         yml.set(ArenaYamlPath.RED_SPAWN, redSpawn.getStringList());         //redSpawn
         yml.set(ArenaYamlPath.BLUE_SPAWN, blueSpawn.getStringList());       //blueSpawn
         yml.set(ArenaYamlPath.RETURN_POINT, returnPoint.getStringList());   //returnPoint

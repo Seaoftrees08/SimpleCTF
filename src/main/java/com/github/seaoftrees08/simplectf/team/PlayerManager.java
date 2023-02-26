@@ -46,6 +46,7 @@ public class PlayerManager {
 
     /**
      * プレイヤーがどこのPlayArenaに参加しているかどうか
+     * 参加してなければ「not join」を返す
      * @param playerName 検査するplayerName
      * @return 参加しているarenaの名前
      */
