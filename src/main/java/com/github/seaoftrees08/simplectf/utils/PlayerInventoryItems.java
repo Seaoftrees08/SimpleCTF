@@ -3,6 +3,7 @@ package com.github.seaoftrees08.simplectf.utils;
 
 import com.github.seaoftrees08.simplectf.arena.ArenaItem;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -24,8 +25,17 @@ public class PlayerInventoryItems {
 
     }
     public PlayerInventoryItems(PlayerInventory pi){
-        List<ItemStack> contents = Arrays.asList(pi.getContents());
-        for(int i=0; i<5; i++) contents.remove(contents.size()-1);
+        List<ItemStack> contents = new ArrayList<>();
+        for(ItemStack is : pi.getContents()){
+            contents.add(is==null ? new ItemStack(Material.AIR) : is);
+        }
+        int count=0;
+        if(pi.getHelmet() != null) count++;
+        if(pi.getChestplate() != null) count++;
+        if(pi.getLeggings() != null) count++;
+        if(pi.getBoots() != null) count++;
+        if(pi.getItemInOffHand().getType().equals(Material.AIR)) count++;
+        for(int i=0; i<count; i++) contents.remove(contents.size()-1);
         mainItems.addAll(contents);
         headItem = pi.getHelmet()==null ? new ItemStack(Material.AIR) : pi.getHelmet();
         chestItem = pi.getChestplate()==null ? new ItemStack(Material.AIR) : pi.getChestplate();

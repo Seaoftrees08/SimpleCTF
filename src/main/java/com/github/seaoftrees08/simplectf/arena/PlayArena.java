@@ -371,7 +371,7 @@ public class PlayArena extends Arena{
 
             //スコアボード
             ap.player.setScoreboard(Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard());
-            Objects.requireNonNull(scoreboard.getTeam(getBelongTeam(ap.player.getName()))).removeEntry(ap.player.getName());
+            if(scoreboard!=null) Objects.requireNonNull(scoreboard.getTeam(getBelongTeam(ap.player.getName()))).removeEntry(ap.player.getName());
 
         }
 
