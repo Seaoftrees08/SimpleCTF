@@ -25,5 +25,8 @@ hs_err_pid*
 #idea default? https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 .idea/**/workspace.xml
 .idea/**/tasks.xml
-.gradle/
 build/
+
+# Gradle
+.gradle
+!gradle-wrapper.jar

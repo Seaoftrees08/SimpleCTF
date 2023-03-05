@@ -2,3 +2,34 @@ name: SimpleCTF
 version: '${version}'
 main: com.github.seaoftrees08.simplectf.SimpleCTF
 api-version: 1.19
+authors: [Seaoftrees08]
+description: This plugin is to play ctf
+website: https://github.com/Seaoftrees08/SimpleCTF
+
+commands:
+  simplectf:
+    description: This is SimpleCTF Commands.
+    aliases: [sctf]
+    permission: simplectf.simplectf
+    usage: /simplectf
+
+permissions:
+  simplectf.*:
+    description: Give access to all SimpleCTF commands
+    children:
+      simplectf.admin: true
+      simplectf.simplectf: true
+      simplectf.play: true
+      simplectf.force: true
+  simplectf.admin:
+    description: Allows to control SimpleCTF
+    default: op
+  simplectf.simplectf:
+    description: Allows to simplectf commands
+    default: true
+  simplectf.play:
+    description: Allows to play ctf
+    default: true
+  simplectf.force:
+    description: Allows to force playing ctf
+    default: op
