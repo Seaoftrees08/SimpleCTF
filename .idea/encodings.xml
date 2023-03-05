@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/CmdTabCompletion.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/Commands.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/PlayerListeners.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/SimpleCTF.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/arena/Arena.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/arena/ArenaCreation.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/arena/ArenaItem.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/arena/ArenaManager.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/arena/PlayArena.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/clockwork/Playing.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/clockwork/Waiting.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/flag/Flag.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/player/PlayerManager.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/reflection/RefPotionData.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/github/seaoftrees08/simplectf/utils/PlayerInventoryItems.java" charset="UTF-8" />
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8" addBOMForNewFiles="with BOM">
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
