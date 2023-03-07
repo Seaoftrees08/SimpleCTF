@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ArenaItem extends ItemStack {
-    public ArenaItem(ItemStack is){
+public class ArenaItemStack extends ItemStack {
+    public ArenaItemStack(ItemStack is){
         super(nullRemoval(is));
     }
 
-    public ArenaItem(List<String> lst){
+    public ArenaItemStack(List<String> lst){
         super(listToItem(lst));
     }
 
@@ -89,15 +89,15 @@ public class ArenaItem extends ItemStack {
 
     /**
      * ListからItemStackを作る
-     * Listは下記の順が保証されているものとする
+     * Listは下記の順が保証されているものとする(さもなくばAIRを返す)
      * ただし、Index=1, 2は空の場合がある
      * 0: Material名
      * 1: 個数(数字)
-     * 2: MetaData(EnchantName, Level, )
+     * 2: MetaData(EnchantName1, Level, EnchantName2, Level, ...)
      * 3: PoritonData(PotionType, Extended, Upgraded)
      *
-     * @param lst
-     * @return
+     * @param lst 変換元のリスト
+     * @return 変換したItemsStack
      */
     private static ItemStack listToItem(List<String> lst){
         if(lst==null || lst.size()<=3){
