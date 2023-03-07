@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class ArenaItemStack extends ItemStack {
+    public ArenaItemStack(){
+        super(new ItemStack(Material.AIR));
+    }
     public ArenaItemStack(ItemStack is){
         super(nullRemoval(is));
     }
@@ -30,6 +33,10 @@ public class ArenaItemStack extends ItemStack {
 
     public ItemStack getItemStack(){
         return this;
+    }
+
+    public int isAir(){
+        return getType().equals(Material.AIR) ? 1 : 0;
     }
 
     /**

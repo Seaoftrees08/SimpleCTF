@@ -1,33 +1,48 @@
 ﻿package com.github.seaoftrees08.simplectf.arena;
 
-import com.github.seaoftrees08.simplectf.utils.Cuboid;
+import com.github.seaoftrees08.simplectf.SimpleCTF;
+import com.github.seaoftrees08.simplectf.flag.Flag;
+import com.github.seaoftrees08.simplectf.flag.FlagItem;
+import com.github.seaoftrees08.simplectf.utils.*;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Arena {
-    
+
+    public final static String RED_TEAM = "Red Team";
+    public final static String BLUE_TEAM = "Blue Team";
     public final String arenaName;
-    protected final Flag redFlag;
-    protected final Flag blueFlag;
+    private final FileConfiguration yml;
+    private final File file;
     protected Cuboid arenaField;
     protected ArenaTeam redTeam;
     protected ArenaTeam blueTeam;
+    protected Flag redFlag;
+    protected Flag blueFlag;
     protected Scoreboard scoreboard;
-    protected int remTime;
-    protected ArenaPhase phase;
-    protected boolean enable;
-    protected ArenaTeam spectators;
+    protected int remTime = 0;
+    protected ArenaPhase phase = ArenaPhase.NONE;
+    protected boolean enable = false;
+    protected ArenaTeam spectators = new ArenaTeam(TeamColor.SPECTATOR, new StoredPlayerData());
 
     /**
      * CreateArenaにて使われるコンストラクタ
-     * 区別のためにbooleanの値をとっている
-     * falseの場合は`Arena(String arenaName)`と同じ挙動をする
+     * 区別のためにbooleanの値をとっている、まあ使ってないけど
      * @param uniqueName
      * @param isCreation
      */
     protected Arena(String uniqueName, boolean isCreation){
-        arenaName = uniqueName;
-        //TODO?
+        this.arenaName = uniqueName;
+        file = new File(SimpleCTF.getSimpleCTF().getDataFolder(), arenaName+ ".yml");
+        yml = YamlConfiguration.loadConfiguration(file);
     }
 
     /**
@@ -36,16 +51,56 @@ public class Arena {
      * @param arenaName
      */
     public Arena(String arenaName){
-        this.arenaName = arenaName;
-        loadArena();
-    }
+        this(arenaName, false);
 
-    /**
-     * アリーナを読み込む
-     * フィールドの`arenaName`はすでにsetされており、これを用いてロードを行う
-     */
-    private void loadArena(){
-        //TODO
+        //load arena
+        //arena field
+        arenaField = new Cuboid(new Vec3i(yml.getIntegerList(ArenaYamlPath.FIRST_POINT)), new Vec3i(yml.getIntegerList(ArenaYamlPath.SECOND_POINT)));
+
+        //StoredPlayerData for redTeam
+        ArrayList<ArenaItemStack> redMainItems = new ArrayList<>();
+        if(yml.getList(ArenaYamlPath.RED_INV_ITEMS) != null){
+            for(List<String> lst : (List<ArrayList<String>>) yml.getList(ArenaYamlPath.RED_INV_ITEMS)){
+                redMainItems.add(new ArenaItemStack(lst));
+            }
+        }
+        StoredPlayerData red_spd = new StoredPlayerData(
+                redMainItems,
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_HELMET)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_CHEST_PLATE)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_LEGGINGS)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_BOOTS)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_OFFHAND)),
+                new LocationStringList(yml.getStringList(ArenaYamlPath.RED_SPAWN))
+        );
+        redTeam = new ArenaTeam(TeamColor.RED, red_spd);
+
+        //StoredPlayerData for blueTeam
+        ArrayList<ArenaItemStack> blueMainItems = new ArrayList<>();
+        if(yml.getList(ArenaYamlPath.BLUE_INV_ITEMS) != null){
+            for(List<String> lst : (List<ArrayList<String>>) yml.getList(ArenaYamlPath.BLUE_INV_ITEMS)){
+                blueMainItems.add(new ArenaItemStack(lst));
+            }
+        }
+        StoredPlayerData blue_spd = new StoredPlayerData(
+                blueMainItems,
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_HELMET)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_CHEST_PLATE)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_LEGGINGS)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_BOOTS)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_OFFHAND)),
+                new LocationStringList(yml.getStringList(ArenaYamlPath.BLUE_SPAWN))
+        );
+
+        //redFlag
+        redFlag = new Flag(TeamColor.RED, new LocationStringList(yml.getStringList(ArenaYamlPath.RED_FLAG)).getLocation());
+
+        //blueFlag
+        blueFlag = new Flag(TeamColor.BLUE, new LocationStringList(yml.getStringList(ArenaYamlPath.BLUE_FLAG)).getLocation());
+
+        //scoreboard
+        //phaseに分けて各タイミングで実行するため、コンストラクタでは未定義
+
     }
 
 
