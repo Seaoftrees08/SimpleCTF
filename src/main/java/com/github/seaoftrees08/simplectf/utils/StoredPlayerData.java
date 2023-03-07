@@ -69,7 +69,7 @@ public class StoredPlayerData {
      * 設定されているLocationStringListを返す
      * @return 設定されているLocationStringList
      */
-    public LocationStringList getLocation() {
+    public LocationStringList getLocationStringList() {
         return location;
     }
 }

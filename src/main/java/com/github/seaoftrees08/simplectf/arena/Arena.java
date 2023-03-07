@@ -2,13 +2,10 @@
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
 import com.github.seaoftrees08.simplectf.flag.Flag;
-import com.github.seaoftrees08.simplectf.flag.FlagItem;
 import com.github.seaoftrees08.simplectf.utils.*;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
@@ -91,6 +88,7 @@ public class Arena {
                 new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_OFFHAND)),
                 new LocationStringList(yml.getStringList(ArenaYamlPath.BLUE_SPAWN))
         );
+        blueTeam = new ArenaTeam(TeamColor.BLUE, blue_spd);
 
         //redFlag
         redFlag = new Flag(TeamColor.RED, new LocationStringList(yml.getStringList(ArenaYamlPath.RED_FLAG)).getLocation());
@@ -103,7 +101,6 @@ public class Arena {
 
     }
 
-
     /**
      * プレイヤーが本アリーナに参加していない場合は、参加させる
      * このプレイヤーは他のアリーナには所属していないものとする.
@@ -113,22 +110,41 @@ public class Arena {
      * @return すでに所属している -> false、どこにも所属せず正式に参加できた -> true
      */
     public boolean join(Player player){
-        //TODO
-        return false;
+        if(redTeam.isBelonging(player.getName()) || blueTeam.isBelonging(player.getName())) return false;
+
+        if(redTeam.getArenaPlayerList().size() < blueTeam.getArenaPlayerList().size()){
+            redTeam.addMember(new ArenaPlayer(player));
+        }else{
+            blueTeam.addMember(new ArenaPlayer(player));
+        }
+        player.getInventory().clear();
+
+        if(redTeam.getArenaPlayerList().size()>=1 && blueTeam.getArenaPlayerList().size()>=1
+                && (phase.equals(ArenaPhase.NONE) || phase.equals(ArenaPhase.FINISHED))){
+            //TODO: clock work
+        }
+        return true;
     }
 
     /**
      * このアリーナからプレイヤーを退場させる
      * このプレイヤーが本アリーナに所属していない場合`null`が返される.
-     * @param playerName 退場させるプレイヤー名
+     * インベントリの修復等もここで行われる
+     * @param player 退場させるプレイヤー
      * @return 退場させたArenaPlayer (本アリーナに所属していない場合`null`)
      */
-    public ArenaPlayer leave(String playerName){
-        ArenaPlayer player = redTeam.removeMember(playerName);
-        if(player == null) player = blueTeam.removeMember(playerName);
-        if(player == null) return null;
-        //TODO
-        return player;
+    public ArenaPlayer leave(Player player){
+        if(redTeam.isBelonging(player.getName()) || blueTeam.isBelonging(player.getName())) return null;
+
+        ArenaPlayer arenaPlayer = redTeam.removeMember(player.getName());
+        if(arenaPlayer == null) arenaPlayer = blueTeam.removeMember(player.getName());
+        if(arenaPlayer == null) return null;
+
+        arenaPlayer.setInventory(player);
+        player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
+        player.teleport(arenaPlayer.getLocationStringList().getLocation());
+
+        return arenaPlayer;
     }
 
 

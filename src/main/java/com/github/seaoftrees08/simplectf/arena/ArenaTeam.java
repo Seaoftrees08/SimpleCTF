@@ -4,7 +4,6 @@ import com.github.seaoftrees08.simplectf.utils.StoredPlayerData;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ArenaのTeamに関するData Class
@@ -44,7 +43,11 @@ public class ArenaTeam {
      * メンバー一覧を出力する
      * @return メンバーのリスト
      */
-    public List<ArenaPlayer> getArenaPlayerSet(){
+    public List<ArenaPlayer> getArenaPlayerList(){
         return (List<ArenaPlayer>) teamMember.values();
+    }
+
+    public boolean isBelonging(String playerName){
+        return teamMember.containsKey(playerName);
     }
 }
