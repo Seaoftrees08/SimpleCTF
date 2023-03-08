@@ -44,7 +44,7 @@ public class Arena {
 
     /**
      * アリーナを作成、読み込む
-     * これはArenaManagerから呼ばれるもので、config上で存在するアリーナ名のみが使われることを前提とする
+     * これはArenaManagerから呼ばれるもので、config上で存在するアリーナ名(=実在するもの)のみが使われることを前提とする
      * @param arenaName
      */
     public Arena(String arenaName){
@@ -143,6 +143,8 @@ public class Arena {
         arenaPlayer.setInventory(player);
         player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
         player.teleport(arenaPlayer.getLocationStringList().getLocation());
+
+        //TODO:arenaの事後処理
 
         return arenaPlayer;
     }

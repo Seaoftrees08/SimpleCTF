@@ -21,9 +21,9 @@ public class Flag {
 
     private Player havingPlayer;
 
-    public Flag(TeamColor color, Location flagFenceLocation){
-        this.flagItem = getFlagItem(color, flagFenceLocation);
-        campLocation = flagFenceLocation;
+    public Flag(TeamColor color, Location campLocation){
+        this.flagItem = getFlagItem(color, campLocation);
+        this.campLocation = campLocation;
     }
 
     /**

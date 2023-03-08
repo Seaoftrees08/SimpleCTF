@@ -8,7 +8,7 @@ public class Cuboid {
 
     private boolean isCollect = false;
 
-    private Cuboid(Location loc){
+    public Cuboid(Location loc){
         sv.x = loc.getBlockX();
         sv.y = loc.getBlockY();
         sv.z = loc.getBlockZ();
