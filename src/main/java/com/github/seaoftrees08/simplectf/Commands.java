@@ -1,5 +1,6 @@
 package com.github.seaoftrees08.simplectf;
 
+import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import com.github.seaoftrees08.simplectf.utils.SctfPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,11 +36,13 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin create <arena>
             if(args.length>=3 && args[1].equalsIgnoreCase("create") && sender instanceof Player){
-                //TODO
+                if(!ArenaManager.create(args[2], (Player) sender)){
+                    sendMessage(sender, "Arena creation failed! because this arena already exist.", ChatColor.RED);
+                }
                 return true;
             }
 
-            // /simplectf admin setInv
+            // /simplectf admin setTeam
             if(args.length==2 && args[1].equalsIgnoreCase("setTeam") && sender instanceof Player){
                 //TODO
                 return true;

@@ -165,6 +165,7 @@ public class CreateArena extends Arena{
         blueTeam = new ArenaTeam(TeamColor.BLUE, spd);
         save();
         phase = ArenaPhase.FINISHED;
+        ArenaManager.finishCreation(arenaName);
         sendMessage("Finish arena creation! Arena " + ChatColor.AQUA + arenaName + ChatColor.GREEN + " was created!");
     }
 
