@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 
 public class ArenaPlayer extends StoredPlayerData {
 
-    public final String playerName;
+    public final Player player;
 
     public ArenaPlayer(Player player) {
         super(player.getInventory(), player.getLocation());
-        playerName = player.getName();
+        this.player = player;
     }
 }

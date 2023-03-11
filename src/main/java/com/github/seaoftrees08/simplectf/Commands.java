@@ -131,7 +131,7 @@ public class Commands implements CommandExecutor {
         // /simplectf join <arena>
         if(args.length>=2 && args[0].equalsIgnoreCase("join") && sender.hasPermission(SctfPerms.PLAY)
                 && sender instanceof Player){
-            //TODO
+
             return true;
         }
 
