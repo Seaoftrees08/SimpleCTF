@@ -2,16 +2,17 @@ package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
 import com.github.seaoftrees08.simplectf.clockwork.Waiting;
+import com.github.seaoftrees08.simplectf.flag.Flag;
 import com.github.seaoftrees08.simplectf.utils.StoredPlayerData;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
@@ -118,18 +119,115 @@ public class PlayArena extends Arena{
 
     public void setPhase(ArenaPhase phase){ this.phase = phase; }
 
+    public Flag getRedFlag(){
+        return redFlag;
+    }
+
+    public Flag getBlueFlag(){
+        return blueFlag;
+    }
+
     public boolean canPlay(){
         return !enable && redTeam.getArenaPlayerList().size()>0 && blueTeam.getArenaPlayerList().size()>0;
     }
 
+
     /**
-     * アリーナが始まるときに呼ばれるところ.
-     * フィールドを初期化する
+     * 赤旗をキャンプに設置する
+     *
+     * @param first 最初の呼び出しか(最初の呼び出しでなければbroadcastする)
      */
-    public void whenStartGame(){
-        //TODO:すたーと
+    public void spawnRedFlagAtBase(boolean first){
+        redFlag.spawnCamp();
+        redFlag.onGroundedTime = 0;
+        if(!first) broadcastInArena(ChatColor.RED + "RED FLAG" + ChatColor.GREEN + " is returned base.");
     }
 
+    /**
+     * 青旗をキャンプに設置する
+     *
+     * @param first 最初の呼び出しか(最初の呼び出しでなければbroadcastする)
+     */
+    public void spawnBlueFlagAtBase(boolean first){
+        blueFlag.spawnCamp();
+        blueFlag.onGroundedTime = 0;
+        if(!first) broadcastInArena(ChatColor.BLUE + "BLUE FLAG" + ChatColor.GREEN + " is returned base.");
+    }
+
+    /**
+     * Flagのパーティクルを出す
+     */
+    public void spawnFlagParticle(){
+        //赤旗
+        Location l = redFlag.getLocation();
+        Objects.requireNonNull(l.getWorld()).playEffect(l, Effect.MOBSPAWNER_FLAMES, 1, 100);
+
+        //青旗
+        l = blueFlag.getLocation();
+        Objects.requireNonNull(l.getWorld()).playEffect(l, Effect.MOBSPAWNER_FLAMES, 1, 100);
+    }
+
+    /**
+     * 最初のスポーン、死んだときに呼び出される.
+     * インベントリの設定、ゲームモードの設定、テレポ、最初のリスキル対策エフェクトをやってくれる
+     * @param player 適応するプレイヤー
+     */
+    public void whenSpawn(Player player){
+        //スポーン, 除外設定はこの中でやってくれている
+        redTeam.spawnPlayer(player);
+        blueTeam.spawnPlayer(player);
+
+        //リスキル対策
+        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 40, 5));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 40, 5));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 40, 5));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 40, 5));
+    }
+
+    /**
+     * アリーナが始まるときに呼ばれるところ.
+     * アリーナの戦場を初期化する
+     */
+    public void whenStartGame(){
+        //announce
+        broadcastInArena(ChatColor.GOLD + "Game Start!");
+        broadcastInArena("300 seconds remaining time.");
+
+        //ApplyItems and Gamemode and teleport
+        joinedAllPlayerList().forEach(this::whenSpawn);
+
+        //setSpawnは効かないのでそのまま.(PlayerListenerで対応)
+
+        //setArenaPhase
+        phase = ArenaPhase.PLAYING;
+
+        //setFlag
+        spawnRedFlagAtBase(true);
+        spawnBlueFlagAtBase(true);
+    }
+
+    /**
+     * アリーナが終わるときに呼ばれるところ
+     */
+    public void whenFinish(){
+        //announce
+        broadcastInArena(ChatColor.GOLD + "Game Finished!");
+        if(redTeam.getScore() == blueTeam.getScore()){
+            broadcastInArena("Game result: " + ChatColor.LIGHT_PURPLE + "DRAW");
+        }else if(redTeam.getScore() > blueTeam.getScore()){
+            broadcastInArena("Game result: " + ChatColor.RED + "Red Team" + ChatColor.GREEN + " Win!");
+        }else{
+            broadcastInArena("Game result: " + ChatColor.BLUE + "Blue Team" + ChatColor.GREEN + " Win!");
+        }
+
+        //status
+        phase = ArenaPhase.FINISHED;
+
+        //player leave
+        joinedAllPlayerList().forEach(ArenaManager::leave);
+
+        //フィールドの初期化についてはleaveにて行われるためここでは行わない.
+    }
 
     /**
      * アリーナに所属しているプレイヤー一覧を返す

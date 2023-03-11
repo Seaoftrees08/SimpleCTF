@@ -1,6 +1,8 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.utils.StoredPlayerData;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,5 +62,20 @@ public class ArenaTeam {
 
     public StoredPlayerData getStoredPlayerData(){
         return teamData;
+    }
+
+    /**
+     * 最初や、死んだときにスポーンする際に呼び出される.
+     * このチームに所属していない場合何もしない
+     *
+     * @param player 初期化するプレイヤー
+     */
+    public void spawnPlayer(Player player){
+        if(!isBelonging(player.getName())) return;
+
+        teamData.applyGameMode(player);
+        teamData.setInventory(player);
+        player.teleport(teamData.getLocationStringList().getLocation());
+
     }
 }
