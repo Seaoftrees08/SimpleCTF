@@ -14,11 +14,7 @@ public class Vec3i {
     public int z = 0;
 
     public Vec3i(){
-    }
-    public Vec3i(Location loc){
-        this.x = loc.getBlockX();
-        this.y = loc.getBlockY();
-        this.z = loc.getBlockZ();
+
     }
 
     public Vec3i(List<Integer> lst){

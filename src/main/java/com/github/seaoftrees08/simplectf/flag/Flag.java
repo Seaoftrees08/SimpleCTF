@@ -15,7 +15,6 @@ public class Flag {
     public FlagStatus status = FlagStatus.CAMP;
     private final FlagItem flagItem;
     private final Location campLocation;
-    //    private Location location;
     public int onGroundedTime = 0;//-1 -> PlayerListener等でonGroundを感知、0->camp、n->地面に落ちた時のremTime
     private Item onGroundItem;
 
@@ -109,6 +108,7 @@ public class Flag {
             }
             default -> {}
         }
+        System.out.println("called!!!!!");
         return new FlagItem(null, "", new ItemStack(Material.AIR));
     }
 }

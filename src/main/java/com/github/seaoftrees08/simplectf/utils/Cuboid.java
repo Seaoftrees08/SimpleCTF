@@ -14,16 +14,9 @@ public class Cuboid {
         sv.x = loc.getBlockX();
         sv.y = loc.getBlockY();
         sv.z = loc.getBlockZ();
-    }
-
-    public Cuboid(Location locA, Location locB){
-        sv.x = Math.min(locA.getBlockX(), locB.getBlockX());
-        sv.y = Math.min(locA.getBlockY(), locB.getBlockY());
-        sv.z = Math.min(locA.getBlockZ(), locB.getBlockZ());
-        bv.x = Math.max(locA.getBlockX(), locB.getBlockX());
-        bv.y = Math.max(locA.getBlockY(), locB.getBlockY());
-        bv.z = Math.max(locA.getBlockZ(), locB.getBlockZ());
-        isCollect = true;
+        bv.x = loc.getBlockX();
+        bv.y = loc.getBlockY();
+        bv.z = loc.getBlockZ();
     }
 
     public Cuboid(Vec3i v1, Vec3i v2){
@@ -41,9 +34,9 @@ public class Cuboid {
         sv.x = Math.min(loc.getBlockX(), sv.x);
         sv.y = Math.min(loc.getBlockY(), sv.y);
         sv.z = Math.min(loc.getBlockZ(), sv.z);
-        bv.x = Math.max(loc.getBlockX(), sv.x);
-        bv.y = Math.max(loc.getBlockY(), sv.y);
-        bv.z = Math.max(loc.getBlockZ(), sv.z);
+        bv.x = Math.max(loc.getBlockX(), bv.x);
+        bv.y = Math.max(loc.getBlockY(), bv.y);
+        bv.z = Math.max(loc.getBlockZ(), bv.z);
         isCollect = true;
     }
 

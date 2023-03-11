@@ -108,4 +108,8 @@ public class Arena {
         return allowCommands;
     }
 
+    public boolean isEnable(){
+        return enable;
+    }
+
 }

@@ -9,23 +9,19 @@ import java.util.Objects;
 
 public class FlagItem {
     private ArmorStand armorstand;
-    private Location fenceLocation;
+    private final Location fenceLocation;
     private String text = null;
     private ItemStack itemstack;
 
     private boolean h = false;
 
     public FlagItem(Location fenceLocation, String text, ItemStack itemstack){
-        setFenceLocation(fenceLocation);
-        setText(text);
-        setItemStack(itemstack);
-    }
-
-    public void setFenceLocation(Location fenceLocation) {
         Location l = fenceLocation.clone();
         l.setX(l.getX()+0.5);
         l.setZ(l.getZ()+0.5);
         this.fenceLocation = l;
+        setText(text);
+        setItemStack(itemstack);
     }
 
     public void setText(String text) {
@@ -37,7 +33,6 @@ public class FlagItem {
     }
 
     public void kill() {
-        this.fenceLocation = null;
         if(this.armorstand!=null){
             this.armorstand.remove();
             if(this.armorstand.getPassengers().size() != 0) this.armorstand.getPassengers().forEach(it -> this.armorstand.removePassenger(it));

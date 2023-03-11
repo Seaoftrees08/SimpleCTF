@@ -61,6 +61,11 @@ public class Commands implements CommandExecutor {
             if(args.length==3 && args[1].equalsIgnoreCase("remove")){
                 if(ArenaManager.existPlayArena(args[2])){
                     CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
+                    if(ca.isEnable()){
+                        sendMessage(sender, "This arena is enabled.", ChatColor.RED);
+                        sendMessage(sender, "If you want to remove this arena, please type /sctf admin disable " + args[2], ChatColor.GRAY);
+                        return true;
+                    }
                     ca.deleteArena();
                     sendMessage(sender, "Arena Removed!", ChatColor.GREEN);
                 }else{

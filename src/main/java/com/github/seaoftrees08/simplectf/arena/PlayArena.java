@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public class PlayArena extends Arena{
 
-    private final static double NEAR_DISTANCE = 1.5; //距離の2乗した値
+    private final static double NEAR_DISTANCE = 1.8; //距離の2乗した値
     private int remTime = 0;
     protected ArenaTeam spectators = new ArenaTeam(TeamColor.SPECTATOR, new StoredPlayerData());
     public PlayArena(String arenaName) {
@@ -103,6 +103,15 @@ public class PlayArena extends Arena{
                     .filter(en -> arenaField.contain(en.getLocation()))
                     .toList().forEach(Entity::remove);
 
+            //debug
+            List<Entity> ents = Objects.requireNonNull(redFlag.getCampLocation().getWorld())
+                    .getEntities()
+                    .stream()
+                    .filter(en -> en.getType().equals(EntityType.DROPPED_ITEM) || en.getType().equals(EntityType.ARMOR_STAND))
+                    .toList();
+            System.out.println("debug: " + ents.size());
+            ents.forEach(System.out::println);
+
             //Arena remove from memory
             ArenaManager.removePlayArena(arenaName);
         }
@@ -110,9 +119,6 @@ public class PlayArena extends Arena{
         return arenaPlayer;
     }
 
-    public boolean isEnable(){
-        return enable;
-    }
     public void setTime(int time){ this.remTime = time; }
 
     public int getTime(){ return remTime; }
@@ -159,7 +165,7 @@ public class PlayArena extends Arena{
      */
     public void takePointBlue(){
         if(phase.equals(ArenaPhase.PLAYING)){
-            redTeam.increaseScore();
+            blueTeam.increaseScore();
             broadcastInArena(ChatColor.BLUE + "Blue Team" + ChatColor.GREEN + " get one Point!");
             spawnRedFlagAtBase(false);
         }
@@ -402,7 +408,7 @@ public class PlayArena extends Arena{
     }
 
     public Location getBlueRespawnLocation(){
-        return redTeam.getStoredPlayerData().getLocationStringList().getLocation();
+        return blueTeam.getStoredPlayerData().getLocationStringList().getLocation();
     }
 
 

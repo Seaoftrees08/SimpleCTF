@@ -93,16 +93,16 @@ public class PlayerListeners implements Listener {
             TeamColor tc = pa.getPlayerTeamColor(playerName);
             //RedFlag
             if(tc.equals(TeamColor.RED) && pa.getBlueFlag().hasFlag(playerName)){
-                e.getEntity().getInventory().remove(Material.RED_WOOL);
-                e.getEntity().getInventory().remove(Material.BLUE_WOOL);
+                e.getDrops().remove(Flag.getRedFlagItemStack());
+                e.getDrops().remove(Flag.getBlueFlagItemStack());
                 Location loc = e.getEntity().getLocation();
                 Item i = Objects.requireNonNull(loc.getWorld()).dropItemNaturally(loc, Flag.getBlueFlagItemStack());
                 pa.dropBlueFlag(e.getEntity(), i);
             }
             //BlueFlag
             if(tc.equals(TeamColor.BLUE) && pa.getRedFlag().hasFlag(playerName)){
-                e.getEntity().getInventory().remove(Material.RED_WOOL);
-                e.getEntity().getInventory().remove(Material.BLUE_WOOL);
+                e.getDrops().remove(Flag.getRedFlagItemStack());
+                e.getDrops().remove(Flag.getBlueFlagItemStack());
                 Location loc = e.getEntity().getLocation();
                 Item i = Objects.requireNonNull(loc.getWorld()).dropItemNaturally(loc, Flag.getRedFlagItemStack());
                 pa.dropRedFlag(e.getEntity(), i);
@@ -118,7 +118,6 @@ public class PlayerListeners implements Listener {
             String playerName = e.getEntity().getName();
             PlayArena pa = ArenaManager.getPlayArena(arenaName);
             TeamColor tc = pa.getPlayerTeamColor(playerName);
-            System.out.println("debug: " + Objects.requireNonNull(e.getItem().getItemStack().getItemMeta()).getDisplayName());
 
             //RedFlagを拾ったとき
             if(e.getItem().getItemStack().getType().equals(Material.RED_WOOL)
@@ -136,7 +135,6 @@ public class PlayerListeners implements Listener {
             //Blue Flagを拾ったとき
             }else if(e.getItem().getItemStack().getType().equals(Material.BLUE_WOOL)
                     && Objects.requireNonNull(e.getItem().getItemStack().getItemMeta()).getDisplayName().contains(Flag.BLUE_FLAG_NAME)){
-                System.out.println("debug: pickup BLUE_FLAG");
                 if(tc.equals(TeamColor.RED)) {
                     pa.pickupBlueFlag(SimpleCTF.getSimpleCTF().getServer().getPlayer(e.getEntity().getUniqueId()));
                 }else if(tc.equals(TeamColor.BLUE)
