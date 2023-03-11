@@ -38,12 +38,13 @@ public class FlagItem {
 
     public void kill() {
         this.fenceLocation = null;
-        if(this.armorstand!=null) this.armorstand.remove();
-        assert this.armorstand != null;
-        if(this.armorstand.getPassengers().size() != 0) this.armorstand.getPassengers().forEach(it -> this.armorstand.removePassenger(it));
-        this.armorstand = null;
-        this.text = null;
-        this.itemstack = null;
+        if(this.armorstand!=null){
+            this.armorstand.remove();
+            if(this.armorstand.getPassengers().size() != 0) this.armorstand.getPassengers().forEach(it -> this.armorstand.removePassenger(it));
+            this.armorstand = null;
+            this.text = null;
+            this.itemstack = null;
+        }
     }
 
     public void spawn() {

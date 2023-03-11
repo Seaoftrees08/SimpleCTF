@@ -2,7 +2,6 @@ package com.github.seaoftrees08.simplectf.utils;
 
 import org.bukkit.Location;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Cuboid {
@@ -48,12 +47,12 @@ public class Cuboid {
         isCollect = true;
     }
 
-    public List<Integer> getMinPointIntegerList(){
-        return sv.getList();
+    public Vec3i getMinPointVec3i(){
+        return sv;
     }
 
-    public List<Integer> getMaxPointIntegerList(){
-        return bv.getList();
+    public Vec3i getMaxPointVec3i(){
+        return bv;
     }
 
 

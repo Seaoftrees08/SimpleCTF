@@ -13,6 +13,7 @@ public class ArenaTeam {
 
     final private HashMap<String, ArenaPlayer> teamMember = new HashMap<>();// playerName, ArenaPlayer
     final private StoredPlayerData teamData;
+    private int score;
     final public TeamColor teamColor;
 
     public ArenaTeam(TeamColor tc, StoredPlayerData teamData){
@@ -26,8 +27,14 @@ public class ArenaTeam {
      * @param ap 追加するメンバー
      */
     public void addMember(ArenaPlayer ap){
-        //TODO
+        teamMember.put(ap.player.getName(), ap);
     }
+
+    public void setScore(int value){
+        score = value;
+    }
+
+    public int getScore(){ return score; }
 
     /**
      * メンバーを削除する.
@@ -44,7 +51,7 @@ public class ArenaTeam {
      * @return メンバーのリスト
      */
     public List<ArenaPlayer> getArenaPlayerList(){
-        return (List<ArenaPlayer>) teamMember.values();
+        return teamMember.values().stream().toList();
     }
 
     public boolean isBelonging(String playerName){

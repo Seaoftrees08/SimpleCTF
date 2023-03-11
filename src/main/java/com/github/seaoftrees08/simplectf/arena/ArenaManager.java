@@ -164,7 +164,7 @@ public class ArenaManager {
         }
 
         playArena.get(arenaName).join(player);
-        sendMessage(player, "You join Arena!.", ChatColor.GOLD);
+        sendMessage(player, "You join Arena!", ChatColor.GOLD);
 
     }
 
@@ -183,6 +183,38 @@ public class ArenaManager {
         String arenaName = whereBelong(player.getName());
         playArena.get(arenaName).leave(player);
         sendMessage(player, "You leaved Arena.", ChatColor.GOLD);
+    }
+
+    public static void removePlayArena(String arenaName){
+        playArena.remove(arenaName);
+    }
+
+    /**
+     * PlayArenaを取得する. ClockWork用
+     *
+     * @param arenaName 取得するアリーナ名
+     * @return 該当するPlayArena. 無ければnullが帰る
+     */
+    public static PlayArena getPlayArena(String arenaName){
+        return playArena.getOrDefault(arenaName, null);
+    }
+
+    /**
+     * アリーナのカウントダウンを強制10秒にする.
+     *
+     * @param arenaName 強制したいアリーナ名
+     * @return 成功したかどうか(アリーナが存在しないなどで失敗するとfalseが返る)
+     */
+    public static boolean forceStart(String arenaName){
+        if(!existPlayArena(arenaName)){
+            return false;
+        }
+        PlayArena pa = playArena.get(arenaName);
+        if(pa.phase.equals(ArenaPhase.WAITING) || pa.phase.equals(ArenaPhase.PLAYING)){
+            pa.setTime(10);
+            return true;
+        }
+        return false;
     }
 
     // -------------------- other --------------------- //

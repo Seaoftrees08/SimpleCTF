@@ -8,7 +8,7 @@ public class ArenaPlayer extends StoredPlayerData {
     public final Player player;
 
     public ArenaPlayer(Player player) {
-        super(player.getInventory(), player.getLocation());
+        super(player.getInventory(), player.getLocation(), player.getGameMode());
         this.player = player;
     }
 }

@@ -1,5 +1,6 @@
 package com.github.seaoftrees08.simplectf.utils;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,11 +20,11 @@ public class StoredPlayerData {
     private ArenaItemStack boots = new ArenaItemStack(new ItemStack(Material.AIR));
     private ArenaItemStack offHand = new ArenaItemStack(new ItemStack(Material.AIR));
     private LocationStringList location; //spawn location or return location
+    private GameMode gamemode = GameMode.ADVENTURE;
 
     public StoredPlayerData(){
-
     }
-    public StoredPlayerData(PlayerInventory pi, Location loc){
+    public StoredPlayerData(PlayerInventory pi, Location loc, GameMode gamemode){
         for(ItemStack is : pi.getContents()) invContents.add(new ArenaItemStack(is));
         helmet = new ArenaItemStack(pi.getHelmet());
         chest = new ArenaItemStack(pi.getChestplate());
@@ -38,6 +39,8 @@ public class StoredPlayerData {
                 + boots.isAir()
                 + offHand.isAir();
         for(int i=0; i<count; i++) invContents.remove(invContents.size()-1);
+
+        this.gamemode = gamemode;
     }
 
     /**
@@ -108,6 +111,10 @@ public class StoredPlayerData {
      */
     public List<String> getOffHandItemStringList(){
         return offHand.getStringList();
+    }
+
+    public void applyGameMode(Player player){
+        player.setGameMode(gamemode);
     }
 
     /**

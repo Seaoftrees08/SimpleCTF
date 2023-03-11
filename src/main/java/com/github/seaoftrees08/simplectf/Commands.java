@@ -131,14 +131,13 @@ public class Commands implements CommandExecutor {
         // /simplectf join <arena>
         if(args.length>=2 && args[0].equalsIgnoreCase("join") && sender.hasPermission(SctfPerms.PLAY)
                 && sender instanceof Player){
-
+            ArenaManager.join(args[1], (Player) sender);
             return true;
         }
 
         // /simplectf leave
         if(args[0].equalsIgnoreCase("leave") && sender instanceof Player){
-            Player p = (Player) sender;
-            //TODO
+            ArenaManager.leave((Player) sender);
             return true;
         }
 
@@ -163,7 +162,9 @@ public class Commands implements CommandExecutor {
 
         // /simplectf start <arena>
         if(args[0].equalsIgnoreCase("start") && args.length==2){
-            //TODO
+            if(ArenaManager.forceStart(args[1])){
+                sendMessage(sender, "Set the countdown to 10 seconds.", ChatColor.GOLD);
+            }
             return true;
         }
 
