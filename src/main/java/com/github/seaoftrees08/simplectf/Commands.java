@@ -40,13 +40,7 @@ public class Commands implements CommandExecutor {
             }
 
             // /simplectf admin setInv
-            if(args.length==2 && args[1].equalsIgnoreCase("setInv") && sender instanceof Player){
-                //TODO
-                return true;
-            }
-
-            // /simplectf admin setLoc
-            if(args.length==2 && args[1].equalsIgnoreCase("setLoc") && sender instanceof Player){
+            if(args.length==2 && args[1].equalsIgnoreCase("setTeam") && sender instanceof Player){
                 //TODO
                 return true;
             }
@@ -188,8 +182,7 @@ public class Commands implements CommandExecutor {
         sendMessage(sender, "   ===== Simple CTF Admin CommandList ===== ", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin create <arena>     #create <arena>", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin remove <arena>     #remove <arena>", ChatColor.GRAY);
-        sendMessage(sender, "/sctf admin setInv             #use this when creating arena", ChatColor.GRAY);
-        sendMessage(sender, "/sctf admin setLoc             #use this when creating arena", ChatColor.GRAY);
+        sendMessage(sender, "/sctf admin setTeam            #use this when creating arena", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin enable <arena>     #enable <arena>", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin disable <arena>    #disable <arena>", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin addCmd <cmd>       #add usable command contain /", ChatColor.GRAY);

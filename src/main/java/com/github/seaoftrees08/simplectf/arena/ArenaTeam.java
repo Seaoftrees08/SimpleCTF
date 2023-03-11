@@ -12,12 +12,12 @@ import java.util.List;
 public class ArenaTeam {
 
     final private HashMap<String, ArenaPlayer> teamMember = new HashMap<>();// playerName, ArenaPlayer
-    final private StoredPlayerData teamItems;
+    final private StoredPlayerData teamData;
     final public TeamColor teamColor;
 
-    public ArenaTeam(TeamColor tc, StoredPlayerData teamItems){
+    public ArenaTeam(TeamColor tc, StoredPlayerData teamData){
         teamColor = tc;
-        this.teamItems = teamItems;
+        this.teamData = teamData;
     }
 
     /**
@@ -49,5 +49,9 @@ public class ArenaTeam {
 
     public boolean isBelonging(String playerName){
         return teamMember.containsKey(playerName);
+    }
+
+    public StoredPlayerData getStoredPlayerData(){
+        return teamData;
     }
 }

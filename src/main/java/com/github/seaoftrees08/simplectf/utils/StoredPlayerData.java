@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StoredPlayerData {
@@ -61,8 +62,52 @@ public class StoredPlayerData {
      * @param player 設定するプレイヤー
      */
     public void setInventory(Player player){
-        player.getInventory();
-        //TODO
+        PlayerInventory pi = player.getInventory();
+        clearInventory(pi);
+
+        //inventory set
+        invContents.forEach(pi::addItem);
+        pi.setHelmet(helmet);
+        pi.setChestplate(chest);
+        pi.setLeggings(leggings);
+        pi.setBoots(boots);
+        pi.setItemInOffHand(offHand);
+    }
+
+    /**
+     * メインアイテムのStringListのListを返す.
+     * yaml保存用
+     * @return メインアイテムのStringListのList
+     */
+    public List<List<String>> getMainItemStringList(){
+        return invContents.stream()
+                .map(ArenaItemStack::getStringList)
+                .toList();
+    }
+
+    public List<String> getHelmetStringList(){
+        return helmet.getStringList();
+    }
+
+    public List<String> getChestStringList(){
+        return chest.getStringList();
+    }
+
+    public List<String> getLeggingsStringList(){
+        return leggings.getStringList();
+    }
+
+    public List<String> getBootsStringList(){
+        return boots.getStringList();
+    }
+
+    /**
+     * offHandに持っているアイテムのStringListを返す
+     * yaml保存用
+     * @return offHandに持っているアイテムのStringList
+     */
+    public List<String> getOffHandItemStringList(){
+        return offHand.getStringList();
     }
 
     /**
@@ -71,5 +116,14 @@ public class StoredPlayerData {
      */
     public LocationStringList getLocationStringList() {
         return location;
+    }
+
+    public static void clearInventory(PlayerInventory pi){
+        pi.clear();
+        pi.setHelmet(new ItemStack(Material.AIR));
+        pi.setChestplate(new ItemStack(Material.AIR));
+        pi.setLeggings(new ItemStack(Material.AIR));
+        pi.setBoots(new ItemStack(Material.AIR));
+        pi.setItemInOffHand(new ItemStack(Material.AIR));
     }
 }

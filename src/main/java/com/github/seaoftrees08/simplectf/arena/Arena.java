@@ -17,8 +17,8 @@ public class Arena {
     public final static String RED_TEAM = "Red Team";
     public final static String BLUE_TEAM = "Blue Team";
     public final String arenaName;
-    private final FileConfiguration yml;
-    private final File file;
+    protected final FileConfiguration yml;
+    protected final File file;
     protected Cuboid arenaField;
     protected ArenaTeam redTeam;
     protected ArenaTeam blueTeam;
@@ -33,8 +33,8 @@ public class Arena {
     /**
      * CreateArenaにて使われるコンストラクタ
      * 区別のためにbooleanの値をとっている、まあ使ってないけど
-     * @param uniqueName
-     * @param isCreation
+     * @param uniqueName アリーナ名. 使用されていないことを要請する
+     * @param isCreation 区別のためにbooleanの値をとっている、まあ使ってないけど(2回目)
      */
     protected Arena(String uniqueName, boolean isCreation){
         this.arenaName = uniqueName;

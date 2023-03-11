@@ -2,6 +2,9 @@
 
 import org.bukkit.Location;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Cuboid {
     private final Vec3i sv = new Vec3i(); //small
     private final Vec3i bv = new Vec3i(); //big
@@ -44,6 +47,15 @@ public class Cuboid {
         bv.z = Math.max(loc.getBlockZ(), sv.z);
         isCollect = true;
     }
+
+    public List<Integer> getMinPointIntegerList(){
+        return sv.getList();
+    }
+
+    public List<Integer> getMaxPointIntegerList(){
+        return bv.getList();
+    }
+
 
     public boolean contain(Location loc){
         return sv.x < loc.getX() && loc.getX() < bv.x
