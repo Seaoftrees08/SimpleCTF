@@ -1,4 +1,4 @@
-﻿package com.github.seaoftrees08.simplectf.utils;
+package com.github.seaoftrees08.simplectf.utils;
 
 import com.github.seaoftrees08.simplectf.reflection.RefPotionData;
 import org.bukkit.Material;

@@ -1,4 +1,4 @@
-﻿package com.github.seaoftrees08.simplectf.arena;
+package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
 import com.github.seaoftrees08.simplectf.flag.Flag;
@@ -45,7 +45,7 @@ public class Arena {
     /**
      * アリーナを作成、読み込む
      * これはArenaManagerから呼ばれるもので、config上で存在するアリーナ名(=実在するもの)のみが使われることを前提とする
-     * @param arenaName
+     * @param arenaName 読み込むアリーナ名
      */
     public Arena(String arenaName){
         this(arenaName, false);

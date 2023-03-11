@@ -1,4 +1,4 @@
-﻿package com.github.seaoftrees08.simplectf.utils;
+package com.github.seaoftrees08.simplectf.utils;
 
 import org.bukkit.Location;
 

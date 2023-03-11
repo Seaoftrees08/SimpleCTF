@@ -1,4 +1,4 @@
-﻿package com.github.seaoftrees08.simplectf.arena;
+package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.utils.StoredPlayerData;
 

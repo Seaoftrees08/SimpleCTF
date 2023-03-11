@@ -1,4 +1,4 @@
-﻿package com.github.seaoftrees08.simplectf.flag;
+package com.github.seaoftrees08.simplectf.flag;
 
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;

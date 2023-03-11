@@ -1,4 +1,4 @@
-﻿package com.github.seaoftrees08.simplectf.utils;
+package com.github.seaoftrees08.simplectf.utils;
 
 public class ArenaYamlPath {
     public static final String FIRST_POINT = "FirstPoint";

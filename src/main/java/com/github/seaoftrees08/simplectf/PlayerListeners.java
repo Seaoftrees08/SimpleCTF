@@ -1,4 +1,4 @@
-﻿package com.github.seaoftrees08.simplectf;
+package com.github.seaoftrees08.simplectf;
 
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import com.github.seaoftrees08.simplectf.arena.ArenaPhase;
@@ -22,7 +22,7 @@ public class PlayerListeners implements Listener {
             String arenaName = ArenaManager.getBelongingCreateArenaName(playerName);
             ArenaPhase ap = ArenaManager.getCreateArenaPhase(arenaName);
             if(ap.equals(ArenaPhase.FIRST_POINT_SETTING) || ap.equals(ArenaPhase.SECOND_POINT_SETTING)
-                || ap.equals(ArenaPhase.RED_FLAG_SETTING) || ap.equals(ArenaPhase.BLUE_FLAG_SETTING)){
+                    || ap.equals(ArenaPhase.RED_FLAG_SETTING) || ap.equals(ArenaPhase.BLUE_FLAG_SETTING)){
                 ArenaManager.doCreateFlow(arenaName, e.getBlock().getLocation(), null);
                 e.setCancelled(true);
             }
