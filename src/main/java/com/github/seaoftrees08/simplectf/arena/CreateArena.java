@@ -125,6 +125,10 @@ public class CreateArena extends Arena{
         }
     }
 
+    public void setEnable(boolean value){
+        enable = value;
+    }
+
     private void setFirstPoint(Location loc){
         arenaField = new Cuboid(loc);
         phase = ArenaPhase.SECOND_POINT_SETTING;

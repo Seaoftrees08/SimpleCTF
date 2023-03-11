@@ -78,13 +78,25 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin enable <arena>
             if(args.length==3 && args[1].equalsIgnoreCase("enable")){
-                //TODO
+                if(ArenaManager.existPlayArena(args[2])){
+                    CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
+                    ca.setEnable(true);
+                    ca.save();
+                }else{
+                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 
             // /simplectf admin disable <arena>
             if(args.length==3 && args[1].equalsIgnoreCase("disable")){
-                //TODO
+                if(ArenaManager.existPlayArena(args[2])){
+                    CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
+                    ca.setEnable(false);
+                    ca.save();
+                }else{
+                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 
