@@ -103,15 +103,6 @@ public class PlayArena extends Arena{
                     .filter(en -> arenaField.contain(en.getLocation()))
                     .toList().forEach(Entity::remove);
 
-            //debug
-            List<Entity> ents = Objects.requireNonNull(redFlag.getCampLocation().getWorld())
-                    .getEntities()
-                    .stream()
-                    .filter(en -> en.getType().equals(EntityType.DROPPED_ITEM) || en.getType().equals(EntityType.ARMOR_STAND))
-                    .toList();
-            System.out.println("debug: " + ents.size());
-            ents.forEach(System.out::println);
-
             //Arena remove from memory
             ArenaManager.removePlayArena(arenaName);
         }

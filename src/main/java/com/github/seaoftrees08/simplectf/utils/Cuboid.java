@@ -2,8 +2,6 @@ package com.github.seaoftrees08.simplectf.utils;
 
 import org.bukkit.Location;
 
-import java.util.List;
-
 public class Cuboid {
     private final Vec3i sv = new Vec3i(); //small
     private final Vec3i bv = new Vec3i(); //big
