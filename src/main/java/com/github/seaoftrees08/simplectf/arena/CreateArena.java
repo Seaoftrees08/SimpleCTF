@@ -17,7 +17,7 @@ import java.util.List;
 
 public class CreateArena extends Arena{
 
-    private final Player author;
+    public final Player author;
 
     /**
      * 最初のアリーナ作成時に呼ばれる場所.

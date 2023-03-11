@@ -1,6 +1,7 @@
 package com.github.seaoftrees08.simplectf;
 
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
+import com.github.seaoftrees08.simplectf.arena.ArenaPhase;
 import com.github.seaoftrees08.simplectf.utils.SctfPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -36,7 +37,7 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin create <arena>
             if(args.length>=3 && args[1].equalsIgnoreCase("create") && sender instanceof Player){
-                if(!ArenaManager.create(args[2], (Player) sender)){
+                if(!ArenaManager.doCreation(args[2], (Player) sender)){
                     sendMessage(sender, "Arena creation failed! because this arena already exist.", ChatColor.RED);
                 }
                 return true;
@@ -44,7 +45,13 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin setTeam
             if(args.length==2 && args[1].equalsIgnoreCase("setTeam") && sender instanceof Player){
-                //TODO
+                String arenaName = ArenaManager.getBelongingCreateArenaName(sender.getName());
+                ArenaPhase ap = ArenaManager.getCreateArenaPhase(arenaName);
+                if(ap.equals(ArenaPhase.RED_TEAM_DATA_SETTING) || ap.equals(ArenaPhase.BLUE_TEAM_DATA_SETTING)){
+                    ArenaManager.doCreateFlow(arenaName, null, (Player) sender);
+                }else{
+                    sendMessage(sender, "You are not creating arena.", ChatColor.GRAY);
+                }
                 return true;
             }
 
