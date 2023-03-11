@@ -101,6 +101,8 @@ public class CreateArena extends Arena{
         yml.set(ArenaYamlPath.BLUE_INV_LEGGINGS, blueTeam.getStoredPlayerData().getLeggingsStringList());
         yml.set(ArenaYamlPath.BLUE_INV_BOOTS, blueTeam.getStoredPlayerData().getBootsStringList());
         yml.set(ArenaYamlPath.BLUE_INV_OFFHAND, blueTeam.getStoredPlayerData().getOffHandItemStringList());
+        //enable
+        yml.set(ArenaYamlPath.ENABLE, enable);
 
         //save file
         try{

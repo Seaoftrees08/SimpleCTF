@@ -99,6 +99,9 @@ public class Arena {
         //scoreboard
         //phaseに分けて各タイミングで実行するため、コンストラクタでは未定義
 
+        //enable
+        enable = yml.getBoolean(ArenaYamlPath.ENABLE);
+
     }
 
     /**
