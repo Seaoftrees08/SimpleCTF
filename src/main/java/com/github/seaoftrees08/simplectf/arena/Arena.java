@@ -26,6 +26,7 @@ public class Arena {
     protected Flag blueFlag;
     protected ArenaPhase phase = ArenaPhase.NONE;
     protected boolean enable = false;
+    protected List<String> allowCommands = new ArrayList<>();
 
     /**
      * CreateArenaにて使われるコンストラクタ
@@ -99,6 +100,12 @@ public class Arena {
         //enable
         enable = yml.getBoolean(ArenaYamlPath.ENABLE);
 
+        //allow commands
+        allowCommands = yml.getStringList(ArenaYamlPath.ALLOW_COMMANDS);
+    }
+
+    public List<String> getAllowCommands(){
+        return allowCommands;
     }
 
 }

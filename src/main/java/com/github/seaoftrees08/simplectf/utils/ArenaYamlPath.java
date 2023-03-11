@@ -20,4 +20,5 @@ public class ArenaYamlPath {
     public static final String BLUE_INV_BOOTS = "BlueInv.boots";
     public static final String BLUE_INV_OFFHAND = "BlueInv.offhand";
     public static final String ENABLE = "enable";
+    public static final String ALLOW_COMMANDS = "allowCommands";
 }

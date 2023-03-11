@@ -7,6 +7,7 @@ import com.github.seaoftrees08.simplectf.utils.StoredPlayerData;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -21,6 +22,7 @@ import java.util.Objects;
 
 public class PlayArena extends Arena{
 
+    private final static double NEAR_DISTANCE = 1.5; //距離の2乗した値
     private Scoreboard scoreboard;
     private int remTime = 0;
     protected ArenaTeam spectators = new ArenaTeam(TeamColor.SPECTATOR, new StoredPlayerData());
@@ -133,7 +135,84 @@ public class PlayArena extends Arena{
     public boolean canPlay(){
         return !enable && redTeam.getArenaPlayerList().size()>0 && blueTeam.getArenaPlayerList().size()>0;
     }
+    public ArenaPhase getPhase(){ return phase; }
 
+    public TeamColor getPlayerTeamColor(String playerName){
+        if(redTeam.isBelonging(playerName)) return TeamColor.RED;
+        if(blueTeam.isBelonging(playerName)) return TeamColor.BLUE;
+        return TeamColor.NONE;
+    }
+
+    /**
+     * 青旗を納品して、赤チームが点数を取得
+     */
+    public void takePointRed(){
+        if(phase.equals(ArenaPhase.PLAYING)){
+            redTeam.increaseScore();
+            broadcastInArena(ChatColor.RED + "Red Team" + ChatColor.GREEN + " get one Point!");
+            spawnBlueFlagAtBase(true);
+        }
+        if(redTeam.getScore()>=3){ setTime(1); }
+    }
+
+    /**
+     * 赤旗を納品して、青チームが点数を取得
+     */
+    public void takePointBlue(){
+        if(phase.equals(ArenaPhase.PLAYING)){
+            redTeam.increaseScore();
+            broadcastInArena(ChatColor.BLUE + "Blue Team" + ChatColor.GREEN + " get one Point!");
+            spawnRedFlagAtBase(false);
+        }
+        if(blueTeam.getScore()>=3){ setTime(1); }
+    }
+
+    /**
+     * 青旗を落とした時に呼びだされる
+     * @param p 落としたプレイヤー
+     * @param item 落としたアイテム
+     */
+    public void dropBlueFlag(Player p, Item item){
+        if(item==null){
+            item = p.getWorld().dropItemNaturally(p.getLocation(), Flag.getBlueFlagItemStack());
+        }
+        broadcastInArena(ChatColor.BLUE + "BLUE Flag" + ChatColor.GREEN + " is Dropped!");
+        blueFlag.drop(item);
+        blueFlag.onGroundedTime = -1;
+    }
+
+    /**
+     * 赤旗を落とした時に呼びだされる
+     * @param p 落としたプレイヤー
+     * @param item 落としたアイテム
+     */
+    public void dropRedFlag(Player p, Item item){
+        if(item==null){
+            item = p.getWorld().dropItemNaturally(p.getLocation(), Flag.getRedFlagItemStack());
+        }
+        broadcastInArena(ChatColor.RED + "Red Flag" + ChatColor.GREEN + " is Dropped!");
+        redFlag.drop(item);
+        redFlag.onGroundedTime = -1;
+    }
+    /**
+     * 旗を拾った時に呼びだされる
+     * @param p 拾ったプレイヤー
+     */
+    public void pickupRedFlag(Player p){
+        redFlag.pickUp(p);
+        redFlag.onGroundedTime = 0;
+        broadcastInArena(ChatColor.BLUE + p.getName() + ChatColor.GREEN + " pick up RED FLAG!");
+    }
+
+    /**
+     * 旗を拾った時に呼びだされる
+     * @param p 拾ったプレイヤー
+     */
+    public void pickupBlueFlag(Player p){
+        blueFlag.pickUp(p);
+        blueFlag.onGroundedTime = 0;
+        broadcastInArena(ChatColor.RED + p.getName() + ChatColor.GREEN + " pick up BLUE FLAG!");
+    }
 
     /**
      * 赤旗をキャンプに設置する
@@ -168,6 +247,28 @@ public class PlayArena extends Arena{
         //青旗
         l = blueFlag.getLocation();
         Objects.requireNonNull(l.getWorld()).playEffect(l, Effect.MOBSPAWNER_FLAMES, 1, 100);
+    }
+
+    /**
+     * red flagのフェンスとの距離を計測し、近ければTrueを返す
+     * @param location 検査するLocation
+     * @return 近いかどうか(近ければtrue)
+     */
+    public boolean nearRedFlagFence(Location location){
+        Location camp = redFlag.getCampLocation();
+        return Objects.requireNonNull(location.getWorld()).getName().equals(Objects.requireNonNull(camp.getWorld()).getName())
+                && location.distanceSquared(camp) < NEAR_DISTANCE;
+    }
+
+    /**
+     * blue flagのフェンスとの距離を計測し、近ければTrueを返す
+     * @param location 検査するLocation
+     * @return 近いかどうか(近ければtrue)
+     */
+    public boolean nearBlueFlagFence(Location location){
+        Location camp = blueFlag.getCampLocation();
+        return Objects.requireNonNull(location.getWorld()).getName().equals(Objects.requireNonNull(camp.getWorld()).getName())
+                && location.distanceSquared(camp) < NEAR_DISTANCE;
     }
 
     /**
@@ -296,6 +397,13 @@ public class PlayArena extends Arena{
         obj.getScore(ChatColor.BLUE + " Join Players: " + ChatColor.WHITE + blueTeam.getArenaPlayerList().size()).setScore(96);
 
         applyScoreboard(sb);
+    }
+    public Location getRedRespawnLocation(){
+        return redTeam.getStoredPlayerData().getLocationStringList().getLocation();
+    }
+
+    public Location getBlueRespawnLocation(){
+        return redTeam.getStoredPlayerData().getLocationStringList().getLocation();
     }
 
 

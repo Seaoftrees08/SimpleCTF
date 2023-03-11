@@ -22,11 +22,6 @@ public class ArenaManager {
         return loadArenaNameList().contains(arenaName);
     }
 
-    public static boolean enable(String arenaName){
-        if(!existPlayArena(arenaName)) return false;
-        return new Arena(arenaName).enable;
-    }
-
     /**
      * アリーナが存在するかどうかを返す
      * これは作成中のアリーナも含めて判別する
@@ -121,7 +116,7 @@ public class ArenaManager {
      * @return すでに参加している場合はtrue
      */
     public static boolean alreadyJoin(String playerName){
-        return !whereBelong(playerName).equals(ArenaManager.INVALID_ARENA_NAME);
+        return !whereJoined(playerName).equals(ArenaManager.INVALID_ARENA_NAME);
     }
 
     /**
@@ -131,7 +126,7 @@ public class ArenaManager {
      * @param playerName 検査するプレイヤー名
      * @return 参加しているアリーナ名
      */
-    public static String whereBelong(String playerName){
+    public static String whereJoined(String playerName){
         return playArena.values().stream()
                 .filter(arena -> arena.isJoined(playerName))
                 .map(arena -> arena.arenaName)
@@ -154,7 +149,7 @@ public class ArenaManager {
         }
 
         if(alreadyJoin(player.getName())){
-            sendMessage(player, "You already join " + whereBelong(player.getName()), ChatColor.RED);
+            sendMessage(player, "You already join " + whereJoined(player.getName()), ChatColor.RED);
             return;
         }
 
@@ -186,7 +181,7 @@ public class ArenaManager {
             return;
         }
 
-        String arenaName = whereBelong(player.getName());
+        String arenaName = whereJoined(player.getName());
         playArena.get(arenaName).leave(player);
         sendMessage(player, "You leaved Arena.", ChatColor.GOLD);
     }

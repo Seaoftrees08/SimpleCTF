@@ -82,12 +82,15 @@ public class CreateArena extends Arena{
         //アリーナの範囲を保存
         yml.set(ArenaYamlPath.FIRST_POINT, arenaField.getMinPointVec3i().getList());
         yml.set(ArenaYamlPath.SECOND_POINT, arenaField.getMaxPointVec3i().getList());
+
         //旗の場所を保存
         yml.set(ArenaYamlPath.RED_FLAG, new LocationStringList(redFlag.getCampLocation()));
         yml.set(ArenaYamlPath.BLUE_FLAG, new LocationStringList(blueFlag.getCampLocation()));
+
         //スポーンポイント
         yml.set(ArenaYamlPath.RED_SPAWN, redTeam.getStoredPlayerData().getLocationStringList());
         yml.set(ArenaYamlPath.BLUE_SPAWN, blueTeam.getStoredPlayerData().getLocationStringList());
+
         //Red Inventory
         yml.set(ArenaYamlPath.RED_INV_ITEMS, redTeam.getStoredPlayerData().getMainItemStringList());
         yml.set(ArenaYamlPath.RED_INV_HELMET, redTeam.getStoredPlayerData().getHelmetStringList());
@@ -95,6 +98,7 @@ public class CreateArena extends Arena{
         yml.set(ArenaYamlPath.RED_INV_LEGGINGS, redTeam.getStoredPlayerData().getLeggingsStringList());
         yml.set(ArenaYamlPath.RED_INV_BOOTS, redTeam.getStoredPlayerData().getBootsStringList());
         yml.set(ArenaYamlPath.RED_INV_OFFHAND, redTeam.getStoredPlayerData().getOffHandItemStringList());
+
         //Blue Inventory
         yml.set(ArenaYamlPath.BLUE_INV_ITEMS, blueTeam.getStoredPlayerData().getMainItemStringList());
         yml.set(ArenaYamlPath.BLUE_INV_HELMET, blueTeam.getStoredPlayerData().getHelmetStringList());
@@ -102,8 +106,12 @@ public class CreateArena extends Arena{
         yml.set(ArenaYamlPath.BLUE_INV_LEGGINGS, blueTeam.getStoredPlayerData().getLeggingsStringList());
         yml.set(ArenaYamlPath.BLUE_INV_BOOTS, blueTeam.getStoredPlayerData().getBootsStringList());
         yml.set(ArenaYamlPath.BLUE_INV_OFFHAND, blueTeam.getStoredPlayerData().getOffHandItemStringList());
+
         //enable
         yml.set(ArenaYamlPath.ENABLE, enable);
+
+        //allowCommands
+        yml.set(ArenaYamlPath.ALLOW_COMMANDS, allowCommands);
 
         //save file
         try{
@@ -130,6 +138,10 @@ public class CreateArena extends Arena{
 
     public void setEnable(boolean value){
         enable = value;
+    }
+
+    public void addAllowCommand(String cmdName){
+        allowCommands.add(cmdName);
     }
 
     private void setFirstPoint(Location loc){

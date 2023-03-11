@@ -1,7 +1,6 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.utils.StoredPlayerData;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -32,8 +31,8 @@ public class ArenaTeam {
         teamMember.put(ap.player.getName(), ap);
     }
 
-    public void setScore(int value){
-        score = value;
+    public void increaseScore(){
+        score++;
     }
 
     public int getScore(){ return score; }
