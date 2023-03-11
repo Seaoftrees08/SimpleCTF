@@ -1,7 +1,9 @@
 package com.github.seaoftrees08.simplectf;
 
+import com.github.seaoftrees08.simplectf.arena.Arena;
 import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import com.github.seaoftrees08.simplectf.arena.ArenaPhase;
+import com.github.seaoftrees08.simplectf.arena.CreateArena;
 import com.github.seaoftrees08.simplectf.utils.SctfPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -57,7 +59,13 @@ public class Commands implements CommandExecutor {
 
             // /simplectf admin remove <arena>
             if(args.length==3 && args[1].equalsIgnoreCase("remove")){
-                //TODO
+                if(ArenaManager.existPlayArena(args[2])){
+                    CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
+                    ca.deleteArena();
+                    sendMessage(sender, "Arena Removed!", ChatColor.GREEN);
+                }else{
+                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 

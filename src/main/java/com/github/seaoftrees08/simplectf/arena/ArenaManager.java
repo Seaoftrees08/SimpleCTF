@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 public class ArenaManager {
     public static final String ARENA_LIST_PATH = "ArenaList";
@@ -18,6 +17,15 @@ public class ArenaManager {
         return SimpleCTF.getSimpleCTF().getConfig().getStringList(ARENA_LIST_PATH);
     }
 
+    public static boolean existPlayArena(String arenaName){
+        return loadArenaNameList().contains(arenaName);
+    }
+
+    public static boolean enable(String arenaName){
+        if(!existPlayArena(arenaName)) return false;
+        return new Arena(arenaName).enable;
+    }
+
     /**
      * アリーナが存在するかどうかを返す
      * これは作成中のアリーナも含めて判別する
@@ -25,7 +33,7 @@ public class ArenaManager {
      * @param arenaName 検査するアリーナ名
      * @return 存在すればtrue
      */
-    public static boolean existArena(String arenaName){
+    public static boolean existArenaIncludeCreating(String arenaName){
         return loadArenaNameList().contains(arenaName) || createArena.containsKey(arenaName);
     }
 
@@ -40,7 +48,7 @@ public class ArenaManager {
      * @param player 作成者(チャットを送るのに使用)
      */
     public static boolean doCreation(String arenaName, Player player){
-        if(existArena(arenaName)) return false;
+        if(existArenaIncludeCreating(arenaName)) return false;
         createArena.put(arenaName, new CreateArena(arenaName, player, true));
         return true;
     }
@@ -101,5 +109,7 @@ public class ArenaManager {
         if(!createArena.containsKey(arenaName)) return;
         createArena.get(arenaName).flow(location, player);
     }
+
+
 
 }
