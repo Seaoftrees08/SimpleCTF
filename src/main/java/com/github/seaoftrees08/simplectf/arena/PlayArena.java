@@ -109,6 +109,9 @@ public class PlayArena extends Arena{
         return arenaPlayer;
     }
 
+    public boolean isEnable(){
+        return enable;
+    }
     public void setTime(int time){ this.remTime = time; }
 
     public int getTime(){ return remTime; }

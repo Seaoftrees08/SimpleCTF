@@ -158,9 +158,15 @@ public class ArenaManager {
             return;
         }
 
+        PlayArena pa = new PlayArena(arenaName);
+        if(!pa.enable){
+            sendMessage(player, "This arena is disabled.", ChatColor.GRAY);
+            return;
+        }
+
         //PlayArenaが作成されてなかった場合、作成
         if(!playArena.containsKey(arenaName)){
-            playArena.put(arenaName, new PlayArena(arenaName));
+            playArena.put(arenaName, pa);
         }
 
         playArena.get(arenaName).join(player);
