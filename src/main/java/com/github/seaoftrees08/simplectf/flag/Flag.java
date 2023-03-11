@@ -97,14 +97,14 @@ public class Flag {
                 return new FlagItem(
                         flagFenceLocation,
                         Flag.RED_FLAG_NAME,
-                        new ItemStack(Material.RED_WOOL)
+                        Flag.getRedFlagItemStack()
                 );
             }
             case BLUE -> {
                 return new FlagItem(
                         flagFenceLocation,
                         Flag.BLUE_FLAG_NAME,
-                        new ItemStack(Material.BLUE_WOOL)
+                        Flag.getBlueFlagItemStack()
                 );
             }
             default -> {}

@@ -82,6 +82,7 @@ public class Commands implements CommandExecutor {
                     CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
                     ca.setEnable(true);
                     ca.save();
+                    sendMessage(sender, ChatColor.GOLD + args[2] + " is enabled!", ChatColor.GREEN);
                 }else{
                     sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
                 }
@@ -94,6 +95,7 @@ public class Commands implements CommandExecutor {
                     CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
                     ca.setEnable(false);
                     ca.save();
+                    sendMessage(sender, ChatColor.GOLD + args[2] + " is disabled!", ChatColor.DARK_GREEN);
                 }else{
                     sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
                 }

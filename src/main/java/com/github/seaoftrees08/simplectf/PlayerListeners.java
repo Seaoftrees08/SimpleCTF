@@ -47,7 +47,7 @@ public class PlayerListeners implements Listener {
         }
 
         //Play中の破壊禁止
-        if(!isArenaJoined(e.getPlayer())){
+        if(isArenaJoined(e.getPlayer())){
             e.setCancelled(true);
         }
 
@@ -65,6 +65,7 @@ public class PlayerListeners implements Listener {
     //Playerがコマンドを送信したときに発生
     @EventHandler
     public void PLayerCommandProcess(PlayerCommandPreprocessEvent e){
+
         //プレイ中のコマンド禁止
         if(isArenaJoined(e.getPlayer())){
             //絶対除外
@@ -72,8 +73,11 @@ public class PlayerListeners implements Listener {
             if(e.getMessage().contains("/sctf start") || e.getMessage().contains("/simplectf start")) return;
 
             //除外コマンド
-            List<String> cmds = ArenaManager.getPlayArena(ArenaManager.whereJoined(e.getPlayer().getName())).getAllowCommands();
-            if(cmds.stream().map(cmd -> e.getMessage().contains(cmd)).toList().contains(true)) return;
+            PlayArena pa = ArenaManager.getPlayArena(ArenaManager.whereJoined(e.getPlayer().getName()));
+            if(pa != null){
+                List<String> cmds = pa.getAllowCommands();
+                if(cmds.stream().map(cmd -> e.getMessage().contains(cmd)).toList().contains(true)) return;
+            }
 
             e.setCancelled(true);
         }
@@ -114,9 +118,12 @@ public class PlayerListeners implements Listener {
             String playerName = e.getEntity().getName();
             PlayArena pa = ArenaManager.getPlayArena(arenaName);
             TeamColor tc = pa.getPlayerTeamColor(playerName);
+            System.out.println("debug: " + Objects.requireNonNull(e.getItem().getItemStack().getItemMeta()).getDisplayName());
+
             //RedFlagを拾ったとき
             if(e.getItem().getItemStack().getType().equals(Material.RED_WOOL)
-                    && Objects.requireNonNull(e.getItem().getItemStack().getItemMeta()).getDisplayName().contains("Red Flag")){
+                    && Objects.requireNonNull(e.getItem().getItemStack().getItemMeta()).getDisplayName().contains(Flag.RED_FLAG_NAME)){
+
                 if(tc.equals(TeamColor.BLUE)) {
                     pa.pickupRedFlag(SimpleCTF.getSimpleCTF().getServer().getPlayer(e.getEntity().getUniqueId()));
                 }else if(tc.equals(TeamColor.RED)
@@ -128,7 +135,8 @@ public class PlayerListeners implements Listener {
                 }
             //Blue Flagを拾ったとき
             }else if(e.getItem().getItemStack().getType().equals(Material.BLUE_WOOL)
-                    && Objects.requireNonNull(e.getItem().getItemStack().getItemMeta()).getDisplayName().contains("Blue Flag")){
+                    && Objects.requireNonNull(e.getItem().getItemStack().getItemMeta()).getDisplayName().contains(Flag.BLUE_FLAG_NAME)){
+                System.out.println("debug: pickup BLUE_FLAG");
                 if(tc.equals(TeamColor.RED)) {
                     pa.pickupBlueFlag(SimpleCTF.getSimpleCTF().getServer().getPlayer(e.getEntity().getUniqueId()));
                 }else if(tc.equals(TeamColor.BLUE)
@@ -250,7 +258,7 @@ public class PlayerListeners implements Listener {
     }
 
     private static boolean isArenaJoined(Player player){
-        return ArenaManager.whereJoined(player.getName()).equals(ArenaManager.INVALID_ARENA_NAME);
+        return !ArenaManager.whereJoined(player.getName()).equals(ArenaManager.INVALID_ARENA_NAME);
     }
 
     private void removeCtfItems(Player p, PlayArena pa){

@@ -23,7 +23,6 @@ import java.util.Objects;
 public class PlayArena extends Arena{
 
     private final static double NEAR_DISTANCE = 1.5; //距離の2乗した値
-    private Scoreboard scoreboard;
     private int remTime = 0;
     protected ArenaTeam spectators = new ArenaTeam(TeamColor.SPECTATOR, new StoredPlayerData());
     public PlayArena(String arenaName) {
@@ -133,7 +132,7 @@ public class PlayArena extends Arena{
     }
 
     public boolean canPlay(){
-        return !enable && redTeam.getArenaPlayerList().size()>0 && blueTeam.getArenaPlayerList().size()>0;
+        return enable && redTeam.getArenaPlayerList().size()>0 && blueTeam.getArenaPlayerList().size()>0;
     }
     public ArenaPhase getPhase(){ return phase; }
 
@@ -425,7 +424,6 @@ public class PlayArena extends Arena{
     private void applyScoreboard(Scoreboard sb){
         joinedAllPlayerList().forEach(p -> p.setScoreboard(sb));
         spectators.getArenaPlayerList().forEach(ap -> ap.player.setScoreboard(sb));
-        scoreboard = sb;
     }
     private Scoreboard initScoreboard(){
         Scoreboard sb = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();

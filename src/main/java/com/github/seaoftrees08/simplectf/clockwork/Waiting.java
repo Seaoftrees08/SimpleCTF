@@ -36,10 +36,6 @@ public class Waiting extends BukkitRunnable {
         //start
         if(remTime==0){
             arena.whenStartGame();
-
-            System.out.println("Start! Start! Start!");
-            arena.broadcastInArena(ChatColor.RED + "STAAAAAAAAAAT!");
-
             new Playing(300, arenaName).runTaskTimer(SimpleCTF.getSimpleCTF(), 0, 20);
             this.cancel();
         }

@@ -194,7 +194,7 @@ public class ArenaManager {
      * PlayArenaを取得する. ClockWork用
      *
      * @param arenaName 取得するアリーナ名
-     * @return 該当するPlayArena. 無ければnullが帰る
+     * @return 該当するPlayArena. 無ければnullが返る
      */
     public static PlayArena getPlayArena(String arenaName){
         return playArena.getOrDefault(arenaName, null);
