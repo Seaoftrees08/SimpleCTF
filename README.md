@@ -40,6 +40,10 @@ You back to WorldSpawnPoint from watching game.
 You can view this plugin infomation.
 - CanUse: Player, Console
 - Permission: none(Anybody can use this command)
+### /simplectf reset
+You can Reset Scoreboard. (debug)
+- CanUse: Player, Console
+- Permission: none(Anybody can use this command)
 ### /simplectf start \<arena\>
 You can countdown within 10 seconds remaining after countdown started
  - CanUse: Player, Console
@@ -60,8 +64,8 @@ Start creation arena process as arena name is \<arena\>
 Remove \<arena\>
 - CanUse: Player
 - Permission: simplectf.admin
-### /simplectf admin setInv
-Set Inventory team1 and team2.  
+### /simplectf admin setTeam
+Set Inventory and SpawnLocation. 
 You can use this command when you create arena.
 - CanUse: Player
 - Permission: simplectf.admin
@@ -109,6 +113,10 @@ Allows to force playing ctf
 - Default: op
 
 ## version info
+- 1.0.0
+ stable version.(some bugs fixed from 0.4.0)
+- 0.4.0
+  totally from scratch for mc1.19.3 (some function unimplemented) again.
 - 0.3.0
   totally from scratch for mc1.19.3 (some function unimplemented)
 - 0.2.1
