@@ -123,6 +123,10 @@ public class Commands implements CommandExecutor {
 
             //	/simplectf admin rmCmd <arena> <Cmd>
             if(args.length==4 && args[1].equalsIgnoreCase("rmCmd")){
+                if(args[2].contains("/sctf") || args[2].contains("/simplectf")){
+                    sendMessage(sender, "This command cannot be deny.", ChatColor.RED);
+                    return true;
+                }
                 if(ArenaManager.existPlayArena(args[2])){
                     CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
                     ca.removeAllowCommand(args[3]);
@@ -140,6 +144,8 @@ public class Commands implements CommandExecutor {
                 if(ArenaManager.existPlayArena(args[2])){
                     CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
                     sendMessage(sender, "   ===== Allow CommandList in " + args[2] + " =====", ChatColor.GRAY);
+                    sendMessage(sender, "/sctf", ChatColor.GRAY);
+                    sendMessage(sender, "/simplectf", ChatColor.GRAY);
                     ca.getAllowCommands().forEach(c -> sendMessage(sender, c, ChatColor.GRAY));
                 }else{
                     sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);

@@ -187,8 +187,8 @@ public class PlayArena extends Arena{
         return arenaPlayer;
     }
 
-    public boolean isSpectators(String playerName){
-        return spectators.isBelonging(playerName);
+    public void teleportSpectator(Player player){
+        player.teleport(spectators.getStoredPlayerData().getLocationStringList().getLocation());
     }
 
     public void setTime(int time){ this.remTime = time; }
@@ -209,6 +209,8 @@ public class PlayArena extends Arena{
         return blueFlag;
     }
 
+    public boolean inArena(Location loc){ return arenaField.contain(loc); }
+
     public boolean canPlay(){
         return enable && redTeam.getArenaPlayerList().size()>0 && blueTeam.getArenaPlayerList().size()>0;
     }
@@ -217,6 +219,7 @@ public class PlayArena extends Arena{
     public TeamColor getPlayerTeamColor(String playerName){
         if(redTeam.isBelonging(playerName)) return TeamColor.RED;
         if(blueTeam.isBelonging(playerName)) return TeamColor.BLUE;
+        if(spectators.isBelonging(playerName)) return TeamColor.SPECTATOR;
         return TeamColor.NONE;
     }
 

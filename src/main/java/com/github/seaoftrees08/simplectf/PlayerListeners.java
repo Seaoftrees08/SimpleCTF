@@ -69,8 +69,7 @@ public class PlayerListeners implements Listener {
         //プレイ中のコマンド禁止
         if(isArenaJoined(e.getPlayer())){
             //絶対除外
-            if(e.getMessage().contains("/sctf leave") || e.getMessage().contains("/simplectf leave")) return;
-            if(e.getMessage().contains("/sctf start") || e.getMessage().contains("/simplectf start")) return;
+            if(e.getMessage().contains("/sctf") || e.getMessage().contains("/simplectf")) return;
 
             //除外コマンド
             PlayArena pa = ArenaManager.getPlayArena(ArenaManager.whereJoined(e.getPlayer().getName()));
@@ -182,6 +181,7 @@ public class PlayerListeners implements Listener {
             String playerName = e.getPlayer().getName();
             PlayArena pa = ArenaManager.getPlayArena(arenaName);
             TeamColor tc = pa.getPlayerTeamColor(playerName);
+
             //赤チーム
             if(tc.equals(TeamColor.RED)){
                 //頭を強制で赤コンクリに
@@ -198,6 +198,7 @@ public class PlayerListeners implements Listener {
                     }
                 }
             }
+
             //青チーム
             if(tc.equals(TeamColor.BLUE)){
                 //頭を強制で青コンクリに
@@ -215,6 +216,16 @@ public class PlayerListeners implements Listener {
                 }
             }
             removeCtfItems(e.getPlayer(), pa);
+
+            //spectator
+            if(tc.equals(TeamColor.SPECTATOR)){
+                //外部に行けないようにする
+                if(!pa.inArena(e.getPlayer().getLocation())){
+                    pa.teleportSpectator(e.getPlayer());
+                    e.getPlayer().sendMessage(ChatColor.AQUA + "[S-CTF] " + ChatColor.RED + "You cannot go outside the arena.");
+                    e.getPlayer().sendMessage(ChatColor.AQUA + "[S-CTF] " + ChatColor.GRAY + "If you wanna return, please type /sctf back");
+                }
+            }
         }
 
         //moveEventCooldown
@@ -225,7 +236,7 @@ public class PlayerListeners implements Listener {
             moveEventCooldown.remove(e.getPlayer().getName());
         }
 
-        //TODO:Spectator
+
     }
 
     //プレイヤーがリスポするときに発生
