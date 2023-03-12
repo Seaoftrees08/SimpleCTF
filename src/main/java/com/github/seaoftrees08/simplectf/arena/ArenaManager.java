@@ -121,6 +121,7 @@ public class ArenaManager {
 
     /**
      * プレイヤーが参加しているアリーナ名を返す
+     * これは観戦者も含める
      * どこにも参加していなければ`ArenaManager.INVALID_ARENA_NAME`を返す
      *
      * @param playerName 検査するプレイヤー名
@@ -184,6 +185,57 @@ public class ArenaManager {
         String arenaName = whereJoined(player.getName());
         playArena.get(arenaName).leave(player);
         sendMessage(player, "You leaved Arena.", ChatColor.GOLD);
+    }
+
+    /**
+     * アリーナに観戦者として参加する.
+     * アリーナが存在するかどうか、プレイヤーがすでに他のアリーナに参加しているかどうかを判別し、メッセージを送るのもここで行う
+     *
+     * @param arenaName 参加するarena名
+     * @param player 参加するPlayer
+     */
+    public static void joinSpectator(String arenaName, Player player){
+        if(!existPlayArena(arenaName)){
+            sendMessage(player, "This arena is not exist.", ChatColor.RED);
+            return;
+        }
+
+        if(alreadyJoin(player.getName())){
+            sendMessage(player, "You already join " + whereJoined(player.getName()), ChatColor.RED);
+            return;
+        }
+
+        PlayArena pa = new PlayArena(arenaName);
+        if(!pa.enable){
+            sendMessage(player, "This arena is disabled.", ChatColor.GRAY);
+            return;
+        }
+
+        //PlayArenaが作成されてなかった場合、作成
+        if(!playArena.containsKey(arenaName)){
+            playArena.put(arenaName, pa);
+        }
+
+        playArena.get(arenaName).joinSpectator(player);
+        sendMessage(player, "You join Arena as Spectators!", ChatColor.BLUE);
+
+    }
+
+    /**
+     * アリーナの観戦者から退出する
+     * プレイヤーがすでに他のアリーナに参加しているかどうかを判別し、メッセージを送るのもここで行う
+     *
+     * @param player 退出するプレイヤー
+     */
+    public static void leaveSpectator(Player player){
+        if(!alreadyJoin(player.getName())){
+            sendMessage(player, "You are not join anywhere.", ChatColor.GRAY);
+            return;
+        }
+
+        String arenaName = whereJoined(player.getName());
+        playArena.get(arenaName).leaveSpectator(player);
+        sendMessage(player, "You leaved Arena.", ChatColor.BLUE);
     }
 
     public static void removePlayArena(String arenaName){

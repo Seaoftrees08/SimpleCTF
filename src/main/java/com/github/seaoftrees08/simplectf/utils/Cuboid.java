@@ -2,6 +2,9 @@ package com.github.seaoftrees08.simplectf.utils;
 
 import org.bukkit.Location;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Cuboid {
     private final Vec3i sv = new Vec3i(); //small
     private final Vec3i bv = new Vec3i(); //big
@@ -44,6 +47,16 @@ public class Cuboid {
 
     public Vec3i getMaxPointVec3i(){
         return bv;
+    }
+
+    public Vec3i getCentral(){
+        return new Vec3i(
+                List.of(
+                        (sv.x + bv.x) / 2,
+                        (sv.y + bv.y) / 2,
+                        (sv.z + bv.z) / 2
+                )
+        );
     }
 
 

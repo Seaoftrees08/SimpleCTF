@@ -22,7 +22,9 @@ public class StoredPlayerData {
     private LocationStringList location; //spawn location or return location
     private GameMode gamemode = GameMode.ADVENTURE;
 
-    public StoredPlayerData(){
+    public StoredPlayerData(Location loc, GameMode gamemode){
+        this.location = new LocationStringList(loc);
+        this.gamemode = gamemode;
     }
     public StoredPlayerData(PlayerInventory pi, Location loc, GameMode gamemode){
         for(ItemStack is : pi.getContents()) invContents.add(new ArenaItemStack(is));

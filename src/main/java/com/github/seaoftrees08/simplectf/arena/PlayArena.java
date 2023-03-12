@@ -24,9 +24,13 @@ public class PlayArena extends Arena{
 
     private final static double NEAR_DISTANCE = 1.8; //距離の2乗した値
     private int remTime = 0;
-    protected ArenaTeam spectators = new ArenaTeam(TeamColor.SPECTATOR, new StoredPlayerData());
+    protected ArenaTeam spectators;
     public PlayArena(String arenaName) {
         super(arenaName);
+        spectators = new ArenaTeam(
+                TeamColor.SPECTATOR,
+                new StoredPlayerData(arenaField.getCentral().getLocation(redFlag.getLocation().getWorld()), GameMode.SPECTATOR)
+        );
     }
 
     /**
@@ -38,7 +42,8 @@ public class PlayArena extends Arena{
      * @return すでに所属している -> false、どこにも所属せず正式に参加できた -> true
      */
     public boolean join(Player player){
-        if(redTeam.isBelonging(player.getName()) || blueTeam.isBelonging(player.getName())) return false;
+        if(redTeam.isBelonging(player.getName()) || blueTeam.isBelonging(player.getName())
+            || spectators.isBelonging(player.getName())) return false;
 
         //Player Init and join team
         if(redTeam.getArenaPlayerList().size() <= blueTeam.getArenaPlayerList().size()){
@@ -72,7 +77,8 @@ public class PlayArena extends Arena{
      * @return 退場させたArenaPlayer (本アリーナに所属していない場合`null`)
      */
     public ArenaPlayer leave(Player player){
-        if(!redTeam.isBelonging(player.getName()) && !blueTeam.isBelonging(player.getName())) return null;
+        if(!redTeam.isBelonging(player.getName()) && !blueTeam.isBelonging(player.getName())
+                && !spectators.isBelonging(player.getName())) return null;
 
         ArenaPlayer arenaPlayer = redTeam.removeMember(player.getName());
         if(arenaPlayer == null) arenaPlayer = blueTeam.removeMember(player.getName());
@@ -90,7 +96,7 @@ public class PlayArena extends Arena{
         arenaPlayer.applyGameMode(player);
 
         //Arenaの事後処理
-        if(redTeam.getArenaPlayerList().size()==0 && blueTeam.getArenaPlayerList().size()==0){
+        if(redTeam.getArenaPlayerList().isEmpty() && blueTeam.getArenaPlayerList().isEmpty() && spectators.getArenaPlayerList().isEmpty()){
             //flag kill
             redFlag.kill();
             blueFlag.kill();
@@ -108,6 +114,81 @@ public class PlayArena extends Arena{
         }
 
         return arenaPlayer;
+    }
+
+    /**
+     * プレイヤーが本アリーナに観戦者として参加していない場合は、参加させる
+     * このプレイヤーは他のアリーナには所属していないものとする.
+     * ただし、本アリーナに所属しているかどうかはわからない.
+     *
+     * @param player 観戦者として参加させるプレイヤー
+     * @return 成功したらtrue
+     */
+    public boolean joinSpectator(Player player){
+        if(redTeam.isBelonging(player.getName()) || blueTeam.isBelonging(player.getName())
+                || spectators.isBelonging(player.getName())) return false;
+
+        //Player Init and join team
+        spectators.addMember(new ArenaPlayer(player));
+        player.getInventory().clear();
+
+        //gamemode set
+        spectators.getStoredPlayerData().applyGameMode(player);
+
+        //teleport
+        player.teleport(spectators.getStoredPlayerData().getLocationStringList().getLocation());
+
+        return true;
+    }
+
+    /**
+     * このアリーナからプレイヤーを退場させる
+     * このプレイヤーが本アリーナに所属していない場合`null`が返される.
+     * インベントリの修復等もここで行われる
+     * @param player 退場させるプレイヤー
+     * @return 退場させたArenaPlayer (本アリーナに所属していない場合`null`)
+     */
+    public ArenaPlayer leaveSpectator(Player player){
+        if(!redTeam.isBelonging(player.getName()) && !blueTeam.isBelonging(player.getName())
+                && !spectators.isBelonging(player.getName())) return null;
+
+        ArenaPlayer arenaPlayer = spectators.removeMember(player.getName());
+        if(arenaPlayer == null) return null;
+
+        //Inventory 修復
+        player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
+        player.teleport(arenaPlayer.getLocationStringList().getLocation());
+        arenaPlayer.setInventory(player);
+
+        //scorebord set
+        player.setScoreboard(Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard());
+
+        //gamemode
+        arenaPlayer.applyGameMode(player);
+
+        //Arenaの事後処理
+        if(redTeam.getArenaPlayerList().isEmpty() && blueTeam.getArenaPlayerList().isEmpty() && spectators.getArenaPlayerList().isEmpty()){
+            //flag kill
+            redFlag.kill();
+            blueFlag.kill();
+
+            //DropItemRemove
+            Objects.requireNonNull(redFlag.getCampLocation().getWorld())
+                    .getEntities()
+                    .stream()
+                    .filter(en -> en.getType().equals(EntityType.DROPPED_ITEM) || en.getType().equals(EntityType.ARMOR_STAND))
+                    .filter(en -> arenaField.contain(en.getLocation()))
+                    .toList().forEach(Entity::remove);
+
+            //Arena remove from memory
+            ArenaManager.removePlayArena(arenaName);
+        }
+
+        return arenaPlayer;
+    }
+
+    public boolean isSpectators(String playerName){
+        return spectators.isBelonging(playerName);
     }
 
     public void setTime(int time){ this.remTime = time; }
@@ -326,7 +407,21 @@ public class PlayArena extends Arena{
         //player leave
         joinedAllPlayerList().forEach(ArenaManager::leave);
 
-        //フィールドの初期化についてはleaveにて行われるためここでは行わない.
+        //フィールドの初期化
+        //flag kill
+        redFlag.kill();
+        blueFlag.kill();
+
+        //DropItemRemove
+        Objects.requireNonNull(redFlag.getCampLocation().getWorld())
+                .getEntities()
+                .stream()
+                .filter(en -> en.getType().equals(EntityType.DROPPED_ITEM) || en.getType().equals(EntityType.ARMOR_STAND))
+                .filter(en -> arenaField.contain(en.getLocation()))
+                .toList().forEach(Entity::remove);
+
+        //Arena remove from memory
+        ArenaManager.removePlayArena(arenaName);
     }
 
     /**
@@ -341,6 +436,7 @@ public class PlayArena extends Arena{
 
     /**
      * プレイヤーがこのアリーナに所属しているかどうかを返す
+     *
      * @param playerName 検査するプレイヤー名
      * @return 所属していればtrue
      */
@@ -348,8 +444,37 @@ public class PlayArena extends Arena{
         return joinedAllPlayerList().stream()
                 .map(Player::getName)
                 .toList()
+                .contains(playerName)
+                || spectators.getArenaPlayerList().stream()
+                .map(ap -> ap.player.getName())
+                .toList()
                 .contains(playerName);
     }
+
+    public Location getRedRespawnLocation(){
+        return redTeam.getStoredPlayerData().getLocationStringList().getLocation();
+    }
+
+    public Location getBlueRespawnLocation(){
+        return blueTeam.getStoredPlayerData().getLocationStringList().getLocation();
+    }
+
+
+    public void broadcastInArena(String msg){
+        joinedAllPlayerList().forEach(p -> p.sendMessage(ChatColor.GREEN + "[S-CTF " + arenaName + "] "
+                + ChatColor.GREEN + msg));
+    }
+
+    public void broadcastRedTeam(String msg){
+        joinedAllPlayerList().forEach(p -> p.sendMessage(ChatColor.RED + "[S-CTF " + arenaName + " RED] "
+                + ChatColor.GREEN + msg));
+    }
+
+    public void broadcastBlueTeam(String msg){
+        joinedAllPlayerList().forEach(p -> p.sendMessage(ChatColor.BLUE + "[S-CTF " + arenaName + " BLUE] "
+                + ChatColor.GREEN + msg));
+    }
+
     public void waitScoreboard(){
         Scoreboard sb = initScoreboard();
         Objective obj = sb.getObjective(arenaName);
@@ -394,34 +519,12 @@ public class PlayArena extends Arena{
 
         applyScoreboard(sb);
     }
-    public Location getRedRespawnLocation(){
-        return redTeam.getStoredPlayerData().getLocationStringList().getLocation();
-    }
-
-    public Location getBlueRespawnLocation(){
-        return blueTeam.getStoredPlayerData().getLocationStringList().getLocation();
-    }
-
-
-    public void broadcastInArena(String msg){
-        joinedAllPlayerList().forEach(p -> p.sendMessage(ChatColor.GREEN + "[S-CTF " + arenaName + "] "
-                + ChatColor.GREEN + msg));
-    }
-
-    public void broadcastRedTeam(String msg){
-        joinedAllPlayerList().forEach(p -> p.sendMessage(ChatColor.RED + "[S-CTF " + arenaName + " RED] "
-                + ChatColor.GREEN + msg));
-    }
-
-    public void broadcastBlueTeam(String msg){
-        joinedAllPlayerList().forEach(p -> p.sendMessage(ChatColor.BLUE + "[S-CTF " + arenaName + " BLUE] "
-                + ChatColor.GREEN + msg));
-    }
 
     private void applyScoreboard(Scoreboard sb){
         joinedAllPlayerList().forEach(p -> p.setScoreboard(sb));
         spectators.getArenaPlayerList().forEach(ap -> ap.player.setScoreboard(sb));
     }
+
     private Scoreboard initScoreboard(){
         Scoreboard sb = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
         //red team

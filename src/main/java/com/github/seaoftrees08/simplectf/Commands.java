@@ -174,15 +174,15 @@ public class Commands implements CommandExecutor {
             return true;
         }
 
-        // /simplectf watch
-        if(args.length>=2 && args[0].equalsIgnoreCase("watch") && sender instanceof Player){
-            //TODO: Watch Arena
+        // /simplectf watch <arena>
+        if(args.length==2 && args[0].equalsIgnoreCase("watch") && sender instanceof Player){
+            ArenaManager.joinSpectator(args[1], (Player) sender);
             return true;
         }
 
         // /simplectf back
         if(args[0].equalsIgnoreCase("back") && args.length==1 && sender instanceof Player){
-            //TODO: Back
+            ArenaManager.leaveSpectator(((Player) sender));
             return true;
         }
 
