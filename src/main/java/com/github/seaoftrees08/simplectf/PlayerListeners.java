@@ -77,7 +77,11 @@ public class PlayerListeners implements Listener {
             if(pa != null){
                 List<String> cmds = pa.getAllowCommands();
                 if(cmds.stream().map(cmd -> e.getMessage().contains(cmd)).toList().contains(true)) return;
+
+                e.getPlayer().sendMessage(ChatColor.AQUA + "[S-CTF " + pa.arenaName + "]"
+                        + ChatColor.RED + "This command are not allowed in this arena.");
             }
+
 
             e.setCancelled(true);
         }

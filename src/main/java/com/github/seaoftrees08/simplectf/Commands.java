@@ -107,24 +107,43 @@ public class Commands implements CommandExecutor {
                 return true;
             }
 
-            //	/simplectf admin addCmd <allowCmd>
-            if(args.length==3 && args[1].equalsIgnoreCase("addCmd")) {
-                //TODO: Add Allow Command
-                sendMessage(sender, "This command implementation in Future Update.", ChatColor.GRAY);
+            //	/simplectf admin addCmd <arena> <allowCmd>
+            if(args.length==4 && args[1].equalsIgnoreCase("addCmd")) {
+                if(ArenaManager.existPlayArena(args[2])){
+                    CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
+                    ca.addAllowCommand(args[3]);
+                    ca.save();
+                    sendMessage(sender,"'" + ChatColor.GOLD + args[3] + ChatColor.GREEN
+                            + "' are allowed in " + args[2], ChatColor.GREEN);
+                }else{
+                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 
-            //	/simplectf admin rmCmd <allowedCmd>
-            if(args.length==3 && args[1].equalsIgnoreCase("rmCmd")){
-                //TODO: Remove Allowed Command
-                sendMessage(sender, "This command implementation in Future Update.", ChatColor.GRAY);
+            //	/simplectf admin rmCmd <arena> <Cmd>
+            if(args.length==4 && args[1].equalsIgnoreCase("rmCmd")){
+                if(ArenaManager.existPlayArena(args[2])){
+                    CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
+                    ca.removeAllowCommand(args[3]);
+                    ca.save();
+                    sendMessage(sender,"'" + ChatColor.GOLD + args[3] + ChatColor.DARK_GREEN
+                            + "' are denied in " + args[2], ChatColor.DARK_GREEN);
+                }else{
+                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 
-            //  /simplectf admin cmdlist
-            if(args.length==2 && args[1].equalsIgnoreCase("cmdList")){
-                //TODO: Allow Command list
-                sendMessage(sender, "This command implementation in Future Update.", ChatColor.GRAY);
+            //  /sctf admin cmdlist <arena>
+            if(args.length==3 && args[1].equalsIgnoreCase("cmdList")){
+                if(ArenaManager.existPlayArena(args[2])){
+                    CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
+                    sendMessage(sender, "   ===== Allow CommandList in " + args[2] + " =====", ChatColor.GRAY);
+                    ca.getAllowCommands().forEach(c -> sendMessage(sender, c, ChatColor.GRAY));
+                }else{
+                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                }
                 return true;
             }
 
@@ -223,8 +242,8 @@ public class Commands implements CommandExecutor {
         sendMessage(sender, "/sctf admin setTeam            #use this when creating arena", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin enable <arena>     #enable <arena>", ChatColor.GRAY);
         sendMessage(sender, "/sctf admin disable <arena>    #disable <arena>", ChatColor.GRAY);
-        sendMessage(sender, "/sctf admin addCmd <cmd>       #add usable command contain /", ChatColor.GRAY);
-        sendMessage(sender, "/sctf admin rmCmd <cmd>        #remove usable command", ChatColor.GRAY);
-        sendMessage(sender, "/sctf admin cmdlist            #view usable command list", ChatColor.GRAY);
+        sendMessage(sender, "/sctf admin addCmd <arena> <allowCmd> #add usable command contain /", ChatColor.GRAY);
+        sendMessage(sender, "/sctf admin rmCmd <arena> <denyCmd>   #remove usable command", ChatColor.GRAY);
+        sendMessage(sender, "/sctf admin cmdList <arena>           #view usable command list", ChatColor.GRAY);
     }
 }

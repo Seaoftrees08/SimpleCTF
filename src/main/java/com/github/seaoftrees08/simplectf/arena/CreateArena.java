@@ -144,6 +144,10 @@ public class CreateArena extends Arena{
         allowCommands.add(cmdName);
     }
 
+    public void removeAllowCommand(String cmdName){
+        allowCommands.remove(cmdName);
+    }
+
     private void setFirstPoint(Location loc){
         arenaField = new Cuboid(loc);
         phase = ArenaPhase.SECOND_POINT_SETTING;
