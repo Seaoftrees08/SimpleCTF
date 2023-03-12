@@ -1,4 +1,4 @@
-package com.github.seaoftrees08.simplectf.arena;
+package com.github.seaoftrees08.simplectf.utils;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
 import org.bukkit.Location;
@@ -6,9 +6,9 @@ import org.bukkit.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArenaLocation extends ArrayList<String> {
+public class LocationStringList extends ArrayList<String> {
     private Location loc;
-    public ArenaLocation(Location loc){
+    public LocationStringList(Location loc){
         this.loc = loc;
         add(String.valueOf(loc.getX()));        //0
         add(String.valueOf(loc.getY()));        //1
@@ -18,7 +18,7 @@ public class ArenaLocation extends ArrayList<String> {
         add(loc.getWorld().getName());          //5
     }
 
-    public ArenaLocation(List<String> locationStringList){
+    public LocationStringList(List<String> locationStringList){
         if(locationStringList == null || locationStringList.size()!=6){
             loc = null;
         }else{
@@ -30,7 +30,7 @@ public class ArenaLocation extends ArrayList<String> {
                     Double.parseDouble(locationStringList.get(2)),
                     Float.parseFloat(locationStringList.get(3)),
                     Float.parseFloat(locationStringList.get(4))
-                );
+            );
         }
     }
 

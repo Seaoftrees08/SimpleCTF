@@ -1,139 +1,278 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
-import com.github.seaoftrees08.simplectf.player.ArenaPlayer;
-import com.github.seaoftrees08.simplectf.player.PlayerManager;
-import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class ArenaManager {
-
     public static final String ARENA_LIST_PATH = "ArenaList";
-    private static HashMap<String, String> creating = new HashMap<>();//PlayerName ArenaName
-    private static HashMap<String, ArenaCreation> creatingArena = new HashMap<>();//arenaName, Arena
-    private static HashMap<String, PlayArena> playing = new HashMap<>();//arenaName, PlayArena
+    public static final String INVALID_ARENA_NAME = "Invalid Arena";
+    public static HashMap<String, PlayArena> playArena = new HashMap<>();//arenaName, PlayArena
+    public static HashMap<String, CreateArena> createArena = new HashMap<>();//arenaName CreateArena
 
-    public ArenaManager(){}
-
-    /**
-     * アリーナの作成を行うステータスを付与する
-     * これにより作成中に重複したりすることを防ぐ
-     *
-     * @param player 作成者
-     * @param arenaName アリーナ名
-     * @return 成功したかどうか(false->重複している)
-     */
-    public static boolean startCreation(Player player, String arenaName){
-        if(creating.containsKey(player.getName()) || creating.containsValue(arenaName)){
-            player.sendMessage(ChatColor.AQUA + "[S-CTF Creation] " + ChatColor.GREEN + "You began ArenaCreation so cannot start new creation.");
-            return false;
-        }else{
-            creatingArena.put(arenaName, new ArenaCreation(player, arenaName));
-            creating.put(player.getName(), arenaName);
-            return true;
-        }
-    }
-
-    /**
-     * playerNameがアリーナを作成中か
-     * @param playerName 検査するPlayerName
-     * @return 作成中かどうか(作成中ならばtrue)
-     */
-    public static boolean isCreating(String playerName){
-        return creating.containsKey(playerName);
-    }
-
-    public static void doCreationFlow(String playerName, ArenaCreationCause acc, Location loc, PlayerInventoryItems inv){
-        if(!isCreating(playerName)) return;
-        ArenaCreation ac = creatingArena.get(creating.get(playerName));
-        ac.flow(acc, loc, inv);
-    }
-
-    /**
-     * 作成終了時に実行
-     * playerを作成ステータスから除外する
-     * @param playerName 除外するplayerName
-     */
-    public static void finishCreation(String playerName){
-        creating.remove(playerName);
-    }
-
-    /**
-     * Arenaの名前一覧をconfig.ymlから読み取って返す
-     * @return ArenaNameの一覧
-     */
     public static List<String> loadArenaNameList(){
         return SimpleCTF.getSimpleCTF().getConfig().getStringList(ARENA_LIST_PATH);
     }
 
-    /**
-     * arenaNameに参加しているプレイヤーリストを返す
-     * @param arenaName 検査するArena名
-     * @return
-     */
-    public static List<String> joinedPlayerNameList(String arenaName){
-        if(!loadArenaNameList().contains(arenaName)) return new ArrayList<>();
-        return playing.get(arenaName).joinedPlayerNameList();
+    public static boolean existPlayArena(String arenaName){
+        return loadArenaNameList().contains(arenaName);
     }
 
     /**
-     * playArenaのListを返す
-     * @return playArenaのList
+     * アリーナが存在するかどうかを返す
+     * これは作成中のアリーナも含めて判別する
+     *
+     * @param arenaName 検査するアリーナ名
+     * @return 存在すればtrue
      */
-    public static List<PlayArena> getPlayArenaList(){
-        return playing.values().stream().toList();
+    public static boolean existArenaIncludeCreating(String arenaName){
+        return loadArenaNameList().contains(arenaName) || createArena.containsKey(arenaName);
+    }
+
+    // -------------------- creation ------------------- //
+
+    /**
+     * アリーナを作成する
+     * この時、既に存在するアリーナ、もしくは作成中のアリーナ名が使われた場合falseを返し、アリーナ作成は開始されない
+     * ただし、失敗した際のreplyはない
+     *
+     * @param arenaName 作成するアリーナ名
+     * @param player 作成者(チャットを送るのに使用)
+     */
+    public static boolean doCreation(String arenaName, Player player){
+        if(existArenaIncludeCreating(arenaName)) return false;
+        createArena.put(arenaName, new CreateArena(arenaName, player, true));
+        return true;
     }
 
     /**
-     * 指定されたarenaNameにplayerを参加させる
-     * @param ap 参加させるPlayer
-     * @param arenaName 対象のarenaName
+     * アリーナ作成後にcreateArenaから削除する
+     * @param arenaName 作成を終了したアリーナ名
      */
-    public static void join(ArenaPlayer ap, String arenaName){
-        if(!playing.containsKey(arenaName)) playing.put(arenaName, new PlayArena(arenaName));
-        PlayArena playArena = playing.get(arenaName);
-        playArena.join(ap);
-        PlayerManager.sendNormalMessage(ap.player, "You joined Arena! (" + playArena.name + ")");
+    public static void finishCreation(String arenaName){
+        createArena.remove(arenaName);
+    }
 
-        if(playArena.canPlay()){
-            playArena.broadcastInArena("Starting countdown for beginning game!");
-            playArena.setArenaStatus(ArenaStatus.WAITING);
-            //0tick後から、60秒間、20tickごとに実行するタイマー
-            playArena.startWaiting();
+    /**
+     * プレイヤーがアリーナを作成中かをかえす
+     * @param playerName 検査するプレイヤー名
+     * @return 作成中であればtrue
+     */
+    public static boolean isCreating(String playerName){
+        return createArena.values().stream()
+                .map(it -> it.author.getName())
+                .toList()
+                .contains(playerName);
+    }
+
+    /**
+     * playerがアリーナ作成中の場合、そのアリーナ名を返す.
+     * @param playerName 検査するプレイヤー名
+     * @return 作成中のarena名. 存在しない場合`ArenaManager.INVALID_ARENA_NAME`が返る
+     */
+    public static String getBelongingCreateArenaName(String playerName){
+        return createArena.values().stream()
+                .filter(it -> it.author.getName().equals(playerName))
+                .map(it -> it.arenaName)
+                .findFirst()
+                .orElse(INVALID_ARENA_NAME);
+    }
+
+    /**
+     * 作成中アリーナの現在のPhaseを取得する
+     *
+     * @param arenaName 取得したい作成中のアリーナ名
+     * @return 現在のPhase
+     */
+    public static ArenaPhase getCreateArenaPhase(String arenaName){
+        if(!createArena.containsKey(arenaName)) return ArenaPhase.NONE;
+        return createArena.get(arenaName).phase;
+    }
+
+    /**
+     * アリーナ作成時に値を入力する際に使用する
+     * ArenaPhaseが正確かどうかについては検査済みのものとする.
+     *
+     * @param arenaName 入力するアリーナ名
+     * @param location 入力値となるLocation(Flagの位置, ArenaFieldの端)
+     * @param player 入力値となるPlayer(SpawnPoint, Inventory)
+     */
+    public static void doCreateFlow(String arenaName, Location location, Player player){
+        if(!createArena.containsKey(arenaName)) return;
+        createArena.get(arenaName).flow(location, player);
+    }
+
+
+    // -------------------- playing ------------------- //
+
+    /**
+     * プレイヤーがすでにほかのところに参加しているかどうかを検査する
+     *
+     * @param playerName 検査するプレイヤー名
+     * @return すでに参加している場合はtrue
+     */
+    public static boolean alreadyJoin(String playerName){
+        return !whereJoined(playerName).equals(ArenaManager.INVALID_ARENA_NAME);
+    }
+
+    /**
+     * プレイヤーが参加しているアリーナ名を返す
+     * これは観戦者も含める
+     * どこにも参加していなければ`ArenaManager.INVALID_ARENA_NAME`を返す
+     *
+     * @param playerName 検査するプレイヤー名
+     * @return 参加しているアリーナ名
+     */
+    public static String whereJoined(String playerName){
+        return playArena.values().stream()
+                .filter(arena -> arena.isJoined(playerName))
+                .map(arena -> arena.arenaName)
+                .findFirst()
+                .orElse(ArenaManager.INVALID_ARENA_NAME);
+    }
+
+
+    /**
+     * アリーナに参加する.
+     * アリーナが存在するかどうか、プレイヤーがすでに他のアリーナに参加しているかどうかを判別し、メッセージを送るのもここで行う
+     *
+     * @param arenaName 参加するarena名
+     * @param player 参加するPlayer
+     */
+    public static void join(String arenaName, Player player){
+        if(!existPlayArena(arenaName)){
+            sendMessage(player, "This arena does not exist.", ChatColor.RED);
+            return;
         }
+
+        if(alreadyJoin(player.getName())){
+            sendMessage(player, "You already join " + whereJoined(player.getName()), ChatColor.RED);
+            return;
+        }
+
+        PlayArena pa = new PlayArena(arenaName);
+        if(!pa.enable){
+            sendMessage(player, "This arena does disabled.", ChatColor.GRAY);
+            return;
+        }
+
+        //PlayArenaが作成されてなかった場合、作成
+        if(!playArena.containsKey(arenaName)){
+            playArena.put(arenaName, pa);
+        }
+
+        playArena.get(arenaName).join(player);
+        sendMessage(player, "You join Arena!", ChatColor.GOLD);
+
     }
 
+    /**
+     * アリーナから退出する
+     * プレイヤーがすでに他のアリーナに参加しているかどうかを判別し、メッセージを送るのもここで行う
+     *
+     * @param player 退出するプレイヤー
+     */
+    public static void leave(Player player){
+        if(!alreadyJoin(player.getName())){
+            sendMessage(player, "You are not join anywhere.", ChatColor.GRAY);
+            return;
+        }
+
+        String arenaName = whereJoined(player.getName());
+        playArena.get(arenaName).leave(player);
+        sendMessage(player, "You leaved Arena.", ChatColor.GOLD);
+    }
+
+    /**
+     * アリーナに観戦者として参加する.
+     * アリーナが存在するかどうか、プレイヤーがすでに他のアリーナに参加しているかどうかを判別し、メッセージを送るのもここで行う
+     *
+     * @param arenaName 参加するarena名
+     * @param player 参加するPlayer
+     */
+    public static void joinSpectator(String arenaName, Player player){
+        if(!existPlayArena(arenaName)){
+            sendMessage(player, "This arena does not exist.", ChatColor.RED);
+            return;
+        }
+
+        if(alreadyJoin(player.getName())){
+            sendMessage(player, "You already join " + whereJoined(player.getName()), ChatColor.RED);
+            return;
+        }
+
+        PlayArena pa = new PlayArena(arenaName);
+        if(!pa.enable){
+            sendMessage(player, "This arena does disabled.", ChatColor.GRAY);
+            return;
+        }
+
+        //PlayArenaが作成されてなかった場合、作成
+        if(!playArena.containsKey(arenaName)){
+            playArena.put(arenaName, pa);
+        }
+
+        playArena.get(arenaName).joinSpectator(player);
+        sendMessage(player, "You join Arena as Spectators!", ChatColor.BLUE);
+
+    }
+
+    /**
+     * アリーナの観戦者から退出する
+     * プレイヤーがすでに他のアリーナに参加しているかどうかを判別し、メッセージを送るのもここで行う
+     *
+     * @param player 退出するプレイヤー
+     */
+    public static void leaveSpectator(Player player){
+        if(!alreadyJoin(player.getName())){
+            sendMessage(player, "You are not join anywhere.", ChatColor.GRAY);
+            return;
+        }
+
+        String arenaName = whereJoined(player.getName());
+        playArena.get(arenaName).leaveSpectator(player);
+        sendMessage(player, "You leaved Arena.", ChatColor.BLUE);
+    }
+
+    public static void removePlayArena(String arenaName){
+        playArena.remove(arenaName);
+    }
+
+    /**
+     * PlayArenaを取得する. ClockWork用
+     *
+     * @param arenaName 取得するアリーナ名
+     * @return 該当するPlayArena. 無ければnullが返る
+     */
     public static PlayArena getPlayArena(String arenaName){
-        return playing.getOrDefault(arenaName, new PlayArena(arenaName));
+        return playArena.getOrDefault(arenaName, null);
     }
 
     /**
-     * playerNameをarenaNameから退場させる
-     * この退場によってアリーナが誰もいなくなるようであればplayingから削除する
-     * @param playerName 退場させるplayerName
-     * @param arenaName 退場させるarenaName
+     * アリーナのカウントダウンを強制10秒にする.
+     *
+     * @param arenaName 強制したいアリーナ名
+     * @return 成功したかどうか(アリーナが存在しないなどで失敗するとfalseが返る)
      */
-    public static void leave(String playerName, String arenaName){
-        PlayArena pa = playing.get(arenaName);
-        pa.leave(playerName);
-        PlayerManager.sendNormalMessage(
-                Objects.requireNonNull(SimpleCTF.getSimpleCTF().getServer().getPlayer(playerName)),
-                "You leaved Arena! (" + pa.name + ")"
-        );
-
-        if(pa.joinedPlayerList().isEmpty()){
-            playing.remove(arenaName);
+    public static boolean forceStart(String arenaName){
+        if(!existPlayArena(arenaName)){
+            return false;
         }
-
-        Player p = SimpleCTF.getSimpleCTF().getServer().getPlayer(playerName);
-        assert p != null;
-        p.teleport(Objects.requireNonNull(p.getLocation().getWorld()).getSpawnLocation());
+        PlayArena pa = playArena.get(arenaName);
+        if(pa.phase.equals(ArenaPhase.WAITING) || pa.phase.equals(ArenaPhase.PLAYING)){
+            pa.setTime(10);
+            return true;
+        }
+        return false;
     }
+
+    // -------------------- other --------------------- //
+    private static void sendMessage(Player player, String message, ChatColor cc) {
+        player.sendMessage(ChatColor.AQUA + "[S-CTF] " + cc + message);
+    }
+
 }

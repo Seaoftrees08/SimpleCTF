@@ -1,4 +1,4 @@
-package com.github.seaoftrees08.simplectf.arena;
+package com.github.seaoftrees08.simplectf.utils;
 
 import com.github.seaoftrees08.simplectf.reflection.RefPotionData;
 import org.bukkit.Material;
@@ -10,16 +10,20 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ArenaItem extends ItemStack {
-    public ArenaItem(ItemStack is){
-        super(is);
+public class ArenaItemStack extends ItemStack {
+    public ArenaItemStack(){
+        super(new ItemStack(Material.AIR));
+    }
+    public ArenaItemStack(ItemStack is){
+        super(nullRemoval(is));
     }
 
-    public ArenaItem(List<String> lst){
+    public ArenaItemStack(List<String> lst){
         super(listToItem(lst));
     }
 
@@ -29,6 +33,21 @@ public class ArenaItem extends ItemStack {
 
     public ItemStack getItemStack(){
         return this;
+    }
+
+    public int isAir(){
+        return getType().equals(Material.AIR) ? 1 : 0;
+    }
+
+    /**
+     * nullかどうかわからないItemSTackをnull safeにしてくれる子
+     * nullはAIRとなる
+     * @param i null除去するItemStack
+     * @return null除去されたItemStack
+     */
+    @Nonnull
+    public static ItemStack nullRemoval(ItemStack i){
+        return i == null ? new ItemStack(Material.AIR) : i;
     }
 
     /**
@@ -77,15 +96,15 @@ public class ArenaItem extends ItemStack {
 
     /**
      * ListからItemStackを作る
-     * Listは下記の順が保証されているものとする
+     * Listは下記の順が保証されているものとする(さもなくばAIRを返す)
      * ただし、Index=1, 2は空の場合がある
      * 0: Material名
      * 1: 個数(数字)
-     * 2: MetaData(EnchantName, Level, )
+     * 2: MetaData(EnchantName1, Level, EnchantName2, Level, ...)
      * 3: PoritonData(PotionType, Extended, Upgraded)
      *
-     * @param lst
-     * @return
+     * @param lst 変換元のリスト
+     * @return 変換したItemsStack
      */
     private static ItemStack listToItem(List<String> lst){
         if(lst==null || lst.size()<=3){

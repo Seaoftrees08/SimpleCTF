@@ -1,190 +1,115 @@
 package com.github.seaoftrees08.simplectf.arena;
 
 import com.github.seaoftrees08.simplectf.SimpleCTF;
-import com.github.seaoftrees08.simplectf.utils.PlayerInventoryItems;
-import com.github.seaoftrees08.simplectf.utils.Vec3i;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import com.github.seaoftrees08.simplectf.flag.Flag;
+import com.github.seaoftrees08.simplectf.utils.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Arena {
 
-    public final String name;
-    private final FileConfiguration yml;
-    private final File file;
-    protected Vec3i firstPoint;
-    protected Vec3i secondPoint;
-    protected Vec3i redFlagFence;
-    protected Vec3i blueFlagFence;
-    protected ArenaLocation redSpawn;
-    protected ArenaLocation blueSpawn;
-    protected ArenaLocation returnPoint;
-    protected PlayerInventoryItems redInv;
-    protected PlayerInventoryItems blueInv;
-    private boolean enable;
+    public final static String RED_TEAM = "Red Team";
+    public final static String BLUE_TEAM = "Blue Team";
+    public final String arenaName;
+    protected final FileConfiguration yml;
+    protected final File file;
+    protected Cuboid arenaField;
+    protected ArenaTeam redTeam;
+    protected ArenaTeam blueTeam;
+    protected Flag redFlag;
+    protected Flag blueFlag;
+    protected ArenaPhase phase = ArenaPhase.NONE;
+    protected boolean enable = false;
+    protected List<String> allowCommands = new ArrayList<>();
 
-    public Arena(String name){
-        this.name = name;
-        file = new File(SimpleCTF.getSimpleCTF().getDataFolder(), name+ ".yml");
+    /**
+     * CreateArenaにて使われるコンストラクタ
+     * 区別のためにbooleanの値をとっている、まあ使ってないけど
+     * @param uniqueName アリーナ名. 使用されていないことを要請する
+     * @param isCreation 区別のためにbooleanの値をとっている、まあ使ってないけど(2回目)
+     */
+    protected Arena(String uniqueName, boolean isCreation){
+        this.arenaName = uniqueName;
+        file = new File(SimpleCTF.getSimpleCTF().getDataFolder(), arenaName+ ".yml");
         yml = YamlConfiguration.loadConfiguration(file);
+    }
 
-        firstPoint = new Vec3i(yml.getIntegerList(ArenaYamlPath.FIRST_POINT));
-        secondPoint = new Vec3i(yml.getIntegerList(ArenaYamlPath.SECOND_POINT));
-        redFlagFence = new Vec3i(yml.getIntegerList(ArenaYamlPath.RED_FLAG));
-        blueFlagFence = new Vec3i(yml.getIntegerList(ArenaYamlPath.BLUE_FLAG));
-        redSpawn = new ArenaLocation(yml.getStringList(ArenaYamlPath.RED_SPAWN));
-        blueSpawn = new ArenaLocation(yml.getStringList(ArenaYamlPath.BLUE_SPAWN));
-        returnPoint = new ArenaLocation(yml.getStringList(ArenaYamlPath.RETURN_POINT));
+    /**
+     * アリーナを作成、読み込む
+     * これはArenaManagerから呼ばれるもので、config上で存在するアリーナ名(=実在するもの)のみが使われることを前提とする
+     * @param arenaName 読み込むアリーナ名
+     */
+    public Arena(String arenaName){
+        this(arenaName, false);
+
+        //load arena
+        //arena field
+        arenaField = new Cuboid(new Vec3i(yml.getIntegerList(ArenaYamlPath.FIRST_POINT)), new Vec3i(yml.getIntegerList(ArenaYamlPath.SECOND_POINT)));
+
+        //StoredPlayerData for redTeam
+        ArrayList<ArenaItemStack> redMainItems = new ArrayList<>();
+        if(yml.getList(ArenaYamlPath.RED_INV_ITEMS) != null){
+            for(List<String> lst : (List<ArrayList<String>>) yml.getList(ArenaYamlPath.RED_INV_ITEMS)){
+                redMainItems.add(new ArenaItemStack(lst));
+            }
+        }
+        StoredPlayerData red_spd = new StoredPlayerData(
+                redMainItems,
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_HELMET)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_CHEST_PLATE)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_LEGGINGS)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_BOOTS)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.RED_INV_OFFHAND)),
+                new LocationStringList(yml.getStringList(ArenaYamlPath.RED_SPAWN))
+        );
+        redTeam = new ArenaTeam(TeamColor.RED, red_spd);
+
+        //StoredPlayerData for blueTeam
+        ArrayList<ArenaItemStack> blueMainItems = new ArrayList<>();
+        if(yml.getList(ArenaYamlPath.BLUE_INV_ITEMS) != null){
+            for(List<String> lst : (List<ArrayList<String>>) yml.getList(ArenaYamlPath.BLUE_INV_ITEMS)){
+                blueMainItems.add(new ArenaItemStack(lst));
+            }
+        }
+        StoredPlayerData blue_spd = new StoredPlayerData(
+                blueMainItems,
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_HELMET)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_CHEST_PLATE)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_LEGGINGS)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_BOOTS)),
+                new ArenaItemStack(yml.getStringList(ArenaYamlPath.BLUE_INV_OFFHAND)),
+                new LocationStringList(yml.getStringList(ArenaYamlPath.BLUE_SPAWN))
+        );
+        blueTeam = new ArenaTeam(TeamColor.BLUE, blue_spd);
+
+        //redFlag
+        redFlag = new Flag(TeamColor.RED, new LocationStringList(yml.getStringList(ArenaYamlPath.RED_FLAG)).getLocation());
+
+        //blueFlag
+        blueFlag = new Flag(TeamColor.BLUE, new LocationStringList(yml.getStringList(ArenaYamlPath.BLUE_FLAG)).getLocation());
+
+        //scoreboard
+        //phaseに分けて各タイミングで実行するため、コンストラクタでは未定義
+
+        //enable
         enable = yml.getBoolean(ArenaYamlPath.ENABLE);
 
-        //redInventory
-        ArrayList<ItemStack> redMainItems = new ArrayList<>();
-        if(yml.getList(ArenaYamlPath.RED_INV_ITEMS) != null){
-            //main items
-            for(List<String> lst : (List<ArrayList<String>>) yml.getList(ArenaYamlPath.RED_INV_ITEMS)){
-                redMainItems.add(new ArenaItem(lst).getItemStack());
-            }
-        }
-        //Red armor
-        ItemStack redHead = new ItemStack(Material.AIR);
-        ItemStack redChest = new ItemStack(Material.AIR);
-        ItemStack redLeggings = new ItemStack(Material.AIR);
-        ItemStack redBoots = new ItemStack(Material.AIR);
-        if(yml.getList(ArenaYamlPath.RED_INV_ARMOR) != null){
-
-            int i = 0;
-            for(List<String> lst : (List<ArrayList<String>>) yml.getList(ArenaYamlPath.RED_INV_ARMOR)){
-                switch (i){
-                    case 0: redBoots = new ArenaItem(lst).getItemStack();
-                    case 1: redLeggings = new ArenaItem(lst).getItemStack();
-                    case 2: redChest = new ArenaItem(lst).getItemStack();
-                    case 3: redHead = new ArenaItem(lst).getItemStack();
-                }
-                i++;
-            }
-        }
-        //Red left Hand
-        ItemStack redLeftHand = new ArenaItem(yml.getStringList(ArenaYamlPath.RED_INV_LEFTHAND));
-        redInv = new PlayerInventoryItems(redMainItems, redHead, redChest, redLeggings, redBoots, redLeftHand);
-
-        //blueInventory
-        ArrayList<ItemStack> blueMainItems = new ArrayList<>();
-        if(yml.getList(ArenaYamlPath.BLUE_INV_ITEMS) != null){
-            //main items
-            for(List<String> lst : (List<ArrayList<String>>) yml.getList(ArenaYamlPath.BLUE_INV_ITEMS)){
-                blueMainItems.add(new ArenaItem(lst).getItemStack());
-            }
-        }
-        //blue armor
-        ItemStack blueHead = new ItemStack(Material.AIR);
-        ItemStack blueChest = new ItemStack(Material.AIR);
-        ItemStack blueLeggings = new ItemStack(Material.AIR);
-        ItemStack blueBoots = new ItemStack(Material.AIR);
-        if(yml.getList(ArenaYamlPath.BLUE_INV_ARMOR) != null){
-
-            int i = 0;
-            for(List<String> lst : (List<ArrayList<String>>) yml.getList(ArenaYamlPath.BLUE_INV_ARMOR)){
-                switch (i){
-                    case 0: blueBoots = new ArenaItem(lst).getItemStack();
-                    case 1: blueLeggings = new ArenaItem(lst).getItemStack();
-                    case 2: blueChest = new ArenaItem(lst).getItemStack();
-                    case 3: blueHead = new ArenaItem(lst).getItemStack();
-                }
-                i++;
-            }
-        }
-        //blue left Hand
-        ItemStack blueLeftHand = new ArenaItem(yml.getStringList(ArenaYamlPath.BLUE_INV_LEFTHAND));
-        blueInv = new PlayerInventoryItems(blueMainItems, blueHead, blueChest, blueLeggings, blueBoots, blueLeftHand);
-
-        //canPlay
-
+        //allow commands
+        allowCommands = yml.getStringList(ArenaYamlPath.ALLOW_COMMANDS);
     }
 
-    public void setFirstPoint(Vec3i v){
-        this.firstPoint = v;
-    }
-
-    public void setSecondPoint(Vec3i v){
-        this.secondPoint = v;
-    }
-
-    public void setRedFlagFence(Vec3i v){
-        this.redFlagFence = v;
-    }
-
-    public void setBlueFlagFence(Vec3i v){
-        this.blueFlagFence = v;
-    }
-
-    public void setRedSpawn(Location loc){
-        this.redSpawn = new ArenaLocation(loc);
-    }
-
-    public void setBlueSpawn(Location loc){
-        this.blueSpawn = new ArenaLocation(loc);
-    }
-
-    public void setReturnPoint(Location loc){
-        this.returnPoint = new ArenaLocation(loc);
-    }
-
-    public void setRedInv(PlayerInventoryItems pii){
-        this.redInv = pii;
-    }
-    public PlayerInventoryItems getRedInv(){ return redInv; }
-
-    public PlayerInventoryItems getBlueInv(){ return blueInv; }
-
-    public void setBlueInv(PlayerInventoryItems pii){
-        this.blueInv = pii;
-    }
-
-    public void setEnable(boolean b){
-        this.enable = b;
+    public List<String> getAllowCommands(){
+        return allowCommands;
     }
 
     public boolean isEnable(){
         return enable;
-    }
-
-    public void save(){
-        //ArenaList
-        List<String> arenaList = ArenaManager.loadArenaNameList();
-        if(!arenaList.contains(name)) arenaList.add(name);
-        SimpleCTF.getSimpleCTF().getConfig().set(ArenaManager.ARENA_LIST_PATH, arenaList);
-        SimpleCTF.getSimpleCTF().saveConfig();
-
-        yml.set(ArenaYamlPath.FIRST_POINT, firstPoint.getList());     //firstPoint
-        yml.set(ArenaYamlPath.SECOND_POINT, secondPoint.getList());   //secondPoint
-        yml.set(ArenaYamlPath.RED_FLAG, redFlagFence.getList());           //redFlag
-        yml.set(ArenaYamlPath.BLUE_FLAG, blueFlagFence.getList());         //blueFlag
-        yml.set(ArenaYamlPath.RED_SPAWN, redSpawn.getStringList());         //redSpawn
-        yml.set(ArenaYamlPath.BLUE_SPAWN, blueSpawn.getStringList());       //blueSpawn
-        yml.set(ArenaYamlPath.RETURN_POINT, returnPoint.getStringList());   //returnPoint
-        yml.set(ArenaYamlPath.RED_INV_ITEMS, redInv.getMainItemStringList());   //redMainItem
-        yml.set(ArenaYamlPath.RED_INV_ARMOR, redInv.getArmorList());            //redArmor
-        yml.set(ArenaYamlPath.RED_INV_LEFTHAND, redInv.getLeftHandItemStringList()); //redLeftHand
-        yml.set(ArenaYamlPath.BLUE_INV_ITEMS, blueInv.getMainItemStringList());   //blueMainItem
-        yml.set(ArenaYamlPath.BLUE_INV_ARMOR, blueInv.getArmorList());            //blueArmor
-        yml.set(ArenaYamlPath.BLUE_INV_LEFTHAND, blueInv.getLeftHandItemStringList()); //blueLeftHand
-        yml.set(ArenaYamlPath.ENABLE, enable);
-        try {
-            yml.save(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void remove(){
-        file.delete();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.github.seaoftrees08.simplectf.flag;
 
-
+import com.github.seaoftrees08.simplectf.arena.TeamColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,23 +9,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Objects;
-
 public class Flag {
-
+    public static final String RED_FLAG_NAME = "Red Flag";
+    public static final String BLUE_FLAG_NAME = "Blue Flag";
     public FlagStatus status = FlagStatus.CAMP;
     private final FlagItem flagItem;
     private final Location campLocation;
-    private Location location;
     public int onGroundedTime = 0;//-1 -> PlayerListener等でonGroundを感知、0->camp、n->地面に落ちた時のremTime
     private Item onGroundItem;
 
     private Player havingPlayer;
 
-    public Flag(FlagItem flagItem, Location flagFenceLocation){
-        this.flagItem = flagItem;
-        campLocation = flagFenceLocation;
-        location = flagFenceLocation;
+    public Flag(TeamColor color, Location campLocation){
+        this.flagItem = getFlagItem(color, campLocation);
+        this.campLocation = campLocation;
     }
 
     /**
@@ -34,11 +31,11 @@ public class Flag {
      */
     public Location getLocation(){
         switch (status){
-            case CAMP -> { return location.clone().add(0,1,0); }
+            case CAMP -> { return flagItem.getFenceLocation(); }
             case GROUND -> { return onGroundItem.getLocation(); }
             case BRING -> { return havingPlayer.getLocation(); }
         }
-        return location;
+        return flagItem.getFenceLocation();
     }
 
     public Location getCampLocation(){ return campLocation; }
@@ -50,7 +47,6 @@ public class Flag {
     public void drop(Item item){
         this.onGroundItem = item;
         this.havingPlayer = null;
-        this.location = item.getLocation();
         status = FlagStatus.GROUND;
     }
 
@@ -60,7 +56,6 @@ public class Flag {
     public void spawnCamp(){
         this.onGroundItem = null;
         this.havingPlayer = null;
-        this.location = campLocation.clone();
         flagItem.spawn();
         status = FlagStatus.CAMP;
     }
@@ -68,7 +63,6 @@ public class Flag {
     public void pickUp(Player p){
         this.onGroundItem = null;
         this.havingPlayer = p;
-        this.location = null;
         status = FlagStatus.BRING;
     }
 
@@ -82,7 +76,7 @@ public class Flag {
         ItemStack is = new ItemStack(Material.RED_WOOL);
         ItemMeta im = is.getItemMeta();
         assert im != null;
-        im.setDisplayName(ChatColor.RED + "Red Flag");
+        im.setDisplayName(ChatColor.RED + RED_FLAG_NAME);
         is.setItemMeta(im);
         return is;
     }
@@ -91,8 +85,30 @@ public class Flag {
         ItemStack is = new ItemStack(Material.BLUE_WOOL);
         ItemMeta im = is.getItemMeta();
         assert im != null;
-        im.setDisplayName(ChatColor.BLUE + "Blue Flag");
+        im.setDisplayName(ChatColor.BLUE + BLUE_FLAG_NAME);
         is.setItemMeta(im);
         return is;
+    }
+
+    private static FlagItem getFlagItem(TeamColor color, Location flagFenceLocation){
+        switch (color){
+            case RED -> {
+                return new FlagItem(
+                        flagFenceLocation,
+                        Flag.RED_FLAG_NAME,
+                        Flag.getRedFlagItemStack()
+                );
+            }
+            case BLUE -> {
+                return new FlagItem(
+                        flagFenceLocation,
+                        Flag.BLUE_FLAG_NAME,
+                        Flag.getBlueFlagItemStack()
+                );
+            }
+            default -> {}
+        }
+        System.out.println("called!!!!!");
+        return new FlagItem(null, "", new ItemStack(Material.AIR));
     }
 }
