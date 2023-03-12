@@ -36,7 +36,7 @@ public class Waiting extends BukkitRunnable {
         //start
         if(remTime==0){
             arena.whenStartGame();
-            new Playing(300, arenaName).runTaskTimer(SimpleCTF.getSimpleCTF(), 0, 20);
+            new Playing(300, arenaName).runTaskTimer(SimpleCTF.getSimpleCTF(), 20, 20);
             this.cancel();
         }
 

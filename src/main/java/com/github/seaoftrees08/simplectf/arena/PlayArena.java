@@ -54,7 +54,8 @@ public class PlayArena extends Arena{
         player.getInventory().clear();
 
         //scoreboard set
-        waitScoreboard();
+        if(phase.equals(ArenaPhase.PLAYING)) playScoreBoard();
+        if(phase.equals(ArenaPhase.WAITING) || phase.equals(ArenaPhase.NONE) || phase.equals(ArenaPhase.FINISHED)) waitScoreboard();
 
         //gamemode set
         player.setGameMode(GameMode.ADVENTURE);
@@ -64,8 +65,14 @@ public class PlayArena extends Arena{
                 && (phase.equals(ArenaPhase.NONE) || phase.equals(ArenaPhase.FINISHED))){
             phase = ArenaPhase.WAITING;
             //0tick後から、60秒間、20tickごとに実行するタイマー
-            new Waiting(60, arenaName).runTaskTimer(SimpleCTF.getSimpleCTF(), 0, 20);
+            new Waiting(60, arenaName).runTaskTimer(SimpleCTF.getSimpleCTF(), 20, 20);
         }
+
+        //既に開始されている場合
+        if(phase.equals(ArenaPhase.PLAYING)){
+            whenSpawn(player);
+        }
+
         return true;
     }
 
@@ -409,6 +416,7 @@ public class PlayArena extends Arena{
 
         //player leave
         joinedAllPlayerList().forEach(ArenaManager::leave);
+        spectators.getArenaPlayerList().forEach(ap -> ArenaManager.leaveSpectator(ap.player));
 
         //フィールドの初期化
         //flag kill

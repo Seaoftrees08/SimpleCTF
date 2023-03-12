@@ -7,6 +7,7 @@ import com.github.seaoftrees08.simplectf.arena.TeamColor;
 import com.github.seaoftrees08.simplectf.clockwork.Dedication;
 import com.github.seaoftrees08.simplectf.flag.Flag;
 import com.github.seaoftrees08.simplectf.flag.FlagStatus;
+import com.github.seaoftrees08.simplectf.utils.ArenaItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -99,10 +100,6 @@ public class PlayerListeners implements Listener {
             if(tc.equals(TeamColor.RED) && pa.getBlueFlag().hasFlag(playerName)){
                 e.getDrops().remove(Flag.getRedFlagItemStack());
                 e.getDrops().remove(Flag.getBlueFlagItemStack());
-                e.getDrops().stream()
-                        .filter(i -> i.getType().toString().contains("ARMOR") || i.getType().toString().contains("SWORD"))
-                        .toList()
-                        .forEach(i -> e.getDrops().remove(i));
                 Location loc = e.getEntity().getLocation();
                 Item i = Objects.requireNonNull(loc.getWorld()).dropItemNaturally(loc, Flag.getBlueFlagItemStack());
                 pa.dropBlueFlag(e.getEntity(), i);
@@ -111,14 +108,23 @@ public class PlayerListeners implements Listener {
             if(tc.equals(TeamColor.BLUE) && pa.getRedFlag().hasFlag(playerName)){
                 e.getDrops().remove(Flag.getRedFlagItemStack());
                 e.getDrops().remove(Flag.getBlueFlagItemStack());
-                e.getDrops().stream()
-                        .filter(i -> i.getType().toString().contains("ARMOR") || i.getType().toString().contains("SWORD"))
-                        .toList()
-                        .forEach(i -> e.getDrops().remove(i));
                 Location loc = e.getEntity().getLocation();
                 Item i = Objects.requireNonNull(loc.getWorld()).dropItemNaturally(loc, Flag.getRedFlagItemStack());
                 pa.dropRedFlag(e.getEntity(), i);
             }
+            //装備品は落とさないように
+            e.getDrops().stream()
+                    .filter(i -> i.getType().toString().contains("SWORD")
+                            || i.getType().toString().contains("HELMET")
+                            || i.getType().toString().contains("CHEST")
+                            || i.getType().toString().contains("LEGGINGS")
+                            || i.getType().toString().contains("BOOTS")
+                            || i.getType().toString().contains("SHIELD")
+                            || i.getType().toString().contains("TRIDENT")
+                            || i.getType().toString().contains("AXE")
+                    )
+                    .toList()
+                    .forEach(i -> e.getDrops().remove(i));
         }
     }
 
@@ -285,6 +291,7 @@ public class PlayerListeners implements Listener {
         String arenaName = ArenaManager.whereJoined(e.getPlayer().getName());
         if(!arenaName.equals(ArenaManager.INVALID_ARENA_NAME)) {
             ArenaManager.leave(e.getPlayer());
+            ArenaManager.leaveSpectator(e.getPlayer());
         }
     }
 
@@ -299,7 +306,9 @@ public class PlayerListeners implements Listener {
         //赤旗
         if(pa.getRedFlag().hasFlag(p.getName())){
             //赤旗を2つ以上持っている場合
-            Optional<ItemStack> ois = Arrays.stream(p.getInventory().getContents()).filter(is -> is.getType().equals(Material.RED_WOOL)).findFirst();
+            Optional<ItemStack> ois = Arrays.stream(p.getInventory().getContents())
+                    .filter(is -> new ArenaItemStack(is).getType().equals(Material.RED_WOOL))
+                    .findFirst();
             if(ois.isPresent() && ois.get().getAmount() > 1){
                 p.getInventory().remove(Material.RED_WOOL);
                 p.getInventory().addItem(Flag.getRedFlagItemStack());
@@ -311,7 +320,9 @@ public class PlayerListeners implements Listener {
         //青旗
         if(pa.getBlueFlag().hasFlag(p.getName())){
             //赤旗を2つ以上持っている場合
-            Optional<ItemStack> ois = Arrays.stream(p.getInventory().getContents()).filter(is -> is.getType().equals(Material.BLUE_WOOL)).findFirst();
+            Optional<ItemStack> ois = Arrays.stream(p.getInventory().getContents())
+                    .filter(is -> new ArenaItemStack(is).getType().equals(Material.BLUE_WOOL))
+                    .findFirst();
             if(ois.isPresent() && ois.get().getAmount() > 1){
                 p.getInventory().remove(Material.BLUE_WOOL);
                 p.getInventory().addItem(Flag.getBlueFlagItemStack());
