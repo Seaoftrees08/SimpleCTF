@@ -145,7 +145,7 @@ public class ArenaManager {
      */
     public static void join(String arenaName, Player player){
         if(!existPlayArena(arenaName)){
-            sendMessage(player, "This arena is not exist.", ChatColor.RED);
+            sendMessage(player, "This arena does not exist.", ChatColor.RED);
             return;
         }
 
@@ -156,7 +156,7 @@ public class ArenaManager {
 
         PlayArena pa = new PlayArena(arenaName);
         if(!pa.enable){
-            sendMessage(player, "This arena is disabled.", ChatColor.GRAY);
+            sendMessage(player, "This arena does disabled.", ChatColor.GRAY);
             return;
         }
 
@@ -196,7 +196,7 @@ public class ArenaManager {
      */
     public static void joinSpectator(String arenaName, Player player){
         if(!existPlayArena(arenaName)){
-            sendMessage(player, "This arena is not exist.", ChatColor.RED);
+            sendMessage(player, "This arena does not exist.", ChatColor.RED);
             return;
         }
 
@@ -207,7 +207,7 @@ public class ArenaManager {
 
         PlayArena pa = new PlayArena(arenaName);
         if(!pa.enable){
-            sendMessage(player, "This arena is disabled.", ChatColor.GRAY);
+            sendMessage(player, "This arena does disabled.", ChatColor.GRAY);
             return;
         }
 

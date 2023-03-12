@@ -62,14 +62,14 @@ public class Commands implements CommandExecutor {
                 if(ArenaManager.existPlayArena(args[2])){
                     CreateArena ca = new CreateArena(args[2], null);//sendMessageを使わないのでnullを入れている
                     if(ca.isEnable()){
-                        sendMessage(sender, "This arena is enabled.", ChatColor.RED);
+                        sendMessage(sender, "This arena does enabled.", ChatColor.RED);
                         sendMessage(sender, "If you want to remove this arena, please type /sctf admin disable " + args[2], ChatColor.GRAY);
                         return true;
                     }
                     ca.deleteArena();
                     sendMessage(sender, "Arena Removed!", ChatColor.GREEN);
                 }else{
-                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                    sendMessage(sender, "This arena does not exist.", ChatColor.GRAY);
                 }
                 return true;
             }
@@ -89,7 +89,7 @@ public class Commands implements CommandExecutor {
                     ca.save();
                     sendMessage(sender, ChatColor.GOLD + args[2] + " is enabled!", ChatColor.GREEN);
                 }else{
-                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                    sendMessage(sender, "This arena does not exist.", ChatColor.GRAY);
                 }
                 return true;
             }
@@ -102,7 +102,7 @@ public class Commands implements CommandExecutor {
                     ca.save();
                     sendMessage(sender, ChatColor.GOLD + args[2] + " is disabled!", ChatColor.DARK_GREEN);
                 }else{
-                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                    sendMessage(sender, "This arena does not exist.", ChatColor.GRAY);
                 }
                 return true;
             }
@@ -116,7 +116,7 @@ public class Commands implements CommandExecutor {
                     sendMessage(sender,"'" + ChatColor.GOLD + args[3] + ChatColor.GREEN
                             + "' are allowed in " + args[2], ChatColor.GREEN);
                 }else{
-                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                    sendMessage(sender, "This arena does not exist.", ChatColor.GRAY);
                 }
                 return true;
             }
@@ -134,7 +134,7 @@ public class Commands implements CommandExecutor {
                     sendMessage(sender,"'" + ChatColor.GOLD + args[3] + ChatColor.DARK_GREEN
                             + "' are denied in " + args[2], ChatColor.DARK_GREEN);
                 }else{
-                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                    sendMessage(sender, "This arena does not exist.", ChatColor.GRAY);
                 }
                 return true;
             }
@@ -148,7 +148,7 @@ public class Commands implements CommandExecutor {
                     sendMessage(sender, "/simplectf", ChatColor.GRAY);
                     ca.getAllowCommands().forEach(c -> sendMessage(sender, c, ChatColor.GRAY));
                 }else{
-                    sendMessage(sender, "This arena is not exist.", ChatColor.GRAY);
+                    sendMessage(sender, "This arena does not exist.", ChatColor.GRAY);
                 }
                 return true;
             }
