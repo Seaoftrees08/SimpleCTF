@@ -35,12 +35,12 @@ public class StoredPlayerData {
         offHand = new ArenaItemStack(pi.getItemInOffHand());
         location = new LocationStringList(loc);
 
-        int count = helmet.isAir()
-                + chest.isAir()
-                + leggings.isAir()
-                + boots.isAir()
-                + offHand.isAir();
-        for(int i=0; i<count; i++) invContents.remove(invContents.size()-1);
+//        int count = helmet.isAir()
+//                + chest.isAir()
+//                + leggings.isAir()
+//                + boots.isAir()
+//                + offHand.isAir();
+        for(int i=0; i<5; i++) invContents.remove(invContents.size()-1);
 
         this.gamemode = gamemode;
     }

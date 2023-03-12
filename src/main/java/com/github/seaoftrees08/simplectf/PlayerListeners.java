@@ -4,6 +4,7 @@ import com.github.seaoftrees08.simplectf.arena.ArenaManager;
 import com.github.seaoftrees08.simplectf.arena.ArenaPhase;
 import com.github.seaoftrees08.simplectf.arena.PlayArena;
 import com.github.seaoftrees08.simplectf.arena.TeamColor;
+import com.github.seaoftrees08.simplectf.clockwork.Dedication;
 import com.github.seaoftrees08.simplectf.flag.Flag;
 import com.github.seaoftrees08.simplectf.flag.FlagStatus;
 import org.bukkit.ChatColor;
@@ -25,6 +26,7 @@ import java.util.*;
 public class PlayerListeners implements Listener {
 
     public static HashMap<String, Integer> moveEventCooldown = new HashMap<>();
+    public static List<String> dedication = Collections.synchronizedList(new ArrayList<>());
 
     public PlayerListeners(SimpleCTF simpleCTF) {
         simpleCTF.getServer().getPluginManager().registerEvents(this, simpleCTF);
@@ -81,7 +83,6 @@ public class PlayerListeners implements Listener {
                         + ChatColor.RED + "This command are not allowed in this arena.");
             }
 
-
             e.setCancelled(true);
         }
     }
@@ -98,6 +99,10 @@ public class PlayerListeners implements Listener {
             if(tc.equals(TeamColor.RED) && pa.getBlueFlag().hasFlag(playerName)){
                 e.getDrops().remove(Flag.getRedFlagItemStack());
                 e.getDrops().remove(Flag.getBlueFlagItemStack());
+                e.getDrops().stream()
+                        .filter(i -> i.getType().toString().contains("ARMOR") || i.getType().toString().contains("SWORD"))
+                        .toList()
+                        .forEach(i -> e.getDrops().remove(i));
                 Location loc = e.getEntity().getLocation();
                 Item i = Objects.requireNonNull(loc.getWorld()).dropItemNaturally(loc, Flag.getBlueFlagItemStack());
                 pa.dropBlueFlag(e.getEntity(), i);
@@ -106,6 +111,10 @@ public class PlayerListeners implements Listener {
             if(tc.equals(TeamColor.BLUE) && pa.getRedFlag().hasFlag(playerName)){
                 e.getDrops().remove(Flag.getRedFlagItemStack());
                 e.getDrops().remove(Flag.getBlueFlagItemStack());
+                e.getDrops().stream()
+                        .filter(i -> i.getType().toString().contains("ARMOR") || i.getType().toString().contains("SWORD"))
+                        .toList()
+                        .forEach(i -> e.getDrops().remove(i));
                 Location loc = e.getEntity().getLocation();
                 Item i = Objects.requireNonNull(loc.getWorld()).dropItemNaturally(loc, Flag.getRedFlagItemStack());
                 pa.dropRedFlag(e.getEntity(), i);
@@ -194,7 +203,12 @@ public class PlayerListeners implements Listener {
                         e.getPlayer().getInventory().remove(Material.BLUE_WOOL);
                         moveEventCooldown.put(playerName, 10);
                     }else{
-                        pa.broadcastRedTeam(ChatColor.LIGHT_PURPLE + "Cannot score because the flag is not in camp!");
+                        if(!dedication.contains(playerName)){
+                            dedication.add(playerName);
+                            pa.broadcastRedTeam(ChatColor.LIGHT_PURPLE + "Cannot score because the flag is not in camp!");
+                            new Dedication(playerName).runTaskLater(SimpleCTF.getSimpleCTF(), 60);
+                        }
+
                     }
                 }
             }
@@ -211,7 +225,11 @@ public class PlayerListeners implements Listener {
                         e.getPlayer().getInventory().remove(Material.RED_WOOL);
                         moveEventCooldown.put(e.getPlayer().getName(), 10);
                     }else{
-                        pa.broadcastBlueTeam(ChatColor.LIGHT_PURPLE + "Cannot score because the flag is not in camp!");
+                        if(!dedication.contains(playerName)){
+                            dedication.add(playerName);
+                            pa.broadcastBlueTeam(ChatColor.LIGHT_PURPLE + "Cannot score because the flag is not in camp!");
+                            new Dedication(playerName).runTaskLater(SimpleCTF.getSimpleCTF(), 60);
+                        }
                     }
                 }
             }

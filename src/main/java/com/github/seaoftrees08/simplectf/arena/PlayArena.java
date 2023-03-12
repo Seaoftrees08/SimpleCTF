@@ -424,7 +424,10 @@ public class PlayArena extends Arena{
                 .toList().forEach(Entity::remove);
 
         //Arena remove from memory
-        ArenaManager.removePlayArena(arenaName);
+        if(redTeam.getArenaPlayerList().isEmpty() && blueTeam.getArenaPlayerList().isEmpty() && spectators.getArenaPlayerList().isEmpty()){
+            ArenaManager.removePlayArena(arenaName);
+        }
+
     }
 
     /**
@@ -482,9 +485,11 @@ public class PlayArena extends Arena{
         Scoreboard sb = initScoreboard();
         Objective obj = sb.getObjective(arenaName);
 
-        obj.getScore(ChatColor.GREEN + "  == CTF in " + arenaName + " == ").setScore(200);
-        obj.getScore(" ").setScore(199);
-        obj.getScore(ChatColor.RED + " -- RED Team Member -- ").setScore(198);
+        obj.getScore(ChatColor.GREEN + "  == CTF in " + arenaName + " == ").setScore(201);
+        obj.getScore(" ").setScore(200);
+        obj.getScore(ChatColor.AQUA + "remaining time: "+remTime).setScore(199);
+        obj.getScore(" ").setScore(198);
+        obj.getScore(ChatColor.RED + " -- RED Team Member -- ").setScore(197);
         obj.getScore(" ").setScore(99);
         obj.getScore(ChatColor.BLUE + " -- BLUE Team Member -- ").setScore(98);//*/
 
@@ -508,9 +513,9 @@ public class PlayArena extends Arena{
         Objective obj = sb.getObjective(arenaName);
 
         // RED_101~197,  BLUE_1~97
-        obj.getScore(ChatColor.GREEN + "  == CTF in " + arenaName + " == ").setScore(300);
-        obj.getScore(" ").setScore(299);
-        obj.getScore(ChatColor.AQUA + "remaining time: "+remTime).setScore(300);
+        obj.getScore(ChatColor.GREEN + "  == CTF in " + arenaName + " == ").setScore(301);
+        obj.getScore(" ").setScore(300);
+        obj.getScore(ChatColor.AQUA + "remaining time: "+remTime).setScore(299);
         obj.getScore(" ").setScore(199);
         obj.getScore(ChatColor.RED + " -- RED Team Status -- ").setScore(198);
         obj.getScore(ChatColor.RED + " Score: " + ChatColor.WHITE + redTeam.getScore()).setScore(197);
