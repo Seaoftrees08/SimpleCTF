@@ -1,8 +1,6 @@
 # Simple CTF
 This is a Spigot plugin for playing "Capture The Flag".
 
-WARNING: This plugin is beta.  
-
 ## Download
 ### [Releaces](https://github.com/Seaoftrees08/SimpleCTF/releases) 
 for Spigot 1.19.3
